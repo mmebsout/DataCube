@@ -1,0 +1,16 @@
+{
+  "generator-ngx-rocket": {
+    "version": "2.0.0",
+    "props": {
+      "appName": "CNES",
+      "target": [
+        "web"
+      ],
+      "ui": "bootstrap",
+      "auth": false,
+      "projectName": "cnes",
+      "mobile": [],
+      "webview": []
+    }
+  }
+}

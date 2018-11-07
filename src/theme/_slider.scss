@@ -1,0 +1,23 @@
+@import "theme-variables";
+
+.ui-slider-horizontal {
+	height: 4px;
+	border-radius: 5px;
+	background: $blue;
+	box-shadow: none;
+
+	.ui-slider-handle {
+		background: $blue;
+		cursor: pointer;
+		width: 17px !important;
+		height: 17px !important;
+		border-radius: 50%;
+		transform: translateY(-5px);
+		transition: all ease-in-out .2s;
+
+		&:hover {
+			transform: translateY(-5px) scale(1.2);
+			box-shadow: 0px 0px 2px $blue-lighter;
+		}
+	}
+}

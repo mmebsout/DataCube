@@ -1,0 +1,11 @@
+<article>
+	<h2>Histogramme</h2>
+	<div id="histogramme"></div>
+	<div class="controls">
+		<button class="btn" [ngClass]="{'active': activeLinear}" (click)="linear()">Linear</button>
+		<button class="btn" [ngClass]="{'active': activeExpo}" (click)="expo()">Sqrt</button>
+		<button class="btn" [ngClass]="{'active': activeSqr}" (click)="sqr()">Sqr</button>
+		<button class="btn" [ngClass]="{'active': activeAsin}" (click)="asin()">Asin</button>
+		<button class="btn" (click)="resetHisto()">Reset Filter</button>
+	</div>
+</article>

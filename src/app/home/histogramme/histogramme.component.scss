@@ -1,0 +1,24 @@
+@import "../../../theme/theme-variables";
+@import "../dataCube/dataCube.component";
+
+h2 {
+	margin: 0 0 1rem 0;
+}
+
+.controls {
+	padding: 1.6em;
+
+	button {
+		max-width: fit-content;
+		display: inline-block;
+
+		&:last-child {
+			display: block;
+			margin: .5em auto 0;
+		}
+
+		&.active {
+			background: $gray;
+		}
+	}	
+}

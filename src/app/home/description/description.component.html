@@ -1,0 +1,37 @@
+<article>
+	<h2>Description</h2>
+	<div class="row">
+		<div class="col-md-6">
+			<article>
+				<h3 class="waves-effect waves-teal fa-map-marker">Localisation</h3> 
+				<ul>
+					<li *ngFor="let key of objectKeys(localisation)">
+						<strong>{{ key }} : </strong><span>{{ localisation[key] }}</span>
+					</li>
+				</ul>
+			</article>
+		</div>
+		<div class="col-md-6">
+			<article>
+				<h3 class="fa-cogs">Type d'objet</h3> 
+				<ul>
+					<li *ngFor="let key of objectKeys(type)">
+						<strong>{{ key }} : </strong><span>{{ type[key] }}</span>
+					</li>
+				</ul>
+			</article>
+		</div>
+	</div>
+	<div class="accordion">
+		<h3 accordion class="fa-cubes">Metadonnées</h3> 
+		<div>
+			<ul>
+				<li *ngFor="let list of metadatas">
+					<strong>{{ list[0] }} : </strong>
+					<span>{{ list[1] }}</span>
+					<span>{{ list[2] }}</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</article>

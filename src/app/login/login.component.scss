@@ -1,0 +1,131 @@
+@import "src/theme/theme-variables";
+@import "~bootstrap/scss/mixins/_breakpoints";
+@import "src/theme/theme";
+
+.login-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: $white;
+  background: rgb(0, 0, 0);
+}
+
+.login-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100%;
+}
+
+.ng-invalid.ng-touched:not(form) {
+  border-left: 4px solid theme-color("danger");
+}
+
+.card {
+  background: rgba(255, 255, 255, 1);
+  border: none;
+  border-radius: 0;
+  box-shadow: 10px 10px 0 rgba($color: #fff, $alpha: .7);
+
+  form {
+    text-align: center;
+    
+    .d-block {
+      min-height: 8vh;
+
+      input {
+        @extend .animate; 
+
+        background: rgba($color: #fff, $alpha: .7);
+        border-radius: 0;
+        min-height: 5vh;
+        border-color: solid rgba($color: #fafafa, $alpha: 1); 
+        border-width: 0 0 3px;
+
+        &:focus {
+          border-width: 0 0 3px;
+          box-shadow: none;
+        }
+      }
+    }
+
+    input[type=checkbox] + span {
+      color: black;
+    }
+    
+    .text-danger {
+      @extend .animated;
+
+      &.active {
+        @extend .fadeInDown;
+
+        visibility: visible;
+      }
+    }
+  }
+
+  .btn {
+    background:  none;
+    margin: 0 auto;
+    position: relative;
+
+    > span:before {
+      left: 0;
+    }
+
+    > span:after {
+      right: 0;
+    }
+
+    > span:before, > span:after, span span:before, span span:after {
+      background: #333 none repeat scroll 0 0;
+      content: "";
+      position: absolute;
+      transition: -webkit-transform 0.3s cubic-bezier(0.44, 0.05, 0.55, 0.95) 0s;
+      transition: transform 0.3s cubic-bezier(0.44, 0.05, 0.55, 0.95) 0s;
+    }
+
+    > span:before, > span:after {
+      height: 100%;
+      top: 0;
+      -webkit-transform: scale3d(0.1, 0, 1);
+              transform: scale3d(0.1, 0, 1);
+      width: 1px; 
+    }
+    span span:before { 
+      top: 0;
+    }
+
+    span span:after { 
+      bottom: 0;
+    }
+
+    span span:before, span span:after {
+      height: 1px;
+      left: 0;
+      -webkit-transform: scale3d(0, 0.1, 1);
+      transform: scale3d(0, 0.1, 1);
+      width: 100%;
+    }
+
+    &:hover{
+      cursor: pointer;
+      color: black;
+      
+      > span:before, > span:after, span span:before, span span:after {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1);
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .container {
+    width: 100%;
+  }
+}

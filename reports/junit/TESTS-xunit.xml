@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<testsuite name="Chrome 63.0.3239 (Windows 7 0.0.0)" package="" timestamp="2018-01-18T16:02:32" id="0" hostname="AK19469" tests="56" errors="0" failures="0" time="19.223">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"/>
+  </properties>
+  <testcase name="AboutComponent should create" time="0.194" classname="AboutComponent"/>
+  <testcase name="AppComponent should create the app" time="0.988" classname="AppComponent"/>
+  <testcase name="HttpCacheService setCacheData should set cache data" time="0.012" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService setCacheData should replace existing data" time="0.01" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService setCacheData should set cache date correctly" time="0.01" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService getCacheData should return null if no cache" time="0.007" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService getCacheData should return cached data if exists" time="0.957" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService getCacheData should return cached data with url parameters if exists" time="0.008" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService getHttpCacheEntry should return null if no cache" time="0.009" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService getHttpCacheEntry should return cached data date  if exists" time="0.01" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService clearCacheData should clear existing cache data" time="0.009" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService clearCacheData should do nothing if no cache exists" time="0.006" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService cleanCache should clear all cache if no date is specified" time="0.011" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService cleanCache should clear existing since specified date" time="0.946" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService cleanCache should not affect cache entries newer than specified date" time="0.011" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService setPersistence should clear previous cache data when persistence value change" time="0.011" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService setPersistence should persist cache to local storage" time="0.01" classname="HttpCacheService"/>
+  <testcase name="HttpCacheService setPersistence should persist cache to session storage" time="0.007" classname="HttpCacheService"/>
+  <testcase name="HttpService request should prepend environment.serverUrl to the request url" time="0.012" classname="HttpService"/>
+  <testcase name="HttpService request should prepend environment.serverUrl to the request object url property" time="0.009" classname="HttpService"/>
+  <testcase name="HttpService request should go through default error handler and rethrow an error" time="0.937" classname="HttpService"/>
+  <testcase name="HttpService request should cache the request" time="0.011" classname="HttpService"/>
+  <testcase name="HttpService request should force request ignoring the cache" time="0.01" classname="HttpService"/>
+  <testcase name="HttpService request should not cache request" time="0.008" classname="HttpService"/>
+  <testcase name="HttpService request should cache the request and return a copy of the response" time="0.009" classname="HttpService"/>
+  <testcase name="HttpService get should call request with GET method" time="0.008" classname="HttpService"/>
+  <testcase name="HttpService post should call request with POST method and body" time="0.008" classname="HttpService"/>
+  <testcase name="HttpService put should call request with PUT method and body" time="0.946" classname="HttpService"/>
+  <testcase name="HttpService delete should call request with DELETE method" time="0.012" classname="HttpService"/>
+  <testcase name="HttpService patch should call request with PATCH method and body" time="0.021" classname="HttpService"/>
+  <testcase name="HttpService head should call request with HEAD method" time="0.01" classname="HttpService"/>
+  <testcase name="HttpService options should call request with OPTIONS method" time="0.009" classname="HttpService"/>
+  <testcase name="I18nService extract should not modify string" time="0.009" classname="I18nService"/>
+  <testcase name="I18nService init should init with default language" time="0.01" classname="I18nService"/>
+  <testcase name="I18nService init should init with save language" time="0.01" classname="I18nService"/>
+  <testcase name="I18nService set language should change current language" time="0.007" classname="I18nService"/>
+  <testcase name="I18nService set language should change current language without a region match" time="0.007" classname="I18nService"/>
+  <testcase name="I18nService set language should change current language to default if unsupported" time="0.008" classname="I18nService"/>
+  <testcase name="I18nService get language should return current language" time="0.949" classname="I18nService"/>
+  <testcase name="Logger should create an instance" time="0" classname="Logger"/>
+  <testcase name="Logger should add a new LogOutput and receives log entries" time="0.001" classname="Logger"/>
+  <testcase name="Logger should add a new LogOutput and receives only production log entries" time="0" classname="Logger"/>
+  <testcase name="Route withShell should create routes as children of shell" time="0.006" classname="Route"/>
+  <testcase name="HeaderComponent should create" time="1.991" classname="HeaderComponent"/>
+  <testcase name="ShellComponent should create" time="1.01" classname="ShellComponent"/>
+  <testcase name="DataCubeComponent should create" time="1" classname="DataCubeComponent"/>
+  <testcase name="DescriptionComponent should create" time="0.039" classname="DescriptionComponent"/>
+  <testcase name="HistogrammeComponent should create" time="0.954" classname="HistogrammeComponent"/>
+  <testcase name="HomeComponent should create" time="1.997" classname="HomeComponent"/>
+  <testcase name="QuoteService getRandomQuote should return a random Chuck Norris quote" time="0.012" classname="QuoteService"/>
+  <testcase name="QuoteService getRandomQuote should return a string in case of error" time="0.01" classname="QuoteService"/>
+  <testcase name="SpectreComponent should create" time="1.012" classname="SpectreComponent"/>
+  <testcase name="LoaderComponent should not be visible by default" time="0.967" classname="LoaderComponent"/>
+  <testcase name="LoaderComponent should be visible when app is loading" time="0.999" classname="LoaderComponent"/>
+  <testcase name="LoaderComponent should not display a message by default" time="1.998" classname="LoaderComponent"/>
+  <testcase name="LoaderComponent should display specified message" time="1.001" classname="LoaderComponent"/>
+  <system-out>
+    <![CDATA[
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>

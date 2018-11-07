@@ -1,0 +1,46 @@
+<div class="container-fluid">
+	<div class="row">
+		<app-loader class="col-md-8" [isLoading]="isLoading" [message]="messageDataCube"></app-loader>
+		<app-loader class="col-md-4" [isLoading]="isLoadingHisto" [message]="messageHistogramme"></app-loader>
+	</div>	
+	<div class="row">
+		<app-data-cube  
+			class="col-md-8"
+			[hidden]="isLoading" 
+			(dataCubeLoadingStatus)="loadingChange($event)"
+			[newImage]="newImage"
+			[newFilterReset]="newFilterReset"
+			[newHmax]="newHmax"
+		>  
+		</app-data-cube>
+
+		<app-histogramme 
+			class="col-md-4"
+			[hidden]="isLoadingHisto" 
+			(histoLoadingStatus)="loadingChange($event)"
+			(newImageEmitter)="loadingNewImage($event)" 
+			(newResetEmitter)="loadingNewReseter($event)"
+			(newHmaxEmitter)="loadingNewHmax($event)"
+		>
+		</app-histogramme>
+	</div>
+	<div class="row">
+		<app-loader class="col-md-6" [isLoading]="isLoadingSpectre" [message]="messageSpectre"></app-loader>
+		<app-loader class="col-md-6" [isLoading]="isLoadingDesc" [message]="messageDesc"></app-loader>
+	</div>
+	<div class="row">
+		<app-spectre 
+			class="col-md-6"
+			[hidden]="isLoadingSpectre" 
+			(spectreLoadingStatus)="loadingChange($event)"
+		>
+		</app-spectre>
+
+		<app-description 
+			class="col-md-6"
+			[hidden]="isLoadingDesc" 
+			(descLoadingStatus)="loadingChange($event)"
+		>
+		</app-description>
+	</div>
+</div>

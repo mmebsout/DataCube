@@ -1,0 +1,26 @@
+
+h2 {
+	margin: 0 0 1rem 0;
+}
+
+.controls {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px #bbb;
+    padding: 1em;
+    margin: 1em 0;
+	text-align: center;
+
+	button {
+		cursor: pointer;
+		display: block;
+		margin: 0 auto;
+		max-width: 200px;
+		width: 100%;
+	}
+}
+
+p-slider {
+	display: inline-block;
+	margin: 0 0 1rem 0;
+}
