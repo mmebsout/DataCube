@@ -23,6 +23,7 @@ export class SpectreComponent implements OnInit {
 	subscription: Subscription;
 	resetSubscription: Subscription;
 	lastTrace: number = 0;
+	spectreName: number = 0
 	isLoadingSpectre: Boolean = true;
 	currentSlide: any = new Fit(null);
 	spectreData: any = [];
@@ -61,13 +62,14 @@ export class SpectreComponent implements OnInit {
 					this.spectreData = spectreData;
 
 					console.log('Spectre Data:', spectreData);
-
+					this.spectreName++;
 					this.spectreData = [
 						{
 							x: this.spectreData.feature.properties.spectrum.wavelength,
 							y: this.spectreData.feature.properties.spectrum.value,
 							line: {shape: 'spline'},
-							type: 'scatter'
+							type: 'scatter',
+							name: 'trace ' + this.spectreName
 						} as ScatterData
 					];
 
@@ -91,6 +93,7 @@ export class SpectreComponent implements OnInit {
 
 				Plotly.deleteTraces('graphDiv', tabToDelete).then(() => {
 					this.lastTrace = 0;
+					this.spectreName = 0;
 				});
 			}
 		});
