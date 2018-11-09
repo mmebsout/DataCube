@@ -11,11 +11,11 @@ export class AccordionDirective {
 		$(this.el.nativeElement).next('div').css('display', 'none');
 	}
 
-	@HostListener ('click') onclick () {
-		this.togglePane();
+	@HostListener ('click', ['$event']) onclick (e : KeyboardEvent) {
+		this.togglePane(e);
 	}
 
-	private togglePane () {
-		$(event.target).toggleClass('active').next('div').slideToggle();
+	private togglePane (e : KeyboardEvent) {
+		$(e.target).toggleClass('active').next('div').slideToggle();
 	}
 }
