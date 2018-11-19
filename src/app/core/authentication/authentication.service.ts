@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
+import { Logger} from '@app/core';
+
+//const log = new Logger('Authentification');
 
 export interface Credentials {
   // Customize received credentials here
@@ -25,26 +30,48 @@ export class AuthenticationService {
 
   private _credentials: Credentials | null;
 
-  constructor() {
+  constructor(private http: Http, private router: Router) {
     const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey);
     if (savedCredentials) {
       this._credentials = JSON.parse(savedCredentials);
     }
   }
 
+  async delay(ms: number) {
+    await new Promise(resolve => setTimeout(()=>resolve(), ms)).then(()=>console.log("fired"));
+}
+
   /**
    * Authenticates the user.
    * @param {LoginContext} context The login parameters.
    * @return {Observable<Credentials>} The user credentials.
    */
-  login(context: LoginContext): Observable<Credentials> {
-    // Replace by proper authentication call
-    const data = {
-      username: context.username,
-      token: '123456'
-    };
-    this.setCredentials(data, context.remember);
-    return of(data);
+  login(context: LoginContext) : any{
+    let auth = <boolean>false;
+    let promise = new Promise((resolve, reject) => {
+      let apiURL = '/identification';
+      this.http.post(apiURL,{username:context.username,password:context.password})
+        .subscribe((response: Response) =>{
+            console.log(response.json());
+            auth = response.json();
+            if(auth){
+              localStorage.setItem('userNameDataCube',context.username);
+              //log.debug(`${credentials.username} successfully logged in`);
+              this.router.navigate(['/'], { replaceUrl: true });
+              this.setCredentials({
+              username: context.username,
+              token: '123456'
+              }, context.remember);
+              //log.debug(`${context.username} successfully logged in`);
+            }else{
+              localStorage.removeItem('userNameDataCube');
+            }
+           
+          }
+        );
+       
+    });
+    return (localStorage.getItem('userNameDataCube')==undefined)?'no_auth':localStorage.getItem('userNameDataCube');
   }
 
   /**

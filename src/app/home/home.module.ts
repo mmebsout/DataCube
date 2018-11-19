@@ -18,6 +18,7 @@ import { QuoteService } from './quote.service';
 import { SlideService } from './dataCube/slide.service';
 import { SpectreService } from './spectre/spectre.service';
 import { MetadataService } from './description/metadata.service';
+import { LoaderService } from '../core/loader.service';
 import { SliderModule } from 'primeng/components/slider/slider';
 
 
@@ -44,7 +45,8 @@ import { SliderModule } from 'primeng/components/slider/slider';
     QuoteService,
     SlideService,
     SpectreService,
-    MetadataService
+    MetadataService,
+    LoaderService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

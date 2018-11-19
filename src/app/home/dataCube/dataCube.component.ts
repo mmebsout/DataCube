@@ -4,13 +4,16 @@ import { Http, Response } from '@angular/http';
 import { I18nService } from '../../core/i18n.service';
 import { CubeToSpectreService } from '../../shared/services/cube-to-spectre.service';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
+import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
 import { SlideService } from './slide.service';
 import { MetadataService } from '../description/metadata.service';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
-
+import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 import { ImageRecalc } from '../../shared/classes/image-recalc';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
+//import * as Plotly from 'plotly.js-cartesian-dist';
 
 declare function require(moduleName: string): any;
 const Plotly = require('plotly.js/lib/index-cartesian.js');
@@ -34,7 +37,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 
 	@Input()
 	newHmax: any;
-
+	mustBeLoaded : boolean;
 	isLoading = <boolean>true;
 	dataCubePoint = <number>0;
 	graphId = 'heatmap';
@@ -52,6 +55,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	lat: any = [];
 	currentTranche =  <number>1;
 	filterImage: any = null;
+	colors: any = [];
+	traceNumberSubscription: Subscription;
+	
 
 	/**
 	 * Constructor of DataCube component
@@ -67,15 +73,18 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 */
 	constructor(private http: Http,
 				private i18nService: I18nService,
+				private translateService: TranslateService,
 				private cubeToSpectreService: CubeToSpectreService,
 				private slideService: SlideService,
 				private streamFitService: StreamFitService,
 				private metadataService: MetadataService,
+				private loaderService: LoaderService,
 				public toastr: ToastsManager,
 				public vcr: ViewContainerRef) {
-
+		this.mustBeLoaded = this.loaderService.datacube;
+		console.log('Datacube must be loaded ', this.mustBeLoaded);
 		toastr.setRootViewContainerRef(vcr);
-
+		this.colors = Plotly.PlotSchema.get().layout.layoutAttributes.colorway.dflt;
 		cubeToSpectreService.CubePointCoord$.subscribe(coord => {
 			this.dataCubePoint = coord;
 			console.log('coord', this.dataCubePoint);
@@ -86,13 +95,18 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			this.currentSlide = new Fit(fit);
 			this.ngOnInit();
 		});
+	
+	}
+
+	ngOnInit() {
+
 	}
 
 	/**
 	 * DataCube Init Function
 	 * @function ngOnInit
 	 */
-	ngOnInit() {
+	ngAfterViewInit() {
 		this.initSlide();
 	}
 
@@ -100,8 +114,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		if ( this.newImage ) {
 			this.deleteCurrentGraph();
 			this.setPlotly(changes.newImage.currentValue, this.long, this.lat);
-			this.selectedCoord();
+			this.selectedCoord();			
 		}
+	
 	}
 
 	/**
@@ -112,7 +127,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		this.metadataService
 			.getDimension({id: this.currentSlide.name})
 			.finally(() => {
-				this.toastr.success('Metadata are loaded!', 'Success!');
+				this.translateService.get(['messageDataCube','success']).subscribe((res: any) => {
+					this.toastr.success(res.messageDataCube, res.success);
+				  });
 				this.dataCubeLoadingStatus.emit(false);
 			})
 			.subscribe((dimensions: any) => {
@@ -130,8 +147,10 @@ export class DataCubeComponent implements OnInit, OnChanges {
 
 		this.slideService
 			.getSlide({id: this.currentSlide.name})
-			.finally(() => {
-				this.toastr.success('Cube explorer image is loaded!', 'Success!');
+			.finally(() => {				
+				this.translateService.get(['cubeExplorerImage','success']).subscribe((res: any) => {
+					this.toastr.success(res.cubeExplorerImage, res.success);
+				  });
 				this.dataCubeLoadingStatus.emit(false);
 			})
 			.subscribe(slideData => {
@@ -145,6 +164,23 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				}
 
 				this.selectedCoord();
+				this.changeVisibleTrace();
+				this.traceNumberSubscription = this.cubeToSpectreService.SpectreTrace$.subscribe(traceNumber => {
+					console.log('Into datacube : spectre number : ', traceNumber);
+					console.log(this.mustBeLoaded);
+					//if(this.mustBeLoaded == 'true'){
+						const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
+						console.log(graphDiv.data[traceNumber].visible);
+						if(graphDiv.data[traceNumber].visible == undefined || graphDiv.data[traceNumber].visible == true){
+							graphDiv.data[traceNumber].visible = false;
+						}
+						else{
+							graphDiv.data[traceNumber].visible = true;
+						}
+						
+						Plotly.redraw(graphDiv);
+					//}					
+				});	
 			});
 	}
 
@@ -160,7 +196,11 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		this.slideService
 			.getNextTranche({id: this.currentSlide.name}, {idTranche: indexVal})
 			.finally(() => {
-				this.toastr.success(`Slide Nb  ${indexVal} is loaded!`, `Success!`);
+				if(this.translateService.currentLang == 'en-US') {
+					this.toastr.success(`Slide Nb  ${indexVal + 1} is loaded!`, `Success!`);
+				} else {
+					this.toastr.success(`Slide numéro  ${indexVal + 1} est chargée!`, `Succès!`);
+				}				
 				this.currentTranche = indexVal;
 			})
 			.subscribe((figure: any) => {
@@ -187,7 +227,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			const text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
 			Long & Lat:<br> (${yi} , ${xi})`));
 
-			const sliderData = [
+			const sliderData = 
 				{
 					z: this.slideData,
 					hoverinfo: 'z+text',
@@ -199,7 +239,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 						xpad: 5
 					}
 				}
-			];
+			;
 
 			this.deleteCurrentGraph();
 
@@ -239,18 +279,19 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				}
 			}
 		];
+		const layout = {			
+			margin: {
+				l: 40,
+				r: 40,
+				t: 40,
+				b: 40
+			},
+			showlegend: true,
+			legend: {"orientation": "h"}
+		};
+		const data = this.dataTraces;
 
-		const data = this.dataTraces,
-			  layout = {
-					margin: {
-						l: 40,
-						r: 40,
-						t: 40,
-						b: 40
-					}
-				};
-
-		Plotly.newPlot(this.graphId, {data, layout});
+		Plotly.newPlot(this.graphId, data, layout);
 	}
 
 	/**
@@ -300,8 +341,20 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			};
 
 			Plotly.addTraces(myPlot, {y: [tn], x: [pn]});
+			
+			Plotly.restyle(this.graphId, 'marker.color', this.colors[this.dataTraces.length-2], [this.dataTraces.length-1]);
+
 			console.log('DataTraces', this.dataTraces);
 			_cubeToSpectreService.shareCubePointCoord({coordX: pn, coordY: tn});
+		});
+	}
+
+	changeVisibleTrace(): void{
+		const _cubeToSpectreService = this.cubeToSpectreService, 
+		myPlot = <CustomHTMLElement>document.getElementById(this.graphId);
+		myPlot.on('plotly_legendclick', (data: any) => {
+			console.log('plotly_legendclick', data);
+			_cubeToSpectreService.shareTraceNumber(data.curveNumber);
 		});
 	}
 

@@ -24,8 +24,8 @@
 			</div>
 			<div class="navbar-nav ml-auto">
 				<div class="nav-item" ngbDropdown>
-					<a id="language-dropdown" class="nav-link" ngbDropdownToggle>{{currentLanguage}}</a>
-					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="language-dropdown">
+					<a id="language-dropdown" class="nav-link" ngbDropdownToggle>{{currentLang}}</a>
+					<div class="dropdown-menu dropdown-menu-right language-cube"aria-labelledby="language-dropdown">
 						<button 
 							class="dropdown-item" 
 							*ngFor="let language of languages" 
@@ -40,7 +40,7 @@
 					</a>
 					<div ngbDropdownMenu aria-labelledby="user-dropdown">
 					  <h6 class="dropdown-header">
-						<span translate>Logged in as</span> <b>{{username}}</b></h6>
+						<span translate>Logged</span> <b>{{username}}</b></h6>
 					  <div class="dropdown-divider"></div>
 					  <button class="dropdown-item" (click)="logout()" translate>Logout</button>
 					</div>
@@ -50,7 +50,7 @@
 	</nav>
 </header>
 <div [ngbCollapse]="searchHidden">
-	<input [(ngModel)]="searchText" type="text" placeholder="Search a Fit file" appNextElement/>
+	<input [(ngModel)]="searchText" type="text" placeholder="Search a Fit file" appPrefixFocus appNextElement/>
 	<ul [ngClass]="{'show': searchText}">
 		<li *ngFor="let fit of fitsTab | filter:searchText; let i = index" 
 			[attr.tabindex]="i" 

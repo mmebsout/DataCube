@@ -1,5 +1,5 @@
-<article>
-	<h2>Description</h2>
+<article *ngIf="mustBeLoaded">
+	<h2><span translate>Description</span></h2>
 	<div class="row">
 		<div class="col-md-6">
 			<article>
@@ -13,7 +13,7 @@
 		</div>
 		<div class="col-md-6">
 			<article>
-				<h3 class="fa-cogs">Type d'objet</h3> 
+				<h3 class="fa-cogs"><span translate>TypeObject</span></h3> 
 				<ul>
 					<li *ngFor="let key of objectKeys(type)">
 						<strong>{{ key }} : </strong><span>{{ type[key] }}</span>
@@ -23,7 +23,7 @@
 		</div>
 	</div>
 	<div class="accordion">
-		<h3 accordion class="fa-cubes">Metadonnées</h3> 
+		<h3 accordion class="fa-cubes"><span translate>Metadata</span></h3> 
 		<div>
 			<ul>
 				<li *ngFor="let list of metadatas">

@@ -1,4 +1,5 @@
 export class CustomHTMLElement extends HTMLElement {
+	data  :any;
 	constructor() {
 		super();
 	}

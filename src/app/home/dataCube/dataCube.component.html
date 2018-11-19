@@ -1,15 +1,15 @@
-<article>
-		<h2>Data Cube Plugin</h2>
-		<div #myDiv id="heatmap"></div>
-		<!-- <canvas id="MizarCanvas"></canvas> -->
-		<div class="controls">
-			<p>Cube depth: {{ val }}</p>
-			<p-slider 
-				[(ngModel)]="val" 
-				[animate]="true" 
-				[min]="1" [max]="nbSlides" 
-				[style]="{'width':'350px'}"
-				(onSlideEnd)="sliderSelectSlide(val, long, lat)"></p-slider>
-			<button class="btn" (click)="resetPlots()">Reset Plot Spectre</button>
-		</div>
+<article *ngIf="mustBeLoaded">
+	<h2><span translate>Datacube</span></h2>
+	<div #myDiv id="heatmap"></div>
+	<!-- <canvas id="MizarCanvas"></canvas> -->
+	<div class="controls">
+		<p><span translate>CubeSlider</span>: {{ val }} / {{nbSlides}}</p>
+		<p-slider 
+			[(ngModel)]="val" 
+			[animate]="true" 
+			[min]="1" [max]="nbSlides" 
+			[style]="{'width':'350px'}"
+			(onSlideEnd)="sliderSelectSlide(val-1, long, lat)"></p-slider>
+		<button class="btn" (click)="resetPlots()"><span translate>ResetPlot</span></button>
+	</div>
 </article>

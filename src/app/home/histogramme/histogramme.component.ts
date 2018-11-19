@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { I18nService } from '../../core/i18n.service';
 import { SlideService } from '../dataCube/slide.service';
+import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
@@ -26,6 +27,7 @@ export class HistogrammeComponent implements OnInit {
 	@Output()
 	newResetEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+	mustBeLoaded : boolean;
 	slideData: any = [];
 	currentSlide: any = new Fit(null);
 	activeLinear = <boolean>false;
@@ -48,8 +50,10 @@ export class HistogrammeComponent implements OnInit {
 	constructor(
 		private i18nService: I18nService,
 		private slideService: SlideService,
+		private loaderService: LoaderService,
 		private streamFitService: StreamFitService) {
-
+		this.mustBeLoaded = this.loaderService.histogramme;
+		console.log('Histogramme must be loaded : ',this.mustBeLoaded);
 		streamFitService.FitFile$.subscribe(fit => {
 			console.log('reception Fit', fit);
 			this.currentSlide = new Fit(fit);
@@ -109,9 +113,11 @@ export class HistogrammeComponent implements OnInit {
 				}
 				console.log('val length:', val.length);
 				console.log('nbBins', hmax);
-				this.setHistogram(hist);
-				const r = this.getRange();
-				console.log('range ==>', r);
+				if(this.mustBeLoaded){
+					this.setHistogram(hist);
+					const r = this.getRange();
+					console.log('range ==>', r);
+				}				
 			});
 	}
 

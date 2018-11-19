@@ -4,7 +4,7 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { environment } from '../environments/environment';
 import { Logger } from './core/logger.service';
+import { LoaderService } from './core/loader.service';
 import { I18nService } from './core/i18n.service';
 
 
@@ -24,11 +25,36 @@ const log = new Logger('App');
 })
 export class AppComponent implements OnInit {
 
+  attrAppDataCube: boolean;
+  attrAppSpectre: boolean;
+  attrAppHistogramm: boolean;
+  attrAppDescription: boolean;
+
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
               private titleService: Title,
               private translateService: TranslateService,
-              private i18nService: I18nService) { }
+              private i18nService: I18nService,
+              private loader: LoaderService,
+              private elRef: ElementRef) {
+                    this.attrAppDataCube = (this.elRef.nativeElement.getAttribute('appDataCube')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appDataCube')):true,
+                    this.attrAppSpectre = (this.elRef.nativeElement.getAttribute('appSpectre')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appSpectre')):true,
+                    this.attrAppHistogramm = (this.elRef.nativeElement.getAttribute('appHistogramm')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appHistogramm')):true,
+                    this.attrAppDescription = (this.elRef.nativeElement.getAttribute('appDescription')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appDescription')):true;
+              }
+
+              toBoolean(xxx: any): boolean {
+                if(xxx) {
+                  const xStr = xxx.toString().toLowerCase().trim();
+                  if(xStr === 'true' || xStr === 'false') {
+                    return xStr === 'true' ? true : false;
+                  } else {
+                    return xxx ? true : false;
+                  }
+                } else {
+                  return false;
+                }
+              }
 
   ngOnInit() {
     // Setup logger
@@ -37,6 +63,12 @@ export class AppComponent implements OnInit {
     }
 
     log.debug('init');
+    log.debug('attrAppDataCube : ', this.attrAppDataCube);
+    log.debug('attrAppSpectre : ', this.attrAppSpectre);
+    log.debug('attrAppHistogramm : ', this.attrAppHistogramm);
+    log.debug('attrAppDescription : ', this.attrAppDescription);
+
+    this.loader.init(this.attrAppDataCube, this.attrAppSpectre, this.attrAppHistogramm, this.attrAppDescription);
 
     // Setup translations
     this.i18nService.init(environment.defaultLanguage, environment.supportedLanguages);

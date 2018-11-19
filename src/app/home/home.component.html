@@ -1,12 +1,12 @@
 <div class="container-fluid">
 	<div class="row">
-		<app-loader class="col-md-8" [isLoading]="isLoading" [message]="messageDataCube"></app-loader>
-		<app-loader class="col-md-4" [isLoading]="isLoadingHisto" [message]="messageHistogramme"></app-loader>
+		<app-loader class="col-md-8" [isLoading]="isLoadingCube" [message]="messageDataCubeLoading"></app-loader>
+		<app-loader class="col-md-4" [isLoading]="isLoadingHisto" [message]="messageHistogrammeLoading"></app-loader>
 	</div>	
 	<div class="row">
 		<app-data-cube  
 			class="col-md-8"
-			[hidden]="isLoading" 
+			[hidden]="isLoadingCube" 
 			(dataCubeLoadingStatus)="loadingChange($event)"
 			[newImage]="newImage"
 			[newFilterReset]="newFilterReset"
@@ -25,8 +25,8 @@
 		</app-histogramme>
 	</div>
 	<div class="row">
-		<app-loader class="col-md-6" [isLoading]="isLoadingSpectre" [message]="messageSpectre"></app-loader>
-		<app-loader class="col-md-6" [isLoading]="isLoadingDesc" [message]="messageDesc"></app-loader>
+		<app-loader class="col-md-6" [isLoading]="isLoadingSpectre" [message]="messageSpectreLoading"></app-loader>
+		<app-loader class="col-md-6" [isLoading]="isLoadingDesc" [message]="messageDescLoading"></app-loader>
 	</div>
 	<div class="row">
 		<app-spectre 

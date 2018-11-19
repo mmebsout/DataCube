@@ -21,7 +21,9 @@ export class HeaderComponent implements OnInit {
 	searchHidden = true;
 	searchText = <any>null;
 	fitsTab = <any>[];
+	languages = <any>[];
 	fitFile = <string>'';
+	currentLang = <string>'';
 
 	constructor(private router: Router,
 				private i18nService: I18nService,
@@ -30,6 +32,10 @@ export class HeaderComponent implements OnInit {
 				private streamFitService: StreamFitService) { }
 
 	ngOnInit() {
+		this.username = localStorage.getItem('userNameDataCube');
+		this.languages = this.listLanguages;
+		this.currentLang = this.currentLanguage;
+		console.log(this.currentLang);
 		this.searchFileService.getSearchList()
 		.subscribe(data => {
 			this.fitsTab = data;
@@ -38,6 +44,7 @@ export class HeaderComponent implements OnInit {
 	}
 
 	logout() {
+		localStorage.clear();
 		this.authenticationService.logout()
 		  .subscribe(() => this.router.navigate(['/login'], { replaceUrl: true }));
 	  }
@@ -62,13 +69,14 @@ export class HeaderComponent implements OnInit {
 
 	setLanguage(language: string) {
 		this.i18nService.language = language;
+		this.currentLang = language;
 	}
 
 	get currentLanguage(): string {
 		return this.i18nService.language;
 	}
 
-	get languages(): string[] {
+	get listLanguages(): string[] {
 		return this.i18nService.supportedLanguages;
 	}
 }

@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   error: string;
   loginForm: FormGroup;
   isLoading = false;
+  auth = '';
 
   constructor(private router: Router,
               private formBuilder: FormBuilder,
@@ -31,18 +32,12 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.isLoading = true;
-    this.authenticationService.login(this.loginForm.value)
-      .pipe(finalize(() => {
-        this.loginForm.markAsPristine();
+    this.auth = this.authenticationService.login(this.loginForm.value)
+    console.log(localStorage.getItem('userNameDataCube'));
+      if(this.auth=='no_auth'){
         this.isLoading = false;
-      }))
-      .subscribe(credentials => {
-        log.debug(`${credentials.username} successfully logged in`);
-        this.router.navigate(['/'], { replaceUrl: true });
-      }, error => {
-        log.debug(`Login error: ${error}`);
-        this.error = error;
-      });
+        this.error = 'Username Incorrect';
+      }
   }
 
   setLanguage(language: string) {

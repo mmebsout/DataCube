@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/finally';
 
 import { Component, OnInit, NgZone } from '@angular/core';
-
+import { TranslateService } from '@ngx-translate/core';
 import { QuoteService } from './quote.service';
 
 @Component({
@@ -12,30 +12,35 @@ import { QuoteService } from './quote.service';
 export class HomeComponent implements OnInit {
 
 	quote: string;
-	isLoading = <boolean>true;
+	isLoadingCube = <boolean>true;
 	isLoadingHisto = <boolean>true;
 	isLoadingSpectre = <boolean>true;
 	isLoadingDesc = <boolean>true;
 	newFilterReset: any;
 	newImage: any;
 	newHmax: any;
-	messageDataCube = <string> 'Module DataCube is loading';
-	messageHistogramme = <string> 'Module Histogram is loading';
-	messageSpectre = <string> 'Module Spectre is loading';
-	messageDesc = <string> 'Module Description is loading';
-
+	messageDataCubeLoading = <string> '';
+	messageHistogrammeLoading = <string> '';
+	messageSpectreLoading = <string> '';
+	messageDescLoading = <string> '';
 
 	/**
 	 * Constructor of home component
 	 * @constructor
 	 */
-	constructor(private quoteService: QuoteService, private ngZone: NgZone) {}
+	constructor(private quoteService: QuoteService, private ngZone: NgZone, private translateService: TranslateService) {}
 
 	/**
 	 * Initialize the responsive web design for all components
 	 * @function ngOnInit
 	 */
 	ngOnInit() {
+		this.translateService.get(['messageDataCubeLoading','messageHistogrammeLoading','messageSpectreLoading','messageDescLoading']).subscribe((res: any) => {
+			this.messageDataCubeLoading = res.messageDataCubeLoading;
+			this.messageHistogrammeLoading = res.messageHistogrammeLoading;
+			this.messageSpectreLoading = res.messageSpectreLoading;
+			this.messageDescLoading = res.messageDescLoading;
+		  });
 		const d3 = Plotly.d3;
 
 		const WIDTH_IN_PERCENT_OF_PARENT = 100,
@@ -81,7 +86,7 @@ export class HomeComponent implements OnInit {
 	 * @param {any} event - event emitter who return a boolean
 	 */
 	loadingChange(event: any) {
-		this.isLoading = event;
+		this.isLoadingCube = event;
 		this.isLoadingHisto = event;
 		this.isLoadingSpectre = event;
 		this.isLoadingDesc = event;

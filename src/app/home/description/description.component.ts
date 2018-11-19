@@ -3,6 +3,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { I18nService } from '../../core/i18n.service';
 import {NgbAccordionConfig} from '@ng-bootstrap/ng-bootstrap';
 import { MetadataService } from './metadata.service';
+import { LoaderService } from '../../core/loader.service';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { Fit } from '../../shared/classes/fit';
 
@@ -16,6 +17,7 @@ export class DescriptionComponent implements OnInit {
 	@Output()
 	descLoadingStatus: EventEmitter<boolean> = new EventEmitter<boolean>(); 
 
+	mustBeLoaded : boolean;
 	objectKeys = Object.keys;
 	isLoadingDesc = <boolean>true;
 	currentSlide: any = new Fit(null);
@@ -42,8 +44,10 @@ export class DescriptionComponent implements OnInit {
 		private i18nService: I18nService,
 		config: NgbAccordionConfig,
 		private streamFitService: StreamFitService,
+		private loaderService: LoaderService,
 		private metadataService: MetadataService) {
-
+		this.mustBeLoaded = this.loaderService.description;
+		console.log('Description must be loaded : ',this.mustBeLoaded);
 		config.closeOthers = true;
 		config.type = 'info';
 
