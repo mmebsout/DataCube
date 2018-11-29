@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   error: string;
   loginForm: FormGroup;
   isLoading = false;
-  auth = '';
+  auth = true;
 
   constructor(private router: Router,
               private formBuilder: FormBuilder,
@@ -32,12 +32,12 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.isLoading = true;
-    this.auth = this.authenticationService.login(this.loginForm.value)
-    console.log(localStorage.getItem('userNameDataCube'));
-      if(this.auth=='no_auth'){
-        this.isLoading = false;
-        this.error = 'Username Incorrect';
-      }
+    if(this.authenticationService.login(this.loginForm.value)){
+          console.log(localStorage.getItem('userNameDataCube'));
+          this.isLoading = false;
+          this.error = 'Username Incorrect';
+    };
+    
   }
 
   setLanguage(language: string) {

@@ -47,7 +47,7 @@ export class AuthenticationService {
    * @return {Observable<Credentials>} The user credentials.
    */
   login(context: LoginContext) : any{
-    let auth = <boolean>false;
+    let auth = <boolean>true;
     let promise = new Promise((resolve, reject) => {
       let apiURL = '/identification';
       this.http.post(apiURL,{username:context.username,password:context.password})
@@ -56,13 +56,11 @@ export class AuthenticationService {
             auth = response.json();
             if(auth){
               localStorage.setItem('userNameDataCube',context.username);
-              //log.debug(`${credentials.username} successfully logged in`);
               this.router.navigate(['/'], { replaceUrl: true });
               this.setCredentials({
               username: context.username,
               token: '123456'
               }, context.remember);
-              //log.debug(`${context.username} successfully logged in`);
             }else{
               localStorage.removeItem('userNameDataCube');
             }
