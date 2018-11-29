@@ -1,0 +1,69 @@
+{
+  "name": "jquery-boilerplate",
+  "version": "4.1.0",
+  "description": "A jump-start for jQuery plugins development.",
+  "keywords": [
+    "jquery-plugin",
+    "jquery",
+    "boilerplate",
+    "plugins"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jquery-boilerplate/jquery-boilerplate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jquery-boilerplate/jquery-boilerplate/issues"
+  },
+  "author": {
+    "name": "Zeno Rocha",
+    "email": "zno.rocha@gmail.com",
+    "url": "https://github.com/zenorocha"
+  },
+  "homepage": "http://jqueryboilerplate.com",
+  "contributors": [
+    {
+      "name": "Zeno Rocha",
+      "email": "zno.rocha@gmail.com",
+      "url": "https://github.com/zenorocha"
+    },
+    {
+      "name": "Addy Osmani",
+      "email": "addyosmani@gmail.com",
+      "url": "https://github.com/addyosmani"
+    },
+    {
+      "name": "Helder Santana",
+      "email": "heldr@me.com",
+      "url": "https://github.com/heldr"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">=1.5.1",
+    "basket.js": "0.5.2"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.3",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-coffee": "^2.0.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jshint": "^2.0.0",
+    "grunt-contrib-uglify": "^4.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-jscs": "^3.0.1",
+    "grunt-karma": "^3.0.0",
+    "jscs": "^3.0.7",
+    "karma": "^3.0.0",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-qunit": "^0.1.5",
+    "phantomjs": "^1.9.18",
+    "qunitjs": "^1.19.0"
+  },
+  "scripts": {
+    "jscs": "jscs src",
+    "test": "npm run jscs && grunt travis --verbose"
+  }
+}
