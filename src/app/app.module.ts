@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { APP_BASE_HREF, Location } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -8,6 +9,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
+
 import { AppRoutingModule } from './app-routing.module';
 
 import { LoginModule } from './login/login.module';
@@ -15,7 +17,6 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeModule } from './home/home.module';
 import { AboutModule } from './about/about.module';
-
 
 @NgModule({
   imports: [
@@ -33,7 +34,9 @@ import { AboutModule } from './about/about.module';
 	BrowserAnimationsModule
   ],
   declarations: [AppComponent],
-  providers: [],
+  providers: [
+    { provide: APP_BASE_HREF, useValue: window['_app_base'] || '/DataCube/' },
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
