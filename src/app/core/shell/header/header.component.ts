@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../authentication/authentication.servi
 import { SearchFileService } from '../../../shared/services/search-file.service';
 import { StreamFitService } from '../../../shared/services/stream-fit.service';
 import { Fit } from '../../../shared/classes/fit';
+import { environment } from '../../../../environments/environment';
 
 const log = new Logger('searchFileService');
 
@@ -24,6 +25,7 @@ export class HeaderComponent implements OnInit {
 	languages = <any>[];
 	fitFile = <string>'';
 	currentLang = <string>'';
+	imgPath = <string>'';
 
 	constructor(private router: Router,
 				private i18nService: I18nService,
@@ -32,6 +34,7 @@ export class HeaderComponent implements OnInit {
 				private streamFitService: StreamFitService) { }
 
 	ngOnInit() {
+		this.imgPath = environment.imgPath;
 		this.username = localStorage.getItem('userNameDataCube');
 		this.languages = this.listLanguages;
 		this.currentLang = this.currentLanguage;
