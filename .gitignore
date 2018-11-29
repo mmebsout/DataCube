@@ -2,4 +2,6 @@ nodes_modules/
 node_modules/
 documentation/
 dist/
+plugin/node_modules/
+plugin/dist/
 
