@@ -22,15 +22,8 @@ export class DescriptionComponent implements OnInit {
 	isLoadingDesc = <boolean>true;
 	currentSlide: any = new Fit(null);
 	metadatas: any = [];
-
-	localisation = {
-		name: 'm31',
-		constellation: 'andromeda'
-	};
-
-	type = {
-		class: 'star'
-	};
+	localisation: any = {};
+	object_type: any = {};
 
 	/**
 	 * Constructor of description component
@@ -68,6 +61,8 @@ export class DescriptionComponent implements OnInit {
 			.subscribe((metadata: any) => {
 				console.log('metadata', metadata);
 				this.metadatas = metadata.feature.properties.metadata;
+				this.localisation = metadata.feature.properties.localisation;
+				this.object_type = metadata.feature.properties.object_type;
 			});
 	}
 
