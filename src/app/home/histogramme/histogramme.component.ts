@@ -38,6 +38,8 @@ export class HistogrammeComponent implements OnInit {
 	hmax = <number>0;
 	isLoadingHisto = <boolean> true;
 	filterBy: any;
+	histogramme : any = [];
+	traceAdded = <boolean>false;
 
 
 	/**
@@ -74,13 +76,13 @@ export class HistogrammeComponent implements OnInit {
 				this.slideData = slideData;
 				console.log(this.slideData);
 				this.image = this.slideData.feature.properties.slide.value;
+				console.log(this.image);
 				let max = 0, tmax = 0, min = 0, tmin = 0;
 				let val = <any>[];
 				const colorLength = 256;
 				this.image.map((xi: any, i: number) => {
 					max = Math.max.apply(null, xi);
 					min = Math.min.apply(null, xi);
-
 					if (max > tmax) {
 						tmax = max;
 					}
@@ -101,7 +103,7 @@ export class HistogrammeComponent implements OnInit {
 				}
 
 				let hmax = Number.MIN_VALUE;
-
+				
 				for (let i = 0; i < val.length; i++) {
 					const bin = Math.floor(colorLength * (val[i] - tmin) / (tmax - tmin));
 					hist[bin]++;
@@ -122,11 +124,120 @@ export class HistogrammeComponent implements OnInit {
 	}
 
 	/**
+	 * Delete transfer function
+	 * @function deleteTransferFunction
+	 */
+	deleteTransferFunction() {
+		if(this.activeAsin || this.activeExpo || this.activeLinear || this.activeSqr) {
+			Plotly.deleteTraces('histogramme', 1).then(() => {});
+		}		
+	}
+
+	/**
+	 * Draw transfer function
+	 * @function drawTransferFunction
+	 */
+	drawTransferFunction() {
+		if (this.traceAdded) {
+			this.deleteTransferFunction();
+		}
+		let spline : any = [];
+		let tmp_value = 0;
+		let nbBins = this.histogramme.length;
+		for (let i = 0; i < this.histogramme.length; i++) {
+			let value = this.histogramme[i];
+			if(this.activeLinear){
+				tmp_value = (value / nbBins) * 255;
+			}
+			else if(this.activeExpo){
+				tmp_value =
+                        (Math.log(value / 10.0 + 1) /
+                            Math.log(nbBins / 10.0 + 1)) *
+                        255;
+			}
+			else if(this.activeSqr){
+				tmp_value =
+				(Math.pow(value, 2) / Math.pow(nbBins, 2)) * 255;
+			}
+			else if(this.activeAsin){
+				tmp_value =
+				(Math.log(value + Math.sqrt(Math.pow(value, 2) + 1.0)) /
+					Math.log(
+						nbBins + Math.sqrt(Math.pow(nbBins, 2) + 1.0)
+					)) *
+					255;
+			}
+			else{
+				tmp_value = (value / nbBins) * 255;
+			}
+			spline.push(tmp_value);
+		}
+		console.log('spline',spline);
+		let x = Array[this.histogramme.length];
+		let splineData = [
+			{
+				x: x,
+				y: spline,
+				line: {shape: 'spline'},
+				type: 'scatter',
+				name: 'trace function',
+				id: 'spline_histo'
+			}
+		];
+		Plotly.addTraces('histogramme', splineData);
+		this.traceAdded = true;
+	}
+
+
+	/**
+	 * Compute Values To DataCube After Threshold
+	 * @function computeValuesToDataCubeAfterThreshold
+	 */
+	computeValuesToDataCubeAfterThreshold(range : any) {
+		console.log("computeValuesToDataCube");
+		console.log(this.image);
+		let newImageAfterThreshold: any = [];
+		if(range == undefined){
+			range = {min:0,max:255};
+		}
+
+
+		newImageAfterThreshold = this.image.map((xi: any, i: number) => {
+			return xi.map((ji: any) => {
+				console.log();
+				let tmp = 0;
+				if(this.activeLinear){
+					tmp = (ji - range.min ) / (range.max - range.min) * 255;
+				}
+				else if(this.activeExpo){
+					tmp = Math.sqrt(ji - range.min + 1) / Math.sqrt(range.max - range.min + 1);
+				}
+				else if(this.activeSqr){
+					tmp = Math.exp(ji - range.min + 1) / Math.exp(range.max - range.min + 1);
+				}
+				else if(this.activeAsin){
+					tmp = Math.asin(ji - range.min + 1) / Math.asin(range.max - range.min + 1);
+				}
+				else{
+					tmp = (ji - range.min ) / (range.max - range.min) * 255;
+				}
+				return tmp;
+			});
+		});
+
+		this.newImageEmitter.emit(newImageAfterThreshold);
+		console.log ('Image after threshold : ', newImageAfterThreshold);
+
+		
+	}
+
+	/**
 	 * Histogram Setter Function
 	 * @function setHistogram
 	 * @param {any} x - X Axis array
 	 */
 	setHistogram(x: any) {
+		this.histogramme = x;
 		const data = [
 			{
 				x: x,
@@ -165,6 +276,9 @@ export class HistogrammeComponent implements OnInit {
 			range.min = eventData['xaxis.range[0]'];
 			range.max = eventData['xaxis.range[1]'];
 			console.log('ranger ====>', range);
+			if(range.min !== undefined){
+				this.computeValuesToDataCubeAfterThreshold(range);
+			}			
 			return range;
 		});
 	}
@@ -192,6 +306,7 @@ export class HistogrammeComponent implements OnInit {
 		this.newImageEmitter.emit(newImageLinear);
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
+		this.drawTransferFunction();
 		console.log ('Linear Image: ', newImageLinear);
 	}
 
@@ -217,6 +332,7 @@ export class HistogrammeComponent implements OnInit {
 		this.newImageEmitter.emit(newImageExpo);
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
+		this.drawTransferFunction();
 		console.log ('Sqrt Image: ', newImageExpo);
 	}
 
@@ -241,6 +357,7 @@ export class HistogrammeComponent implements OnInit {
 		this.newImageEmitter.emit(newImageSqr);
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
+		this.drawTransferFunction();
 	}
 
 	/**
@@ -265,6 +382,7 @@ export class HistogrammeComponent implements OnInit {
 		this.newImageEmitter.emit(newImageAsin);
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
+		this.drawTransferFunction();
 	}
 
 	/**
@@ -272,11 +390,12 @@ export class HistogrammeComponent implements OnInit {
 	 * @function resetHisto
 	 */
 	resetHisto() {
+		this.deleteTransferFunction();
 		this.activeExpo = false;
 		this.activeLinear = false;
 		this.activeAsin = false;
 		this.activeSqr = false;
-
+		this.traceAdded = false;		
 		this.newImageEmitter.emit(this.slideData);
 		this.newResetEmitter.emit(null);
 	}
