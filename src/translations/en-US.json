@@ -38,5 +38,6 @@
   "Password" : "Password",
   "RememberMe" : "Remember me",
   "Login" : "Login",
-  "PasswordRequired" : "Password is required"
+  "PasswordRequired" : "Password is required",
+  "Opacity" : "Opacity"
 }

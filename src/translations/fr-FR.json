@@ -38,5 +38,6 @@
   "Password" : "Mot de passe",
   "RememberMe" : "Se souvenir des identifiants",
   "Login" : "Connexion",
-  "PasswordRequired" : "Mot de passe obligatoire"
+  "PasswordRequired" : "Mot de passe obligatoire",
+  "Opacity" : "Opacité"
 }
