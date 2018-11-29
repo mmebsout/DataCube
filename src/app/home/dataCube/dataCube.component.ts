@@ -47,6 +47,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	slideData: any = [];
 	fileType: any = [];
 	val =  <number>1;
+	val_opacity = <number>1.00;
 	nbSlides =  <number>1;
 	slideTrace = <number>0;
 	currentSlide: any = new Fit(null);
@@ -57,6 +58,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	filterImage: any = null;
 	colors: any = [];
 	traceNumberSubscription: Subscription;
+	slideLoaded : number = 1;
 	
 
 	/**
@@ -99,7 +101,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	}
 
 	ngOnInit() {
-
+		this.initSlide();
 	}
 
 	/**
@@ -107,7 +109,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @function ngOnInit
 	 */
 	ngAfterViewInit() {
-		this.initSlide();
+		
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -133,6 +135,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				this.dataCubeLoadingStatus.emit(false);
 			})
 			.subscribe((dimensions: any) => {
+				console.log(dimensions);
 				this.nbSlides = dimensions.feature.properties.dimensions.dimZ;
 				this.world = dimensions.feature.properties.dimensions;
 
@@ -184,6 +187,54 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			});
 	}
 
+/**
+	 * DataCube slider for slide opacity
+	 * @function sliderSelectOpacity
+	 */
+	sliderSelectOpacity(long: any, lat: any) {
+		Plotly.restyle(this.graphId, 'opacity', this.val_opacity, [0]);
+	 	let id : number = 0;
+		id = Number(this.val.toFixed()) + 1;
+		if(this.val_opacity<1 && id <= this.nbSlides && (this.slideLoaded != id)){			
+			console.log("idTranche loaded: ",id);
+			this.slideService
+			.getNextTranche({id: this.currentSlide.name}, {idTranche: id})
+			.finally(() => {})
+			.subscribe((figure: any) => {
+				this.slideData = figure.feature.properties.slide.value;
+			});
+			this.slideLoaded = id;
+			const text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
+			Long & Lat:<br> (${yi} , ${xi})`));
+			const sliderData = 
+			{
+				z: this.slideData,
+				hoverinfo: 'z+text',
+				zsmooth: 'best',
+				type: 'heatmap',
+				text: text,
+				colorbar: {
+					thickness: 15,
+					xpad: 5
+				},
+				showscale : false
+			};
+			console.log("avant delete :");
+			this.dataTraces.map((obj: any, index: number) => {
+				console.log(obj);
+			});
+			if(this.dataTraces.length == 2){
+				this.deleteCurrentGraph();
+			}			
+			Plotly.addTraces(this.graphId, sliderData);
+			Plotly.restyle(this.graphId, 'opacity', 0.6 , [1]);
+			console.log("apres delete :");
+			this.dataTraces.map((obj: any, index: number) => {
+				console.log(obj);
+			});
+		} 
+	}
+
 	/**
 	 * DataCube slider for slide image function
 	 * @function sliderSelectSlide
@@ -204,6 +255,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				this.currentTranche = indexVal;
 			})
 			.subscribe((figure: any) => {
+				console.log("figure");
+				console.log(figure);
 				const img = figure.feature.properties.slide.value;
 			if (this.newFilterReset) {
 				switch (this.newFilterReset) {
@@ -244,6 +297,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			this.deleteCurrentGraph();
 
 			Plotly.addTraces(this.graphId, sliderData);
+			Plotly.restyle(this.graphId, 'opacity', this.val_opacity, [0]);
 			console.log('Data Trace SLIDER', this.dataTraces);
 		});
 	}
@@ -349,6 +403,10 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		});
 	}
 
+	/**
+	 * Share click legend to spectre (change visibility)
+	 * @function resetPlots
+	 */
 	changeVisibleTrace(): void{
 		const _cubeToSpectreService = this.cubeToSpectreService, 
 		myPlot = <CustomHTMLElement>document.getElementById(this.graphId);
