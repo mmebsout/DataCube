@@ -7,6 +7,8 @@ import { HomeComponent } from './home.component';
 
 const routes: Routes = Route.withShell([
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'DataCube/home', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'datacube/home', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent, data: { title: extract('Home') } }
 ]);
 
