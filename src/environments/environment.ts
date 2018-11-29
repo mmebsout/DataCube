@@ -12,5 +12,6 @@ export const environment = {
   supportedLanguages: [
 	'en-US',
 	'fr-FR'
-  ]
+  ],
+  imgPath:''
 };
