@@ -18,6 +18,6 @@ export class SearchFileService {
     return this.http.get(routes, { cache: true })
       .map((res: Response) => res.json())
       .map(body => body.response)
-      .catch(() => this.toastr.error('Error, could not load the Fit list files (^___^;)', 'Oops!'));
+      .catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
   }
 }

@@ -32,12 +32,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.isLoading = true;
-    if(this.authenticationService.login(this.loginForm.value)){
-          console.log(localStorage.getItem('userNameDataCube'));
-          this.isLoading = false;
-          this.error = 'Username Incorrect';
-    };
-    
+    if(this.authenticationService.login(this.loginForm.value)){};    
   }
 
   setLanguage(language: string) {

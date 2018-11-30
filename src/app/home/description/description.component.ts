@@ -6,6 +6,7 @@ import { MetadataService } from './metadata.service';
 import { LoaderService } from '../../core/loader.service';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { Fit } from '../../shared/classes/fit';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
   selector: 'app-description',
@@ -38,14 +39,13 @@ export class DescriptionComponent implements OnInit {
 		config: NgbAccordionConfig,
 		private streamFitService: StreamFitService,
 		private loaderService: LoaderService,
-		private metadataService: MetadataService) {
-		this.mustBeLoaded = this.loaderService.description;
-		console.log('Description must be loaded : ',this.mustBeLoaded);
+		private metadataService: MetadataService,
+		public toastr: ToastsManager) {
+		this.mustBeLoaded = this.loaderService.description;	
 		config.closeOthers = true;
 		config.type = 'info';
 
 		streamFitService.FitFile$.subscribe(fit => {
-			console.log('reception Fit', fit);
 			this.currentSlide = new Fit(fit);
 			this.ngOnInit();
 		});
@@ -59,10 +59,14 @@ export class DescriptionComponent implements OnInit {
 			.getMetadata({id: this.currentSlide.name})
 			.finally(() => { this.descLoadingStatus.emit(false); })
 			.subscribe((metadata: any) => {
-				console.log('metadata', metadata);
-				this.metadatas = metadata.feature.properties.metadata;
-				this.localisation = metadata.feature.properties.localisation;
-				this.object_type = metadata.feature.properties.object_type;
+				if(metadata instanceof Object) {
+					this.metadatas = metadata.feature.properties.metadata;
+					this.localisation = metadata.feature.properties.localisation;
+					this.object_type = metadata.feature.properties.object_type;
+				}				
+				else {
+					this.toastr.error(metadata, 'Oops!')
+				}
 			});
 	}
 

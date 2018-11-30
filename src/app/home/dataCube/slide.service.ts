@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import 'rxjs/add/operator/catch';
 
 const routes = {
   slide: (s: slides) => `/slide?entry=${s.id}&posZ=0`,
@@ -29,13 +30,13 @@ export class SlideService {
 		return this.http.get(routes.slide(id), { cache: false })
 				.map((res: Response) => res.json())
 				.map(body => body.response)
-				.catch(() => this.toastr.error('Error, could not load the slide :-(', 'Oops!'));
+				.catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
 	}
 
 	getNextTranche(id: slides, idTranche: tranches): Observable<string> {
 		return this.http.get(routes.tranche(id, idTranche), {cache: false})
 						.map((res: Response) => res.json())
 						.map(body => body.response)
-						.catch(() => this.toastr.error('Error, could not load this specific slide :-(', 'Oops!'));
+						.catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
 	}
 }

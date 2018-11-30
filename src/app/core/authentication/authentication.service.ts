@@ -47,14 +47,13 @@ export class AuthenticationService {
    * @return {Observable<Credentials>} The user credentials.
    */
   login(context: LoginContext) : any{
-    let auth = <boolean>true;
+    let auth = <any>{};
     let promise = new Promise((resolve, reject) => {
       let apiURL = '/identification';
       this.http.post(apiURL,{username:context.username,password:context.password})
         .subscribe((response: Response) =>{
-            console.log(response.json());
             auth = response.json();
-            if(auth){
+           if(auth.message == true){
               localStorage.setItem('userNameDataCube',context.username);
               this.router.navigate(['/'], { replaceUrl: true });
               this.setCredentials({

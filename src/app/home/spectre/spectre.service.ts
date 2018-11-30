@@ -29,6 +29,6 @@ export class SpectreService {
 		return this.http.get(routes.spectre(id, naxis), { cache: true })
 				.map((res: Response) => res.json())
 				.map(body => body.response)
-				.catch(() => this.toastr.error('Error, could not load the spectre :-(', 'Oops!'));
+				.catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
 	}
 }

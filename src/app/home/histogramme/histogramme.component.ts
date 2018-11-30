@@ -55,9 +55,7 @@ export class HistogrammeComponent implements OnInit {
 		private loaderService: LoaderService,
 		private streamFitService: StreamFitService) {
 		this.mustBeLoaded = this.loaderService.histogramme;
-		console.log('Histogramme must be loaded : ',this.mustBeLoaded);
 		streamFitService.FitFile$.subscribe(fit => {
-			console.log('reception Fit', fit);
 			this.currentSlide = new Fit(fit);
 			this.ngOnInit();
 		});
@@ -74,52 +72,51 @@ export class HistogrammeComponent implements OnInit {
 			})
 			.subscribe(slideData => {
 				this.slideData = slideData;
-				console.log(this.slideData);
-				this.image = this.slideData.feature.properties.slide.value;
-				console.log(this.image);
-				let max = 0, tmax = 0, min = 0, tmin = 0;
-				let val = <any>[];
-				const colorLength = 256;
-				this.image.map((xi: any, i: number) => {
-					max = Math.max.apply(null, xi);
-					min = Math.min.apply(null, xi);
-					if (max > tmax) {
-						tmax = max;
-					}
-
-					if (min < tmin) {
-						tmin = min;
-					}
-
-					xi.map((ji: any, j: number) => {
-						val.push(ji);
+				if(this.slideData.feature instanceof Object) {
+					this.image = this.slideData.feature.properties.slide.value;
+					let max = 0, tmax = 0, min = 0, tmin = 0;
+					let val = <any>[];
+					const colorLength = 256;
+					this.image.map((xi: any, i: number) => {
+						max = Math.max.apply(null, xi);
+						min = Math.min.apply(null, xi);
+						if (max > tmax) {
+							tmax = max;
+						}
+	
+						if (min < tmin) {
+							tmin = min;
+						}
+	
+						xi.map((ji: any, j: number) => {
+							val.push(ji);
+						});
 					});
-				});
-
-				let hist = new Array(colorLength);
-
-				for (let i = 0; i < colorLength; i++) {
-					hist[i] = 0;
-				}
-
-				let hmax = Number.MIN_VALUE;
-				
-				for (let i = 0; i < val.length; i++) {
-					const bin = Math.floor(colorLength * (val[i] - tmin) / (tmax - tmin));
-					hist[bin]++;
-
-					// Compute histogram max value
-					if (hist[bin] > this.hmax) {
-						this.hmax = hist[bin];
+	
+					let hist = new Array(colorLength);
+	
+					for (let i = 0; i < colorLength; i++) {
+						hist[i] = 0;
 					}
+	
+					let hmax = Number.MIN_VALUE;
+					
+					for (let i = 0; i < val.length; i++) {
+						const bin = Math.floor(colorLength * (val[i] - tmin) / (tmax - tmin));
+						hist[bin]++;
+	
+						// Compute histogram max value
+						if (hist[bin] > this.hmax) {
+							this.hmax = hist[bin];
+						}
+					}
+				
+					if(this.mustBeLoaded){
+						this.setHistogram(hist);
+						const r = this.getRange();
+					}	
 				}
-				console.log('val length:', val.length);
-				console.log('nbBins', hmax);
-				if(this.mustBeLoaded){
-					this.setHistogram(hist);
-					const r = this.getRange();
-					console.log('range ==>', r);
-				}				
+			
 			});
 	}
 
@@ -172,7 +169,6 @@ export class HistogrammeComponent implements OnInit {
 			}
 			spline.push(tmp_value);
 		}
-		console.log('spline',spline);
 		let x = Array[this.histogramme.length];
 		let splineData = [
 			{
@@ -194,7 +190,6 @@ export class HistogrammeComponent implements OnInit {
 	 * @function computeValuesToDataCubeAfterThreshold
 	 */
 	computeValuesToDataCubeAfterThreshold(range : any) {
-		console.log("computeValuesToDataCube");
 		console.log(this.image);
 		let newImageAfterThreshold: any = [];
 		if(range == undefined){
@@ -204,7 +199,6 @@ export class HistogrammeComponent implements OnInit {
 
 		newImageAfterThreshold = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				console.log();
 				let tmp = 0;
 				if(this.activeLinear){
 					tmp = (ji - range.min ) / (range.max - range.min) * 255;
@@ -225,10 +219,7 @@ export class HistogrammeComponent implements OnInit {
 			});
 		});
 
-		this.newImageEmitter.emit(newImageAfterThreshold);
-		console.log ('Image after threshold : ', newImageAfterThreshold);
-
-		
+		this.newImageEmitter.emit(newImageAfterThreshold);	
 	}
 
 	/**
@@ -275,7 +266,7 @@ export class HistogrammeComponent implements OnInit {
 		myHisto.on('plotly_relayout', (eventData: any) => {
 			range.min = eventData['xaxis.range[0]'];
 			range.max = eventData['xaxis.range[1]'];
-			console.log('ranger ====>', range);
+			
 			if(range.min !== undefined){
 				this.computeValuesToDataCubeAfterThreshold(range);
 			}			
@@ -295,8 +286,6 @@ export class HistogrammeComponent implements OnInit {
 		let newImageLinear: any = [];
 		this.filterBy = 'linear';
 
-		console.log ('Image: ', this.image);
-
 	 	newImageLinear = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
 				return ji = ( ji / 256 ) * this.hmax
@@ -307,7 +296,6 @@ export class HistogrammeComponent implements OnInit {
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
 		this.drawTransferFunction();
-		console.log ('Linear Image: ', newImageLinear);
 	}
 
 	/**
@@ -322,7 +310,6 @@ export class HistogrammeComponent implements OnInit {
 		let newImageExpo: any = [];
 		this.filterBy = 'expo';
 
-		console.log ('Image: ', this.image);
 	 	newImageExpo = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
 				return ji = Math.sqrt(ji / 10.0) / Math.sqrt(256 / 10.0) * this.hmax;
@@ -333,7 +320,6 @@ export class HistogrammeComponent implements OnInit {
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
 		this.drawTransferFunction();
-		console.log ('Sqrt Image: ', newImageExpo);
 	}
 
 	/**

@@ -45,19 +45,14 @@ export class SpectreComponent implements OnInit {
 				private loaderService: LoaderService,
 				private spectreService: SpectreService) {
 		this.mustBeLoaded = this.loaderService.spectre;
-		console.log('Spectre must be loaded ', this.mustBeLoaded);
 		if(this.mustBeLoaded){
 			streamFitService.FitFile$.subscribe(fit => {
-				console.log('reception Fit', fit);
 				this.currentSlide = new Fit(fit);
 				this.ngOnInit();
 			});
 		}		
 
-		console.log('constructor spectre', cubeToSpectreService.CubePointCoord$);
-		this.subscription = cubeToSpectreService.CubePointCoord$.subscribe(coord => {
-			console.log('im in');
-			console.log('coordSpectre', coord);
+		this.subscription = cubeToSpectreService.CubePointCoord$.subscribe(coord => {		
 			this.dataCubePoint = coord;
 			this.lastTrace++;
 
@@ -68,7 +63,6 @@ export class SpectreComponent implements OnInit {
 				.subscribe((spectreData: any) => {
 					this.spectreData = spectreData;
 					if(this.mustBeLoaded){
-						console.log('Spectre Data:', spectreData);
 						this.spectreName++;
 						this.spectreData = [
 							{
@@ -91,7 +85,6 @@ export class SpectreComponent implements OnInit {
 
 		this.resetSubscription = cubeToSpectreService.ResetGraph$.subscribe(reset => {
 			if (reset) {
-				console.log('reset in progress');
 				let nbSpectreTraces = this.lastTrace;
 				const	tabToDelete = <any>[];
 
@@ -107,9 +100,7 @@ export class SpectreComponent implements OnInit {
 		});
 
 		this.traceNumberSubscription = cubeToSpectreService.CubeTrace$.subscribe(traceNumber => {
-			console.log('Into spectre : spectre number : ', traceNumber);
 			const graphDiv = <CustomHTMLElement>document.getElementById('graphDiv');
-			console.log(graphDiv.data[traceNumber-1].visible);
 			if(graphDiv.data[traceNumber-1].visible == undefined || graphDiv.data[traceNumber-1].visible == true){
 				graphDiv.data[traceNumber-1].visible = false;
 			}
@@ -146,6 +137,10 @@ export class SpectreComponent implements OnInit {
 		} */
 	}
 
+	/**
+	 * Actions made after the init view
+	 * @function ngAfterViewInit
+	 */
 	ngAfterViewInit() {
 		if(this.mustBeLoaded){
 			const data: any = [],
@@ -167,23 +162,38 @@ export class SpectreComponent implements OnInit {
 		}
 	  }
 
+	/**
+	 * Send to DataCube the spectre number hidden
+	 * @function changeVisibleTrace
+	 */
 	changeVisibleTrace(): void{
 		const _cubeToSpectreService = this.cubeToSpectreService, 
 		myPlot = <CustomHTMLElement>document.getElementById('graphDiv');
 		myPlot.on('plotly_legendclick', (data: any) => {
-			console.log('plotly_legendclick', data);
 			_cubeToSpectreService.shareSpectreTraceNumber(data.curveNumber+1);
 		});
 	}
 
+	/**
+	 * Set the language
+	 * @function setLanguage
+	 */
 	setLanguage(language: string) {
 		this.i18nService.language = language;
 	}
 
+	/**
+	 * Get the current language
+	 * @function currentLanguage
+	 */
 	get currentLanguage(): string {
 		return this.i18nService.language;
 	}
 
+	/**
+	 * Get all languages
+	 * @function currentLanguage
+	 */
 	get languages(): string[] {
 		return this.i18nService.supportedLanguages;
 	}

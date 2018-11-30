@@ -53,13 +53,11 @@ export class I18nService {
    * @param {string} language The IETF language code to set.
    */
   set language(language: string) {
-    console.log(localStorage.getItem(languageKey));
     if(localStorage.getItem(languageKey) == null && language == null){
       language = 'en-US';
     } else {
       language = language || this.translateService.getBrowserCultureLang();
     }
-    console.log(language);
     //this.translateService.currentLang = language;
     let isSupportedLanguage = includes(this.supportedLanguages, language);
 

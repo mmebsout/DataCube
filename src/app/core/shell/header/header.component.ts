@@ -38,7 +38,6 @@ export class HeaderComponent implements OnInit {
 		this.username = localStorage.getItem('userNameDataCube');
 		this.languages = this.listLanguages;
 		this.currentLang = this.currentLanguage;
-		console.log(this.currentLang);
 		this.searchFileService.getSearchList()
 		.subscribe(data => {
 			this.fitsTab = data;

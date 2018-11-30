@@ -84,16 +84,13 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				public toastr: ToastsManager,
 				public vcr: ViewContainerRef) {
 		this.mustBeLoaded = this.loaderService.datacube;
-		console.log('Datacube must be loaded ', this.mustBeLoaded);
 		toastr.setRootViewContainerRef(vcr);
 		this.colors = Plotly.PlotSchema.get().layout.layoutAttributes.colorway.dflt;
 		cubeToSpectreService.CubePointCoord$.subscribe(coord => {
 			this.dataCubePoint = coord;
-			console.log('coord', this.dataCubePoint);
 		});
 
 		streamFitService.FitFile$.subscribe(fit => {
-			console.log('reception Fit', fit);
 			this.currentSlide = new Fit(fit);
 			this.ngOnInit();
 		});
@@ -131,21 +128,25 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			.finally(() => {
 				this.translateService.get(['messageDataCube','success']).subscribe((res: any) => {
 					this.toastr.success(res.messageDataCube, res.success);
-				  });
-				this.dataCubeLoadingStatus.emit(false);
+					this.dataCubeLoadingStatus.emit(false);
+				  });				
 			})
 			.subscribe((dimensions: any) => {
-				console.log(dimensions);
-				this.nbSlides = dimensions.feature.properties.dimensions.dimZ;
-				this.world = dimensions.feature.properties.dimensions;
-
-				for (let i = 0; i < this.world.dimX; i++) {
-					this.long.push(i * this.world.stepX + this.world.refLon);
-				}
-
-				for (let j = 0; j < this.world.dimY; j++) {
-					this.lat.push(j * this.world.stepY + this.world.refLat);
-				}
+				if(dimensions.feature instanceof Object) {
+					this.nbSlides = dimensions.feature.properties.dimensions.dimZ;
+					this.world = dimensions.feature.properties.dimensions;
+	
+					for (let i = 0; i < this.world.dimX; i++) {
+						this.long.push(i * this.world.stepX + this.world.refLon);
+					}
+	
+					for (let j = 0; j < this.world.dimY; j++) {
+						this.lat.push(j * this.world.stepY + this.world.refLat);
+					}
+				}	
+				else {
+					this.toastr.error(dimensions, 'Oops!')
+				}			
 			});
 
 		this.slideService
@@ -157,33 +158,33 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				this.dataCubeLoadingStatus.emit(false);
 			})
 			.subscribe(slideData => {
-				this.fileType = slideData;
+					this.fileType = slideData;
+					if(this.fileType.feature instanceof Object) {
 
-				if (this.fileType.feature.properties.fileType !== 'mizar') {
-					this.setPlotly(slideData, this.long, this.lat);
-				} else {
-					// TODO
-					// this.setMizar(slideData);
-				}
-
-				this.selectedCoord();
-				this.changeVisibleTrace();
-				this.traceNumberSubscription = this.cubeToSpectreService.SpectreTrace$.subscribe(traceNumber => {
-					console.log('Into datacube : spectre number : ', traceNumber);
-					console.log(this.mustBeLoaded);
-					//if(this.mustBeLoaded == 'true'){
+					if (this.fileType.feature.properties.fileType !== 'mizar') {
+						this.setPlotly(slideData, this.long, this.lat);
+					} else {
+						// TODO
+						// this.setMizar(slideData);
+					}
+	
+					this.selectedCoord();
+					this.changeVisibleTrace();
+					this.traceNumberSubscription = this.cubeToSpectreService.SpectreTrace$.subscribe(traceNumber => {
 						const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
-						console.log(graphDiv.data[traceNumber].visible);
 						if(graphDiv.data[traceNumber].visible == undefined || graphDiv.data[traceNumber].visible == true){
 							graphDiv.data[traceNumber].visible = false;
 						}
 						else{
 							graphDiv.data[traceNumber].visible = true;
 						}
-						
 						Plotly.redraw(graphDiv);
-					//}					
-				});	
+					});	
+				}
+				else {
+					this.toastr.error(this.fileType, 'Oops!')
+				}
+				
 			});
 	}
 
@@ -196,7 +197,6 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 	let id : number = 0;
 		id = Number(this.val.toFixed()) + 1;
 		if(this.val_opacity<1 && id <= this.nbSlides && (this.slideLoaded != id)){			
-			console.log("idTranche loaded: ",id);
 			this.slideService
 			.getNextTranche({id: this.currentSlide.name}, {idTranche: id})
 			.finally(() => {})
@@ -254,9 +254,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				}				
 				this.currentTranche = indexVal;
 			})
-			.subscribe((figure: any) => {
-				console.log("figure");
-				console.log(figure);
+			.subscribe((figure: any) => {			
 				const img = figure.feature.properties.slide.value;
 			if (this.newFilterReset) {
 				switch (this.newFilterReset) {
@@ -298,7 +296,6 @@ export class DataCubeComponent implements OnInit, OnChanges {
 
 			Plotly.addTraces(this.graphId, sliderData);
 			Plotly.restyle(this.graphId, 'opacity', this.val_opacity, [0]);
-			console.log('Data Trace SLIDER', this.dataTraces);
 		});
 	}
 
@@ -315,7 +312,6 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			this.slideData = this.slideData.feature.properties.slide.value;
 		}
 
-		console.log('slideData :', this.slideData);
 		const text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
 			Long & Lat:<br> (${yi} , ${xi})`));
 
@@ -385,7 +381,6 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			  myPlot = <CustomHTMLElement>document.getElementById(this.graphId);
 
 		myPlot.on('plotly_click', (data: any) => {
-			console.log('selectCoord', data);
 			let pn = 0,
 				tn = 0;
 
@@ -398,7 +393,6 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			
 			Plotly.restyle(this.graphId, 'marker.color', this.colors[this.dataTraces.length-2], [this.dataTraces.length-1]);
 
-			console.log('DataTraces', this.dataTraces);
 			_cubeToSpectreService.shareCubePointCoord({coordX: pn, coordY: tn});
 		});
 	}
@@ -411,7 +405,6 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		const _cubeToSpectreService = this.cubeToSpectreService, 
 		myPlot = <CustomHTMLElement>document.getElementById(this.graphId);
 		myPlot.on('plotly_legendclick', (data: any) => {
-			console.log('plotly_legendclick', data);
 			_cubeToSpectreService.shareTraceNumber(data.curveNumber);
 		});
 	}
@@ -442,7 +435,6 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	deleteCurrentGraph() {
 	 	this.dataTraces.map((obj: any, index: number) => {
 			if (obj.type === 'heatmap') {
-				console.log('index', index);
 				return Plotly.deleteTraces(this.graphId, index);
 			}
 		});

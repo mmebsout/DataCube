@@ -9,8 +9,6 @@ export class ImageRecalc {
 	public linear(hmax: any, image: any): void {
 		let newImageLinear: any = [];
 
-		console.log ('Image: ', image);
-
 	 	newImageLinear = image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
 				return ji = ( ji / 256 ) * hmax;
@@ -28,7 +26,6 @@ export class ImageRecalc {
 
 	 	let newImageExpo: any = [];
 
-		console.log ('Image: ', image);
 	 	newImageExpo = image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
 				return ji = Math.sqrt(ji / 10.0) / Math.sqrt(256 / 10.0) * hmax;
