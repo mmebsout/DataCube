@@ -38,6 +38,12 @@ src/                         project source code
 |- main.ts                   app entry point
 |- polyfills.ts              polyfills needed by Angular
 +- test.ts                   unit tests entry point
+plugin/                      plugin javascript source
+|- src/                      plugin source folder
+|  |- vendor/                javascript libraries 
+|- jquery.datacube.js     plugin source
+|- Gruntfile.js              Grunt file
+|- index.html                Demo plugin page
 reports/                     test and coverage reports
 proxy.conf.js                backend proxy configuration
 ```
@@ -55,6 +61,7 @@ Task                            | Description
 `npm run e2e`                   | Run e2e tests using [Protractor](http://www.protractortest.org)
 `npm run lint`                  | Lint code
 `npm run translations:extract`  | Extract strings from code and templates to `src/app/translations/template.json`
+`npm run compodoc`              | Generate project documentation
 `npm run docs`                  | Display project documentation
 
 When building the application, you can specify the target environment using the additional flag `--env <name>` (do not

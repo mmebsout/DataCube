@@ -23,14 +23,14 @@ module.exports = function( grunt ) {
 				banner: "<%= meta.banner %>"
 			},
 			dist: {
-				src: [ "src/jquery.boilerplate.js" ],
-				dest: "dist/libs/jquery.boilerplate.js"
+				src: [ "src/jquery.datacube.js" ],
+				dest: "dist/libs/jquery.datacube.js"
 			}
 		},
 
 		// Lint definitions
 		jshint: {
-			files: [ "src/jquery.boilerplate.js", "test/**/*" ],
+			files: [ "src/jquery.datacube.js", "test/**/*" ],
 			options: {
 				jshintrc: ".jshintrc"
 			}
@@ -46,7 +46,7 @@ module.exports = function( grunt ) {
 		// Minify definitions
 		uglify: {
 			dist: {
-			src: [ "src/vendor/jquery-3.3.1.js", "src/vendor/rsvp.js", "src/vendor/basket.js", "src/jquery.boilerplate.js" ],
+			src: [ "src/vendor/jquery-3.3.1.js", "src/vendor/rsvp.js", "src/vendor/basket.js", "src/jquery.datacube.js" ],
 				dest: "dist/libs/cubeExplorer.full.min.js"
 			},
 			options: {
@@ -58,7 +58,7 @@ module.exports = function( grunt ) {
 		coffee: {
 			compile: {
 				files: {
-					"dist/jquery.boilerplate.js": "src/jquery.boilerplate.coffee"
+					"dist/jquery.datacube.js": "src/jquery.boilerplate.coffee"
 				}
 			}
 		},

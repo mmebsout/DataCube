@@ -1,6 +1,7 @@
 {
-  "name": "cnes",
+  "name": "DataCube",
   "version": "1.0.0",
+  "description": "Manipulation et représentation d'un cube de données",
   "private": true,
   "scripts": {
     "ng": "ng",
@@ -16,6 +17,24 @@
     "env": "ngx-scripts env2json npm_package_version",
     "generate": "ng generate"
   },
+  "keywords": [
+    "cnes",
+    "datacube",
+    "spectre",
+    "histogramme",
+    "cube",
+    "data"
+  ],
+  "author": "CNES",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stephMormes"
+  },
+  "homepage": "http://DataCube/home",
   "dependencies": {
     "@angular/animations": "5.2.7",
     "@angular/common": "^5.2.7",
@@ -29,10 +48,11 @@
     "@ng-bootstrap/ng-bootstrap": "^1.0.0",
     "@ngx-translate/core": "^9.0.1",
     "@types/plotly.js": "^1.28.5",
-    "Mizar": "git+https://github.com/MizarWeb/Mizar.git",
     "bootstrap": "4.0.0-alpha.6",
     "brfs": "1.4.2",
     "core-js": "^2.5.2",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "font-awesome": "^4.7.0",
     "glslify": "^6.1.0",
     "ify-loader": "^1.1.0",
@@ -41,7 +61,8 @@
     "mapbox-gl": "^0.40.1",
     "ng2-slider-component": "1.0.9",
     "ng2-toastr": "^4.1.2",
-    "plotly.js": "^1.30.1",
+    "plotly.js": "^1.42.4",
+    "plotly.js-cartesian-dist": "^1.42.5",
     "primeng": "^4.2.2",
     "rxjs": "^5.5.5",
     "zone.js": "^0.8.12"
@@ -54,7 +75,7 @@
     ]
   },
   "devDependencies": {
-    "@angular/cli": "^1.7.2",
+    "@angular/cli": "^1.7.4",
     "@angular/compiler-cli": "^5.2.7",
     "@angular/language-service": "^5.2.7",
     "@biesbjerg/ngx-translate-extract": "^2.3.4",
