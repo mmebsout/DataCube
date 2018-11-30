@@ -22,6 +22,7 @@ DataCube Plugin allows manipulate and displays DataCube into package NPM
 		appDescription: true
 	});
 	```
+Change parameters values to display the modules (DataCube, Histogramm, Spectrum, Description).
 
 ## Structure
 

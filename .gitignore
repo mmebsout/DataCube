@@ -1,8 +1,8 @@
 nodes_modules/
 node_modules/
 documentation/
-documentation_plugin/
 dist/
 plugin/node_modules/
 plugin/dist/
+plugin/documentation_plugin/
 

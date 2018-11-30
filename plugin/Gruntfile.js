@@ -96,7 +96,14 @@ module.exports = function( grunt ) {
 				dest: 'dist/',
 			  }
 		  },
-		clean: ['dist/']
+		clean: ['dist/', 'documentation_plugin/'],
+		esdoc : {
+			dist : {
+				options: {
+					config: 'esdoc.json'
+				}
+			}
+		}
 
 	} );
 
@@ -109,9 +116,10 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( "grunt-karma" );
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-esdoc');
 
 	grunt.registerTask( "travis", [ "jshint", "karma:travis" ] );
 	grunt.registerTask( "lint", [ "jshint", "jscs" ] );
-	grunt.registerTask( "build", [ "clean","copy", "concat", "uglify" ] );
+	grunt.registerTask( "build", [ "clean", "copy", "concat", "uglify", "esdoc" ] );
 	grunt.registerTask( "default", [ "jshint", "build", "karma:unit:run" ] );
 };

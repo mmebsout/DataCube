@@ -63,6 +63,8 @@ Task                            | Description
 `npm run translations:extract`  | Extract strings from code and templates to `src/app/translations/template.json`
 `npm run compodoc`              | Generate project documentation
 `npm run docs`                  | Display project documentation
+`node_modules/bin/esdoc `
+    `-c plugin/esdoc.json`      | Generate plugin documentation
 
 When building the application, you can specify the target environment using the additional flag `--env <name>` (do not
 forget to prepend `--` to pass arguments to npm scripts).
