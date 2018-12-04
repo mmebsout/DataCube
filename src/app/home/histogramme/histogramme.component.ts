@@ -5,6 +5,7 @@ import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 declare function require(moduleName: string): any;
 const Plotly = require('plotly.js/lib/index-cartesian.js');
@@ -53,7 +54,7 @@ export class HistogrammeComponent implements OnInit {
 		private i18nService: I18nService,
 		private slideService: SlideService,
 		private loaderService: LoaderService,
-		private streamFitService: StreamFitService) {
+		private streamFitService: StreamFitService, public toastr: ToastsManager) {
 		this.mustBeLoaded = this.loaderService.histogramme;
 		streamFitService.FitFile$.subscribe(fit => {
 			this.currentSlide = new Fit(fit);
@@ -71,53 +72,63 @@ export class HistogrammeComponent implements OnInit {
 				this.histoLoadingStatus.emit(false);
 			})
 			.subscribe(slideData => {
-				this.slideData = slideData;
-				if(this.slideData.feature instanceof Object) {
-					this.image = this.slideData.feature.properties.slide.value;
-					let max = 0, tmax = 0, min = 0, tmin = 0;
-					let val = <any>[];
-					const colorLength = 256;
-					this.image.map((xi: any, i: number) => {
-						max = Math.max.apply(null, xi);
-						min = Math.min.apply(null, xi);
-						if (max > tmax) {
-							tmax = max;
-						}
-	
-						if (min < tmin) {
-							tmin = min;
-						}
-	
-						xi.map((ji: any, j: number) => {
-							val.push(ji);
+				let role:  any = null;
+				role = JSON.parse(localStorage.getItem('userNameRole'));
+				console.log(role.roles.public.indexOf(this.currentSlide.name));
+				if((localStorage.getItem('userNameDataCube')=="admin") 
+				|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role.roles.public.indexOf(this.currentSlide.name)!=-1))
+				){
+					this.slideData = slideData;
+					if(this.slideData.feature instanceof Object) {
+						this.image = this.slideData.feature.properties.slide.value;
+						let max = 0, tmax = 0, min = 0, tmin = 0;
+						let val = <any>[];
+						const colorLength = 256;
+						this.image.map((xi: any, i: number) => {
+							max = Math.max.apply(null, xi);
+							min = Math.min.apply(null, xi);
+							if (max > tmax) {
+								tmax = max;
+							}
+		
+							if (min < tmin) {
+								tmin = min;
+							}
+		
+							xi.map((ji: any, j: number) => {
+								val.push(ji);
+							});
 						});
-					});
-	
-					let hist = new Array(colorLength);
-	
-					for (let i = 0; i < colorLength; i++) {
-						hist[i] = 0;
-					}
-	
-					let hmax = Number.MIN_VALUE;
-					
-					for (let i = 0; i < val.length; i++) {
-						const bin = Math.floor(colorLength * (val[i] - tmin) / (tmax - tmin));
-						hist[bin]++;
-	
-						// Compute histogram max value
-						if (hist[bin] > this.hmax) {
-							this.hmax = hist[bin];
+		
+						let hist = new Array(colorLength);
+		
+						for (let i = 0; i < colorLength; i++) {
+							hist[i] = 0;
 						}
+		
+						let hmax = Number.MIN_VALUE;
+						
+						for (let i = 0; i < val.length; i++) {
+							const bin = Math.floor(colorLength * (val[i] - tmin) / (tmax - tmin));
+							hist[bin]++;
+		
+							// Compute histogram max value
+							if (hist[bin] > this.hmax) {
+								this.hmax = hist[bin];
+							}
+						}
+					
+						if(this.mustBeLoaded){
+							this.setHistogram(hist);
+							const r = this.getRange();
+						}	
 					}
-				
-					if(this.mustBeLoaded){
-						this.setHistogram(hist);
-						const r = this.getRange();
-					}	
-				}
-			
-			});
+					}
+					else{
+						this.toastr.error("Forbidden", 'Oops!');		
+					}
+				});
+
 	}
 
 	/**

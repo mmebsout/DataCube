@@ -54,6 +54,7 @@ export class AuthenticationService {
         .subscribe((response: Response) =>{
             auth = response.json();
            if(auth.message == true){
+              localStorage.setItem('userNameRole',JSON.stringify(auth.role));
               localStorage.setItem('userNameDataCube',context.username);
               this.router.navigate(['/'], { replaceUrl: true });
               this.setCredentials({

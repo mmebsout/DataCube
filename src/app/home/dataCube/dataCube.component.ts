@@ -91,8 +91,19 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		});
 
 		streamFitService.FitFile$.subscribe(fit => {
-			this.currentSlide = new Fit(fit);
-			this.ngOnInit();
+
+			let role:  any = null;
+			role = JSON.parse(localStorage.getItem('userNameRole'));
+			console.log(role.roles.public);
+			if((localStorage.getItem('userNameDataCube')=="admin") 
+			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role.roles.public.indexOf(fit)))
+			){
+				this.currentSlide = new Fit(fit);
+				this.ngOnInit();
+			}else{
+				this.toastr.error("Forbidden", 'Oops!')
+			}
+			
 		});
 	
 	}
@@ -123,69 +134,79 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @function initSlide
 	 */
 	initSlide() {
-		this.metadataService
-			.getDimension({id: this.currentSlide.name})
-			.finally(() => {
-				this.translateService.get(['messageDataCube','success']).subscribe((res: any) => {
-					this.toastr.success(res.messageDataCube, res.success);
+		let role:  any = null;
+			role = JSON.parse(localStorage.getItem('userNameRole'));
+			console.log(role.roles.public.indexOf(this.currentSlide.name));
+			if((localStorage.getItem('userNameDataCube')=="admin") 
+			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role.roles.public.indexOf(this.currentSlide.name)!=-1))
+			){
+			this.metadataService
+				.getDimension({id: this.currentSlide.name})
+				.finally(() => {
+					this.translateService.get(['messageDataCube','success']).subscribe((res: any) => {
+						this.toastr.success(res.messageDataCube, res.success);
+						this.dataCubeLoadingStatus.emit(false);
+					});				
+				})
+				.subscribe((dimensions: any) => {
+					if(dimensions.feature instanceof Object) {
+						this.nbSlides = dimensions.feature.properties.dimensions.dimZ;
+						this.world = dimensions.feature.properties.dimensions;
+		
+						for (let i = 0; i < this.world.dimX; i++) {
+							this.long.push(i * this.world.stepX + this.world.refLon);
+						}
+		
+						for (let j = 0; j < this.world.dimY; j++) {
+							this.lat.push(j * this.world.stepY + this.world.refLat);
+						}
+					}	
+					else {
+						this.toastr.error(dimensions, 'Oops!');						
+					}			
+				});
+
+			this.slideService
+				.getSlide({id: this.currentSlide.name})
+				.finally(() => {				
+					this.translateService.get(['cubeExplorerImage','success']).subscribe((res: any) => {
+						this.toastr.success(res.cubeExplorerImage, res.success);
+					});
 					this.dataCubeLoadingStatus.emit(false);
-				  });				
-			})
-			.subscribe((dimensions: any) => {
-				if(dimensions.feature instanceof Object) {
-					this.nbSlides = dimensions.feature.properties.dimensions.dimZ;
-					this.world = dimensions.feature.properties.dimensions;
-	
-					for (let i = 0; i < this.world.dimX; i++) {
-						this.long.push(i * this.world.stepX + this.world.refLon);
-					}
-	
-					for (let j = 0; j < this.world.dimY; j++) {
-						this.lat.push(j * this.world.stepY + this.world.refLat);
-					}
-				}	
-				else {
-					this.toastr.error(dimensions, 'Oops!')
-				}			
-			});
+				})
+				.subscribe(slideData => {
+						this.fileType = slideData;
+						if(this.fileType.feature instanceof Object) {
 
-		this.slideService
-			.getSlide({id: this.currentSlide.name})
-			.finally(() => {				
-				this.translateService.get(['cubeExplorerImage','success']).subscribe((res: any) => {
-					this.toastr.success(res.cubeExplorerImage, res.success);
-				  });
-				this.dataCubeLoadingStatus.emit(false);
-			})
-			.subscribe(slideData => {
-					this.fileType = slideData;
-					if(this.fileType.feature instanceof Object) {
-
-					if (this.fileType.feature.properties.fileType !== 'mizar') {
-						this.setPlotly(slideData, this.long, this.lat);
-					} else {
-						// TODO
-						// this.setMizar(slideData);
+						if (this.fileType.feature.properties.fileType !== 'mizar') {
+							this.setPlotly(slideData, this.long, this.lat);
+						} else {
+							// TODO
+							// this.setMizar(slideData);
+						}
+		
+						this.selectedCoord();
+						this.changeVisibleTrace();
+						this.traceNumberSubscription = this.cubeToSpectreService.SpectreTrace$.subscribe(traceNumber => {
+							const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
+							if(graphDiv.data[traceNumber].visible == undefined || graphDiv.data[traceNumber].visible == true){
+								graphDiv.data[traceNumber].visible = false;
+							}
+							else{
+								graphDiv.data[traceNumber].visible = true;
+							}
+							Plotly.redraw(graphDiv);
+						});	
 					}
-	
-					this.selectedCoord();
-					this.changeVisibleTrace();
-					this.traceNumberSubscription = this.cubeToSpectreService.SpectreTrace$.subscribe(traceNumber => {
-						const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
-						if(graphDiv.data[traceNumber].visible == undefined || graphDiv.data[traceNumber].visible == true){
-							graphDiv.data[traceNumber].visible = false;
-						}
-						else{
-							graphDiv.data[traceNumber].visible = true;
-						}
-						Plotly.redraw(graphDiv);
-					});	
-				}
-				else {
-					this.toastr.error(this.fileType, 'Oops!')
-				}
-				
-			});
+					else {
+						this.toastr.error(this.fileType, 'Oops!')
+					}
+					
+				});
+			}
+			else{
+				this.toastr.error("Forbidden", 'Oops!')
+			}
 	}
 
 /**
