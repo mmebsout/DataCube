@@ -13,7 +13,7 @@
     "jquery-plugin",
     "jquery-boilerplate"
   ],
-  "main": "src/jquery.boilerplate.js",
+  "main": "src/jquery.datacube.js",
   "dependencies": {
 	"jquery": "1",
 	"basket.js": "latest"
