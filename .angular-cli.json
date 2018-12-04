@@ -9,10 +9,11 @@
       "outDir": "dist",
       "assets": [
         "assets",
+        "Logo_CNES.svg",
         "favicon.ico",
         "robots.txt",
         "mock-data"
-      ],
+      ],    
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
@@ -28,8 +29,7 @@
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/plotly.js/dist/plotly.min.js",
-        "../node_modules/Mizar/Mizar.min.js"
+        "../node_modules/plotly.js/dist/plotly.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
