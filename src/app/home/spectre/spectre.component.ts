@@ -30,6 +30,7 @@ export class SpectreComponent implements OnInit {
 	isLoadingSpectre: Boolean = true;
 	currentSlide: any = new Fit(null);
 	spectreData: any = [];
+	serviceSpectre : SpectreService;
 
 	/**
 	 * Constructor of spectre component
@@ -55,30 +56,8 @@ export class SpectreComponent implements OnInit {
 		this.subscription = cubeToSpectreService.CubePointCoord$.subscribe(coord => {		
 			this.dataCubePoint = coord;
 			this.lastTrace++;
-
-			spectreService
-				.getSpectre({id: this.currentSlide.name},
-							{naxis1: this.dataCubePoint.coordX, naxis2: this.dataCubePoint.coordY})
-				.finally(() => { this.spectreLoadingStatus.emit(false);  })
-				.subscribe((spectreData: any) => {
-					this.spectreData = spectreData;
-					if(this.mustBeLoaded){
-						this.spectreName++;
-						this.spectreData = [
-							{
-								x: this.spectreData.feature.properties.spectrum.wavelength,
-								y: this.spectreData.feature.properties.spectrum.value,
-								line: {shape: 'spline'},
-								type: 'scatter',
-								name: 'trace ' + this.spectreName
-							} as ScatterData
-						];
-
-						const data = this.spectreData;
-
-						Plotly.addTraces('graphDiv', data);
-					}
-				});
+			this.serviceSpectre = spectreService;
+			this.getSpectrum(this.currentSlide.name, this.dataCubePoint.coordX, this.dataCubePoint.coordY);
 		},
 		error => { console.log('error:', error)});
 		console.log('subscription', this.subscription);
@@ -110,6 +89,39 @@ export class SpectreComponent implements OnInit {
 			
 			Plotly.redraw(graphDiv);
 		});	
+	}
+
+	/**
+	 * Get all points of spectre from x and y
+	 * @function getSpectrum
+	 * @return array of points
+	 */
+	getSpectrum(name : string, x: any, y: any) : any {
+		this.serviceSpectre
+		.getSpectre({id: name},
+					{naxis1: x, naxis2: y})
+		.finally(() => { this.spectreLoadingStatus.emit(false);  })
+		.subscribe((spectreData: any) => {
+			console.log(spectreData);
+			this.spectreData = spectreData;
+			if(this.mustBeLoaded){
+				this.spectreName++;
+				this.spectreData = [
+					{
+						x: this.spectreData.feature.properties.spectrum.wavelength,
+						y: this.spectreData.feature.properties.spectrum.value,
+						line: {shape: 'spline'},
+						type: 'scatter',
+						name: 'trace ' + this.spectreName
+					} as ScatterData
+				];
+
+				const data = this.spectreData;
+
+				Plotly.addTraces('graphDiv', data);
+			}
+		});
+		return this.spectreData;
 	}
 
 	/**

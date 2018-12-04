@@ -188,6 +188,7 @@ export class HistogrammeComponent implements OnInit {
 	/**
 	 * Compute Values To DataCube After Threshold
 	 * @function computeValuesToDataCubeAfterThreshold
+	 * @param {any} range thresold
 	 */
 	computeValuesToDataCubeAfterThreshold(range : any) {
 		console.log(this.image);

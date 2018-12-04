@@ -300,6 +300,20 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	}
 
 	/**
+	 * Verify if a slide is drawn
+	 * @function isSlideDrawn
+	 * @param {number} slideID
+	 * @return {boolean} isDrawn
+	 */
+	isSlideDrawn(slideID : number) {
+		let isDrawn : boolean = false;
+		this.dataTraces.map((obj: any, index: number) => {
+			console.log(obj);
+		});
+		return isDrawn;
+	}
+
+	/**
 	 * DataCube image builder setter function
 	 * @function setPlotly
 	 * @param {any} slideData
@@ -380,10 +394,28 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		const _cubeToSpectreService = this.cubeToSpectreService,
 			  myPlot = <CustomHTMLElement>document.getElementById(this.graphId);
 
-		myPlot.on('plotly_click', (data: any) => {
+		myPlot.on('plotly_selected', (data: any) => {
+			console.log("plotly_selected");
 			let pn = 0,
 				tn = 0;
+			console.log("all points selected : ");
+			console.log(data);
+			for (let i = 0; i < data.lassoPoints.x.length; i++) {
+				pn = data.lassoPoints.x[i];
+				tn = data.lassoPoints.y[i];
+				Plotly.addTraces(myPlot, {y: [tn], x: [pn]});
+			
+				Plotly.restyle(this.graphId, 'marker.color', this.colors[this.dataTraces.length-2], [this.dataTraces.length-1]);
 
+				_cubeToSpectreService.shareCubePointCoord({coordX: Math.round(pn), coordY: Math.round(tn)});
+			};			
+		});
+
+		myPlot.on('plotly_click', (data: any) => {			
+			let pn = 0,
+				tn = 0;
+			console.log("plotly_click");
+			console.log(data);
 			for (let i = 0; i < data.points.length; i++) {
 				pn = data.points[i].x;
 				tn = data.points[i].y;
