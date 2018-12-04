@@ -13,19 +13,19 @@ basket.clear();
 basket.timeout = 1000000000;
 basket.require(	
 		{
-			url: folderPath + "inline.318b50c57b4eba3d437b.bundle.js",
+			url: folderPath + "inline.datacube.bundle.js",
 			key: "bundle"
 		},
 		{ 
-			url:folderPath + "polyfills.ca14815d749bc4caa189.bundle.js", 
+			url:folderPath + "polyfills.datacube.bundle.js", 
 			key: "polyfill"
 		},
 		{ 
-			url: folderPath + "scripts.e0573741a950e2cffa26.bundle.js", 
+			url: folderPath + "scripts.datacube.bundle.js", 
 			key: "scripts"
 		},
 		{ 
-			url: folderPath + "main.4f4401891870c66ad146.bundle.js", 
+			url: folderPath + "main.datacube.bundle.js", 
 			key: "main"
 		}/*,
 		{ 
@@ -128,7 +128,7 @@ basket.require(
 						}
 					} );
 				};
-				var style = "dist/styles.e5f69a33fcd76aee87b0.bundle.css";
+				var style = "dist/styles.datacube.bundle.css";
 				$('head').append('<link rel="stylesheet" href="'+style+'" type="text/css" />');
 				/* $( "#element" ).dataCubeWidget({
 					appDataCube: true,
