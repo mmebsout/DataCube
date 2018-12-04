@@ -5,6 +5,9 @@
 /tmp
 /out-tsc
 
+# ignore src
+src/plugin/node_modules/
+
 # Dependencies
 /node_modules
 
