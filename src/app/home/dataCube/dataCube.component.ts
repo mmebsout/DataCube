@@ -51,6 +51,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	nbSlides =  <number>1;
 	slideTrace = <number>0;
 	currentSlide: any = new Fit(null);
+	pathData: string = null;
 	world: any = [];
 	long: any = [];
 	lat: any = [];
@@ -94,11 +95,18 @@ export class DataCubeComponent implements OnInit, OnChanges {
 
 			let role:  any = null;
 			role = JSON.parse(localStorage.getItem('userNameRole'));
-			console.log(role.roles.public);
+			let list: any = localStorage.getItem('listfilesPublic').split(",");
 			if((localStorage.getItem('userNameDataCube')=="admin") 
-			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role.roles.public.indexOf(fit)))
+			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(fit)!==-1))
 			){
-				this.currentSlide = new Fit(fit);
+				if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
+					this.pathData = this.loaderService.dataPath;
+				}	
+				if(this.loaderService.fileData != null){
+					this.currentSlide = new Fit(this.loaderService.fileData);
+				}else{
+					this.currentSlide = new Fit(fit);
+				}				
 				this.ngOnInit();
 			}else{
 				this.toastr.error("Forbidden", 'Oops!')
@@ -136,12 +144,12 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	initSlide() {
 		let role:  any = null;
 			role = JSON.parse(localStorage.getItem('userNameRole'));
-			console.log(role.roles.public.indexOf(this.currentSlide.name));
+			let list: any = localStorage.getItem('listfilesPublic').split(",");
 			if((localStorage.getItem('userNameDataCube')=="admin") 
-			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role.roles.public.indexOf(this.currentSlide.name)!=-1))
+			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(this.currentSlide.name)!==-1))
 			){
 			this.metadataService
-				.getDimension({id: this.currentSlide.name})
+				.getDimension({id: this.currentSlide.name, path : this.pathData})
 				.finally(() => {
 					this.translateService.get(['messageDataCube','success']).subscribe((res: any) => {
 						this.toastr.success(res.messageDataCube, res.success);
@@ -167,7 +175,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				});
 
 			this.slideService
-				.getSlide({id: this.currentSlide.name})
+				.getSlide({id: this.currentSlide.name, path : this.pathData})
 				.finally(() => {				
 					this.translateService.get(['cubeExplorerImage','success']).subscribe((res: any) => {
 						this.toastr.success(res.cubeExplorerImage, res.success);
@@ -196,7 +204,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 								graphDiv.data[traceNumber].visible = true;
 							}
 							Plotly.redraw(graphDiv);
-						});	
+						});
+						this.sliderSelectOpacity(this.long, this.lat);	
 					}
 					else {
 						this.toastr.error(this.fileType, 'Oops!')
@@ -216,10 +225,13 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	sliderSelectOpacity(long: any, lat: any) {
 		Plotly.restyle(this.graphId, 'opacity', this.val_opacity, [0]);
 	 	let id : number = 0;
-		id = Number(this.val.toFixed()) + 1;
+		id = Number(this.val.toFixed()) + 1;		
+/* 		this.dataTraces.map((obj: any, index: number) => {
+			console.log(obj);
+		}); */
 		if(this.val_opacity<1 && id <= this.nbSlides && (this.slideLoaded != id)){			
 			this.slideService
-			.getNextTranche({id: this.currentSlide.name}, {idTranche: id})
+			.getNextTranche({id: this.currentSlide.name, path: this.pathData}, {idTranche: id})
 			.finally(() => {})
 			.subscribe((figure: any) => {
 				this.slideData = figure.feature.properties.slide.value;
@@ -238,21 +250,23 @@ export class DataCubeComponent implements OnInit, OnChanges {
 					thickness: 15,
 					xpad: 5
 				},
-				showscale : false
+				showscale : true
 			};
-			console.log("avant delete :");
-			this.dataTraces.map((obj: any, index: number) => {
+			/* this.dataTraces.map((obj: any, index: number) => {
 				console.log(obj);
-			});
+			}); */
 			if(this.dataTraces.length == 2){
-				this.deleteCurrentGraph();
-			}			
+				this.dataTraces.map((obj: any, index: number) => {
+					if (obj.opacity == undefined) {
+						return Plotly.deleteTraces(this.graphId, index);
+					}
+				});
+			}	 		
 			Plotly.addTraces(this.graphId, sliderData);
 			Plotly.restyle(this.graphId, 'opacity', 0.6 , [1]);
-			console.log("apres delete :");
-			this.dataTraces.map((obj: any, index: number) => {
+			/* this.dataTraces.map((obj: any, index: number) => {
 				console.log(obj);
-			});
+			}); */
 		} 
 	}
 
@@ -266,7 +280,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	sliderSelectSlide(indexVal: number, long: any, lat: any): void {
 
 		this.slideService
-			.getNextTranche({id: this.currentSlide.name}, {idTranche: indexVal})
+			.getNextTranche({id: this.currentSlide.name, path: this.pathData}, {idTranche: indexVal})
 			.finally(() => {
 				if(this.translateService.currentLang == 'en-US') {
 					this.toastr.success(`Slide Nb  ${indexVal + 1} is loaded!`, `Success!`);
@@ -317,6 +331,15 @@ export class DataCubeComponent implements OnInit, OnChanges {
 
 			Plotly.addTraces(this.graphId, sliderData);
 			Plotly.restyle(this.graphId, 'opacity', this.val_opacity, [0]);
+
+			//rename legend trace after selected slide
+			const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
+			for(let i=0;i<this.dataTraces.length-1;i++){
+				graphDiv.data[i].name = "trace "+(i+1);
+			}		
+
+			Plotly.redraw(graphDiv);
+
 		});
 	}
 
@@ -329,7 +352,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	isSlideDrawn(slideID : number) {
 		let isDrawn : boolean = false;
 		this.dataTraces.map((obj: any, index: number) => {
-			console.log(obj);
+			if(index==slideID){
+				isDrawn = true;
+			}
 		});
 		return isDrawn;
 	}
@@ -415,28 +440,27 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		const _cubeToSpectreService = this.cubeToSpectreService,
 			  myPlot = <CustomHTMLElement>document.getElementById(this.graphId);
 
+		//to lasso function
 		myPlot.on('plotly_selected', (data: any) => {
-			console.log("plotly_selected");
 			let pn = 0,
 				tn = 0;
-			console.log("all points selected : ");
-			console.log(data);
 			for (let i = 0; i < data.lassoPoints.x.length; i++) {
 				pn = data.lassoPoints.x[i];
 				tn = data.lassoPoints.y[i];
 				Plotly.addTraces(myPlot, {y: [tn], x: [pn]});
 			
+				//change color legend datacube
 				Plotly.restyle(this.graphId, 'marker.color', this.colors[this.dataTraces.length-2], [this.dataTraces.length-1]);
 
 				_cubeToSpectreService.shareCubePointCoord({coordX: Math.round(pn), coordY: Math.round(tn)});
 			};			
 		});
 
+		//to click
 		myPlot.on('plotly_click', (data: any) => {			
 			let pn = 0,
 				tn = 0;
-			console.log("plotly_click");
-			console.log(data);
+
 			for (let i = 0; i < data.points.length; i++) {
 				pn = data.points[i].x;
 				tn = data.points[i].y;
@@ -444,6 +468,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 
 			Plotly.addTraces(myPlot, {y: [tn], x: [pn]});
 			
+			//change color legend datacube
 			Plotly.restyle(this.graphId, 'marker.color', this.colors[this.dataTraces.length-2], [this.dataTraces.length-1]);
 
 			_cubeToSpectreService.shareCubePointCoord({coordX: pn, coordY: tn});

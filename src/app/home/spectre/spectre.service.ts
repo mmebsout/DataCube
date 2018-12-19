@@ -7,11 +7,12 @@ import { Observable } from 'rxjs/Observable';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 const routes = {
-  spectre: (s: slides, c: coords) => `/spectrum?entry=${s.id}&metadata=NAXIS.&posX=${c.naxis1}&posY=${c.naxis2}`
+  spectre: (s: slides, c: coords) => `/spectrum?entry=${s.id}&metadata=NAXIS.&posX=${c.naxis1}&posY=${c.naxis2}&pathData=${s.path}`
 };
 
 export interface slides {
-  id: string;
+	id: string;
+	path: string;
 }
 
 export interface coords {

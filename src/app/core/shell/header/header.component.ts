@@ -40,7 +40,10 @@ export class HeaderComponent implements OnInit {
 		this.currentLang = this.currentLanguage;
 		this.searchFileService.getSearchList()
 		.subscribe(data => {
-			this.fitsTab = data;
+			localStorage.setItem("listfilesPublic",data[0]);
+			localStorage.setItem("listfilesPrivate",data[1]);
+			data = JSON.parse(data);
+			this.fitsTab = data[0].concat(data[1]);
 			log.info(`fitList has uploaded: ${this.fitsTab}`);
 		});
 	}
@@ -48,7 +51,7 @@ export class HeaderComponent implements OnInit {
 	logout() {
 		localStorage.clear();
 		this.authenticationService.logout()
-		  .subscribe(() => this.router.navigate(['/login'], { replaceUrl: true }));
+		  .subscribe(() => this.router.navigate(['/login'], { skipLocationChange: true }));
 	  }
 
 	toggleMenu() {

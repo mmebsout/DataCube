@@ -7,12 +7,13 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 const routes = {
-  metadata: (s: Slides) => `/header?entry=${s.id}`,
-  dimension: (s: Slides) => `/header?entry=${s.id}&metadata=empty`
+  metadata: (s: Slides) => `/header?entry=${s.id}&pathData=${s.path}`,
+  dimension: (s: Slides) => `/header?entry=${s.id}&pathData=${s.path}&metadata=empty`
 };
 
 export interface Slides {
-  id: string;
+	id: string;
+	path: string;
 }
 
 

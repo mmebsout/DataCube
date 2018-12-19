@@ -7,15 +7,19 @@ export class LoaderService {
   isSpectre: boolean;
   isHistogramme: boolean;
   isDesc: boolean;
+  dataPath : string;
+  fileData : string;
 
   constructor() {}
 
   
-  init(datacube: boolean, spectre: boolean, histogramme: boolean, description: boolean) {
+  init(datacube: boolean, spectre: boolean, histogramme: boolean, description: boolean, path: string, file:string) {
     this.isDataCube = datacube;
     this.isSpectre = spectre;
     this.isHistogramme = histogramme;
     this.isDesc = description;
+    this.dataPath = path;
+    this.fileData = file;
   }
 
   /**
@@ -49,5 +53,22 @@ export class LoaderService {
   get description(): boolean {
     return this.isDesc;
   }
+
+   /**
+   * Gets path string.
+   * @return {string} if dataPath is defined.
+   */
+  get path(): string {
+    return this.dataPath;
+  }
+
+   /**
+   * Gets file string.
+   * @return {string} if fileData is defined.
+   */
+  get file(): string {
+    return this.fileData;
+  }
+
 
 }

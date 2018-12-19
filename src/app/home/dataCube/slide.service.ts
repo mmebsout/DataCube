@@ -8,12 +8,13 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import 'rxjs/add/operator/catch';
 
 const routes = {
-  slide: (s: slides) => `/slide?entry=${s.id}&posZ=0`,
-  tranche: (s: slides, t: tranches) => `/slide?entry=${s.id}&posZ=${t.idTranche}`
+  slide: (s: slides) => `/slide?entry=${s.id}&posZ=0&pathData=${s.path}`,
+  tranche: (s: slides, t: tranches) => `/slide?entry=${s.id}&posZ=${t.idTranche}&pathData=${s.path}`
 };
 
 export interface slides {
-  id: string;
+	id: string;
+	path: string;
 }
 
 export interface tranches {

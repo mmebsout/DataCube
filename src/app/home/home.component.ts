@@ -45,6 +45,7 @@ export class HomeComponent implements OnInit {
 
 		const WIDTH_IN_PERCENT_OF_PARENT = 100,
 			HEIGHT_IN_PERCENT_OF_PARENT = 50,
+			
 			cube = this.setGraph('#heatmap', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT),
 			spectre = this.setGraph('#graphDiv', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT),
 			histo = this.setGraph('#histogramme', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
@@ -99,7 +100,7 @@ export class HomeComponent implements OnInit {
 	 */
 	loadingNewImage(event: any) {
 		this.newImage = event;
-		console.log('new image from the home', this.newImage);
+		//console.log('new image from the home', this.newImage);
 	}
 
 	/**
@@ -109,7 +110,7 @@ export class HomeComponent implements OnInit {
 	 */
 	loadingNewReseter(event: any) {
 		this.newFilterReset = event;
-		console.log('new Filter from the home', this.newFilterReset);
+		//console.log('new Filter from the home', this.newFilterReset);
 	}
 
 	/**
@@ -119,6 +120,6 @@ export class HomeComponent implements OnInit {
 	 */
 	loadingNewHmax(event: any) {
 		this.newHmax = event;
-		console.log('new Hmax from the home ==>', this.newHmax);
+		//console.log('new Hmax from the home ==>', this.newHmax);
 	}
 }

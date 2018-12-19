@@ -7,7 +7,7 @@ export const environment = {
   production: false,
   version: '(dev)',
   author: 'CNES - CENTRE NATIONAL D\'ETUDES SPATIALES',
-  serverUrl: 'http://localhost:8080/cubeExplorer/rest',
+  serverUrl: 'http://localhost:8081/cubeExplorer/rest',
   defaultLanguage: 'en-US',
   supportedLanguages: [
 	'en-US',

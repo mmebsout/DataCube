@@ -9,8 +9,13 @@ version 2.0.0
  ```bash
  npm install
  ```
- 
-2. Launch development server, and open `localhost:4200` in your browser:
+2. Launch backend DataCube:
+ ```bash
+ java -jar <path>cubeExplorer-1.0.0-SNAPSHOT.jar
+ ```
+ Log file is written where backend is launched.
+
+3. Launch development server, and open `localhost:4200` in your browser:
  ```bash
  npm start
  ```
@@ -70,6 +75,33 @@ When building the application, you can specify the target environment using the 
 forget to prepend `--` to pass arguments to npm scripts).
 
 The default build environment is `prod`.
+
+## DataCube Functionnality
+
+### 1. Login
+By default, two accounts are created (admin and public). You must be identified to used DataCube.
+
+### 2. Search
+Following your account, you can choose more or less files. Admin account has all files.
+
+### 3. DataCube
+At the left top, you can see a datacube who represent the file choosen.
+##### 3.1 Point
+You can click on the DataCube to display a spectre below the datacube.
+##### 3.2 Lasso
+After one or more point on Datacube, a new option is available (lasso option). This option can selected many points to draw one spectre by point.
+
+##### 3.3 Slide
+You can selected a slide of DataCube with the first slider. The slide selected is displayed with the number but also the maximum number of slides.
+##### 3.4 Opacity
+You can selected a opacity to display to see the next slide.
+### 4. Histogramme
+Once file loaded, a histogramme is displayed next to DataCube. It represents of count of pixels by physical values of each pixel of picture.
+
+### 5. Metadata
+a Metadata block contains all metadata of picture. Click on header to display or hide this block.
+### 6. Description
+This part is stubbed.
 
 ## Development server
 

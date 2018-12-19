@@ -29,6 +29,8 @@ export class AppComponent implements OnInit {
   attrAppSpectre: boolean;
   attrAppHistogramm: boolean;
   attrAppDescription: boolean;
+  attrFile: string;
+  attrDataPath: string;
 
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
@@ -41,6 +43,8 @@ export class AppComponent implements OnInit {
                     this.attrAppSpectre = (this.elRef.nativeElement.getAttribute('appSpectre')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appSpectre')):true,
                     this.attrAppHistogramm = (this.elRef.nativeElement.getAttribute('appHistogramm')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appHistogramm')):true,
                     this.attrAppDescription = (this.elRef.nativeElement.getAttribute('appDescription')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appDescription')):true;
+                    this.attrFile = (this.elRef.nativeElement.getAttribute('appFile')!=null)?this.elRef.nativeElement.getAttribute('appFile'):null;
+                    this.attrDataPath = (this.elRef.nativeElement.getAttribute('attrDataPath')!=null)?this.elRef.nativeElement.getAttribute('attrDataPath'):null;
               }
 
               toBoolean(xxx: any): boolean {
@@ -67,8 +71,11 @@ export class AppComponent implements OnInit {
     log.debug('attrAppSpectre : ', this.attrAppSpectre);
     log.debug('attrAppHistogramm : ', this.attrAppHistogramm);
     log.debug('attrAppDescription : ', this.attrAppDescription);
+    log.debug('attrDataPath : ', this.attrDataPath);
+    log.debug('attrFile : ', this.attrFile);
 
-    this.loader.init(this.attrAppDataCube, this.attrAppSpectre, this.attrAppHistogramm, this.attrAppDescription);
+
+    this.loader.init(this.attrAppDataCube, this.attrAppSpectre, this.attrAppHistogramm, this.attrAppDescription, this.attrDataPath, this.attrFile);
 
     // Setup translations
     this.i18nService.init(environment.defaultLanguage, environment.supportedLanguages);

@@ -56,7 +56,7 @@ export class AuthenticationService {
            if(auth.message == true){
               localStorage.setItem('userNameRole',JSON.stringify(auth.role));
               localStorage.setItem('userNameDataCube',context.username);
-              this.router.navigate(['/'], { replaceUrl: true });
+              this.router.navigate(['/'], { skipLocationChange: true });
               this.setCredentials({
               username: context.username,
               token: '123456'

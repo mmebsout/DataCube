@@ -31,6 +31,7 @@ export class SpectreComponent implements OnInit {
 	currentSlide: any = new Fit(null);
 	spectreData: any = [];
 	serviceSpectre : SpectreService;
+	pathData: string = null;
 
 	/**
 	 * Constructor of spectre component
@@ -48,7 +49,14 @@ export class SpectreComponent implements OnInit {
 		this.mustBeLoaded = this.loaderService.spectre;
 		if(this.mustBeLoaded){
 			streamFitService.FitFile$.subscribe(fit => {
-				this.currentSlide = new Fit(fit);
+				if(this.loaderService.dataPath != null){
+					this.pathData = this.loaderService.dataPath;
+				}	
+				if(this.loaderService.fileData != null){
+					this.currentSlide = new Fit(this.loaderService.fileData);
+				}else{
+					this.currentSlide = new Fit(fit);
+				}	
 				this.ngOnInit();
 			});
 		}		
@@ -60,7 +68,6 @@ export class SpectreComponent implements OnInit {
 			this.getSpectrum(this.currentSlide.name, this.dataCubePoint.coordX, this.dataCubePoint.coordY);
 		},
 		error => { console.log('error:', error)});
-		console.log('subscription', this.subscription);
 
 		this.resetSubscription = cubeToSpectreService.ResetGraph$.subscribe(reset => {
 			if (reset) {
@@ -98,11 +105,10 @@ export class SpectreComponent implements OnInit {
 	 */
 	getSpectrum(name : string, x: any, y: any) : any {
 		this.serviceSpectre
-		.getSpectre({id: name},
+		.getSpectre({id: name, path: this.pathData},
 					{naxis1: x, naxis2: y})
 		.finally(() => { this.spectreLoadingStatus.emit(false);  })
 		.subscribe((spectreData: any) => {
-			console.log(spectreData);
 			this.spectreData = spectreData;
 			if(this.mustBeLoaded){
 				this.spectreName++;
@@ -124,12 +130,13 @@ export class SpectreComponent implements OnInit {
 		return this.spectreData;
 	}
 
+	
 	/**
 	 * Initialize the spectre graph
 	 * @function ngOnInit
 	 */
 	ngOnInit() {
-		/* if(this.mustBeLoaded == 'true'){
+		//if(this.mustBeLoaded == 'true'){
 			const data: any = [],
 						layout = {
 							title: 'Wave Tab (um)',
@@ -145,8 +152,8 @@ export class SpectreComponent implements OnInit {
 						};
 
 			Plotly.newPlot('graphDiv', data, layout);
-			this.changeVisibleTrace();
-		} */
+			//this.changeVisibleTrace();
+		//} 
 	}
 
 	/**
