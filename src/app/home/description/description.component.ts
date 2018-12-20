@@ -46,15 +46,19 @@ export class DescriptionComponent implements OnInit {
 		config.closeOthers = true;
 		config.type = 'info';
 
+		if(this.loaderService.fileData != null){
+			this.currentSlide = new Fit(this.loaderService.fileData);
+		}
+		
 		streamFitService.FitFile$.subscribe(fit => {
 			if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
 				this.pathData = this.loaderService.dataPath;
 			}	
-			if(this.loaderService.fileData != null){
+			/* if(this.loaderService.fileData != null){
 				this.currentSlide = new Fit(this.loaderService.fileData);
-			}else{
-				this.currentSlide = new Fit(fit);
-			}	
+			}else{ */
+			this.currentSlide = new Fit(fit);
+			//}	
 			this.ngOnInit();
 		});
 	}

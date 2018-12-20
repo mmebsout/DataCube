@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
                     this.attrAppHistogramm = (this.elRef.nativeElement.getAttribute('appHistogramm')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appHistogramm')):true,
                     this.attrAppDescription = (this.elRef.nativeElement.getAttribute('appDescription')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appDescription')):true;
                     this.attrFile = (this.elRef.nativeElement.getAttribute('appFile')!=null)?this.elRef.nativeElement.getAttribute('appFile'):null;
-                    this.attrDataPath = (this.elRef.nativeElement.getAttribute('attrDataPath')!=null)?this.elRef.nativeElement.getAttribute('attrDataPath'):null;
+                    this.attrDataPath = (this.elRef.nativeElement.getAttribute('appDataPath')!=null)?this.elRef.nativeElement.getAttribute('appDataPath'):null;
               }
 
               toBoolean(xxx: any): boolean {

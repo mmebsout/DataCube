@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewContainerRef,
 	Output, Input, EventEmitter, OnChanges, SimpleChanges  } from '@angular/core';
 import { Http, Response } from '@angular/http';
+import { Router, CanActivate } from '@angular/router';
 import { I18nService } from '../../core/i18n.service';
 import { CubeToSpectreService } from '../../shared/services/cube-to-spectre.service';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
@@ -74,7 +75,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @param {ToastsManager} toastr
 	 * @param {ViewContainerRef} vcr
 	 */
-	constructor(private http: Http,
+	constructor(private router: Router, private http: Http,
 				private i18nService: I18nService,
 				private translateService: TranslateService,
 				private cubeToSpectreService: CubeToSpectreService,
@@ -90,7 +91,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		cubeToSpectreService.CubePointCoord$.subscribe(coord => {
 			this.dataCubePoint = coord;
 		});
-
+		if(this.loaderService.fileData != null){
+			this.currentSlide = new Fit(this.loaderService.fileData);
+		}
 		streamFitService.FitFile$.subscribe(fit => {
 
 			let role:  any = null;
@@ -99,14 +102,15 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			if((localStorage.getItem('userNameDataCube')=="admin") 
 			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(fit)!==-1))
 			){
+				console.log(this.loaderService);
 				if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
 					this.pathData = this.loaderService.dataPath;
 				}	
-				if(this.loaderService.fileData != null){
+				/* if(this.loaderService.fileData != null){
 					this.currentSlide = new Fit(this.loaderService.fileData);
-				}else{
-					this.currentSlide = new Fit(fit);
-				}				
+				}else{ */
+				this.currentSlide = new Fit(fit);
+				//}				
 				this.ngOnInit();
 			}else{
 				this.toastr.error("Forbidden", 'Oops!')
@@ -144,6 +148,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	initSlide() {
 		let role:  any = null;
 			role = JSON.parse(localStorage.getItem('userNameRole'));
+			if(role==undefined){
+				this.router.navigate(['/login'], { skipLocationChange: true });
+			}			
 			let list: any = localStorage.getItem('listfilesPublic').split(",");
 			if((localStorage.getItem('userNameDataCube')=="admin") 
 			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(this.currentSlide.name)!==-1))

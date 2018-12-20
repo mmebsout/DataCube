@@ -11,5 +11,5 @@ export const environment = {
 	'en-US',
 	'fr-FR'
   ],
-  imgPath:'dist'
+  imgPath:'../templates/dist'
 };

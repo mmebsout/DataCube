@@ -42,11 +42,23 @@ module.exports = function( grunt ) {
 				config: ".jscsrc"
 			}
 		},
-
+/* 
 		// Minify definitions
 		uglify: {
 			dist: {
 			src: [ "src/vendor/jquery-3.3.1.js", "src/vendor/rsvp.js", "src/vendor/basket.js", "src/jquery.datacube.js" ],
+				dest: "dist/libs/cubeExplorer.full.min.js"
+			},
+			options: {
+				banner: "<%= meta.banner %>"
+			}
+		}, */
+
+		
+		// Minify definitions
+		uglify: {
+			dist: {
+			src: [ "src/vendor/jquery-3.3.1.js", "src/jquery.datacube.js" ],
 				dest: "dist/libs/cubeExplorer.full.min.js"
 			},
 			options: {

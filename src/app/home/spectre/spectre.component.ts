@@ -7,10 +7,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
-import * as Plotly from 'plotly.js';
+//import * as Plotly from 'plotly.js';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
-//declare function require(moduleName: string): any;
-//const Plotly = require('plotly.js/lib/index-cartesian.js');
+declare function require(moduleName: string): any;
+const Plotly = require('plotly.js/lib/index-cartesian.js');
 
 @Component({
 	selector: 'app-spectre',
@@ -48,15 +48,20 @@ export class SpectreComponent implements OnInit {
 				private spectreService: SpectreService) {
 		this.mustBeLoaded = this.loaderService.spectre;
 		if(this.mustBeLoaded){
+
+			if(this.loaderService.fileData != null){
+				this.currentSlide = new Fit(this.loaderService.fileData);
+			}
+
 			streamFitService.FitFile$.subscribe(fit => {
 				if(this.loaderService.dataPath != null){
 					this.pathData = this.loaderService.dataPath;
 				}	
-				if(this.loaderService.fileData != null){
+				/* if(this.loaderService.fileData != null){
 					this.currentSlide = new Fit(this.loaderService.fileData);
-				}else{
-					this.currentSlide = new Fit(fit);
-				}	
+				}else{ */
+				this.currentSlide = new Fit(fit);
+				//}	
 				this.ngOnInit();
 			});
 		}		

@@ -3,8 +3,8 @@
 	<div class="row">
 		<div class="col-md-6">
 			<article>
-				<h3 class="waves-effect waves-teal fa-map-marker">Localisation</h3> 
-				<ul>
+				<h3 class="waves-effect waves-teal fa-map-marker descriptionList"><span translate>Localisation</span></h3> 
+				<ul class="descriptionList">
 					<li *ngFor="let key of objectKeys(localisation)">
 						<strong>{{ key }} : </strong><span>{{ localisation[key] }}</span>
 					</li>
@@ -13,8 +13,8 @@
 		</div>
 		<div class="col-md-6">
 			<article>
-				<h3 class="fa-cogs"><span translate>TypeObject</span></h3> 
-				<ul>
+				<h3 class="fa-cogs descriptionList"><span translate>TypeObject</span></h3> 
+				<ul class="descriptionList">
 					<li *ngFor="let key of objectKeys(object_type)">
 						<strong>{{ key }} : </strong><span>{{ object_type[key] }}</span>
 					</li>
@@ -22,10 +22,10 @@
 			</article>
 		</div>
 	</div>
-	<div class="accordion">
-		<h3 accordion class="fa-cubes"><span translate>Metadata</span></h3> 
+	<div class="accordion accordionMetaData">
+		<h3 accordion class="fa-cubes descriptionList"><span translate>Metadata</span></h3> 
 		<div>
-			<ul>
+			<ul class="descriptionList">
 				<li *ngFor="let list of metadatas">
 					<strong>{{ list[0] }} : </strong>
 					<span>{{ list[1] }}</span>
