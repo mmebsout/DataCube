@@ -5,7 +5,9 @@
 					appDataCube: true,
 					appSpectre: false,
 					appHistogramm: false,
-					appDescription: false
+                    appDescription: false,
+                    appDataPath: "",
+                    appFile:""
 				});
  */
 var folderPath =  "./templates/dist/";
@@ -77,6 +79,7 @@ $.when(
                 //this.fetchBeforeRender();
                 this.setDatacube( "Div DataCube Widget" );
             },
+            //basket.js version : problem when integration with Mizar
             /* fetchBeforeRender: function () {
                 console.log('my loaded css files');
                 basket.require({ url: this.folderPat + 'styles.4983a727ec7fe11bbdf4.bundle.css', execute: true }).then(function(responses) {
@@ -121,12 +124,7 @@ $.when(
         };
         var style = "../templates/dist/styles.datacube.bundle.css";
         $('head').append('<link rel="stylesheet" href="'+style+'" type="text/css" />');
-        /* $( "#element" ).dataCubeWidget({
-            appDataCube: true,
-            appSpectre: false,
-            appHistogramm: false,
-            appDescription: false
-        }); */
+       
 } )( jQuery, window, document );
 });
 
