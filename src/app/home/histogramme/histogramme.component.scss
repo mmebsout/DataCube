@@ -1,28 +1,31 @@
-@import "../../../theme/theme-variables";
-@import "../dataCube/dataCube.component";
+article {
+	@import "../../../theme/theme-variables";
+	@import "../dataCube/dataCube.component";
+	//@import "~bootstrap/scss/bootstrap";
 
-h2 {
-	margin: 0 0 1rem 0;
-}
+	h2 {
+		margin: 0 0 1rem 0;
+	}
 
-span {
-	color: black;
-}
+	span {
+		color: black;
+	}
 
-.controls {
-	padding: 1.6em;
+	.controls {
+		padding: 1.6em;
 
-	button {
-		max-width: fit-content;
-		display: inline-block;
+		button {
+			max-width: fit-content;
+			display: inline-block;
 
-		&:last-child {
-			display: block;
-			margin: .5em auto 0;
-		}
+			&:last-child {
+				display: block;
+				margin: .5em auto 0;
+			}
 
-		&.active {
-			background: $gray;
-		}
-	}	
+			&.active {
+				background: $gray;
+			}
+		}	
+	}
 }

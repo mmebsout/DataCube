@@ -6,8 +6,6 @@ import { Fit } from '../../shared/classes/fit';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
-import { forEach } from '@angular/router/src/utils/collection';
-import { anyTypeAnnotation } from 'babel-types';
 
 declare function require(moduleName: string): any;
 const Plotly = require('plotly.js/lib/index-cartesian.js');
@@ -44,7 +42,7 @@ export class HistogrammeComponent implements OnInit {
 	filterBy: any;
 	histogramme : any = [];
 	traceAdded = <boolean>false;
-	tmin :number = 0;
+	//tmin :number = 0;
 	histo_transfer : any = [];
 	pathData: string = null;
 
@@ -67,51 +65,14 @@ export class HistogrammeComponent implements OnInit {
 			this.currentSlide = new Fit(this.loaderService.fileData);
 		}
 
+		//if data file is loaded
 		streamFitService.FitFile$.subscribe(fit => {
 			if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
 				this.pathData = this.loaderService.dataPath;
 			}	
-			/* if(this.loaderService.fileData != null){
-				this.currentSlide = new Fit(this.loaderService.fileData);
-			}else{ */
-			this.currentSlide = new Fit(fit);
-			//}				
+			this.currentSlide = new Fit(fit);	
 			this.ngOnInit();
 		});
-	}
-
-	transformArrayHistogramme( array : any) {
-		let test= new Array(255);
-		let test_tmp= new Array(255);
-		for (let i = 0; i < test.length; i++) {
-			test[i]=0;
-			test_tmp[i]=0;
-		}
-		//console.log(array);
-		/* _.forEach(array, function(value: any, key : any) {
-			if(value !== undefined){
-				console.log(key+" "+value["index"]+" "+value["cpt"]);			
-				test[value["index"]]+=value["cpt"];	
-			}					
-		  }); */
-		  //test = _.groupBy(array, "index");
-		 /*  test_tmp = _.forEach(test, function(value: any, key : any) {
-			value["index"] = value["index"]+ value["cpt"];
-			}); */
-		  test = _.groupBy(array, "index");
-		  //console.log(test);
-		  _.forEach(test, function(value: any, key : any) {
-			if(test_tmp[key]==undefined){
-				test_tmp[key]=0;
-			}
-			let somme = _.sumBy(value, "cpt");
-			//console.log(somme);
-			test_tmp[key] = somme;
-			});
-		 //console.log(test_tmp);
-		return test_tmp;
-		//console.log(arrayGroupBy);
-		//_.sumBy(array, function(o:any) { return o["cpt"]; });
 	}
 
 	swap(json : any) {
@@ -120,12 +81,24 @@ export class HistogrammeComponent implements OnInit {
 		  ret[json[key]] = key;
 		}
 		return ret;
-	  }
+	}
 
-	strToFloat(value: any) {
-		  value=String(value)			
-		  return Number(value);
-	  }
+	getHMAX(val : any, hist_tmp : any) {
+		this.hmax = Number.MIN_VALUE;
+						
+		for (let i = 0; i < val.length; i++) {
+			const bin = (val[i]==null)?0:val[i].toPrecision(1);							
+			hist_tmp[bin]=0;
+			
+		}
+		for (let i = 0; i < val.length; i++) {
+			let bin = (val[i]==null)?0:val[i].toPrecision(1);						
+			hist_tmp[Number(bin)]++;							
+			if (hist_tmp[Number(bin)] > this.hmax) {
+				this.hmax = hist_tmp[Number(bin)];
+			}
+		}
+	}
 
 	/**
 	 * Histogram Init Function
@@ -137,102 +110,59 @@ export class HistogrammeComponent implements OnInit {
 				this.histoLoadingStatus.emit(false);
 			})
 			.subscribe(slideData => {
+				//get user role
 				let role:  any = null;
 				role = JSON.parse(localStorage.getItem('userNameRole'));
+
+				//get list files authorized
 				let list: any = localStorage.getItem('listfilesPublic').split(",");
-				//console.log(list);
+
+				//check if user is authorized
 				if((localStorage.getItem('userNameDataCube')=="admin") 
 				|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(this.currentSlide.name)!==-1))
 				){
 					this.slideData = slideData;
 					if(this.slideData.feature instanceof Object) {
 						this.image = this.slideData.feature.properties.slide.value;
-						let max = 0, tmax = 0, min = 0, tmin = 0;
+						
 						let val = <any>[];
 						let result_final = <any>[];
 						const colorLength = 256;
-						this.image.map((xi: any, i: number) => {
-							max = Math.max.apply(null, xi);
-							min = Math.min.apply(null, xi);
-							if (max > tmax) {
-								tmax = max;
-							}
-		
-							if (min < this.tmin) {
-								this.tmin = min;
-							}
-		
+						this.image.map((xi: any, i: number) => {		
 							xi.map((ji: any, j: number) => {
 								val.push(ji);
 								result_final.push(Number(ji).toFixed(20));
 							});
 						});
 						let hist_tmp = new Array(colorLength);
-						let hist = new Array();
 						let result = new Array(colorLength);
 		
 						for (let i = 0; i < colorLength; i++) {
 							result[i] = 0;
 						}
 		
-						let hmax = Number.MIN_VALUE;
-						
-						for (let i = 0; i < val.length; i++) {
-							const bin = (val[i]==null)?0:val[i].toPrecision(1);							
-							//hist[bin]=0;
-							hist_tmp[bin]=0;
-							
-						}
-						for (let i = 0; i < val.length; i++) {
-							let bin = (val[i]==null)?0:val[i].toPrecision(1);
-							//console.log(bin);							
-							//let index = hist.indexOf(bin);
-							//(index==-1)?hist[1]=bin:hist[index+1]=bin;
-							//console.log(index);
-							//hist[index]=0;
-							
-							
-							hist_tmp[Number(bin)]++;
+						this.getHMAX(val, hist_tmp);						
 
-							//hist_tmp[]=Number(bin);
-							// Compute histogram max value
-							if (hist_tmp[Number(bin)] > this.hmax) {
-								this.hmax = hist_tmp[Number(bin)];
-							}
-
-							//console.log(hist_tmp);
-							//hist.push({'index':Number(bin),'cpt':Number(hist_tmp[bin])});
-							
-						}
-						//hist_tmp = this.transformArrayHistogramme(hist);	
-						//hist_tmp = _.find(hist_tmp, function(o:any) { return o>0; });
-						let y:any;
 						hist_tmp = this.swap(hist_tmp);
-						//console.log(hist_tmp);
 						this.histo_transfer = hist_tmp;
 						_.forEach(hist_tmp, function(value: any, key : any) {
-							//console.log(hist_tmp[key]);
 							if(hist_tmp[key]!==undefined){
-								//console.log(Number(String(hist_tmp[key])));
 								result[key] =Number(hist_tmp[key]).toFixed(20);
 							}
 							else{
 								result[key] = 0;
 							}
 						});
-						tmin = _.min(result);
-						//console.log(result);
 						if(this.mustBeLoaded){
 							this.setHistogram(result_final);
 							const r = this.getRange();
 						}	
 					}
-					}
-					else{
-						this.toastr.error("Forbidden", 'Oops!');		
-					}
-				});
-
+				}
+				else{
+					this.toastr.error("Forbidden", 'Oops!');		
+				}
+			});
 	}
 
 	/**
@@ -250,17 +180,14 @@ export class HistogrammeComponent implements OnInit {
 	 * @function drawTransferFunction
 	 */
 	drawTransferFunction() {
-		//console.log(this.histo_transfer);
 		if (this.traceAdded) {
 			this.deleteTransferFunction();
 		}
 		let spline : any = [];
-		let tmp_value = 0;
 		let x : any = [];
 
 		if(this.activeLinear){
 			_.forEach(this.histo_transfer, function(value: any, key : any) {
-				//console.log(value);
 				if(value >= 0){
 					x.push(value);
 				}			
@@ -295,22 +222,14 @@ export class HistogrammeComponent implements OnInit {
 		}
 		x = _.orderBy(x,Number,['asc']);
 
-
 			let tmp = [];
 			for(let i=0;i<spline.length;i++){
-				//console.log(spline[i]);
 				if(spline[i] % 5 == 0){
 					tmp.push(spline[i]);
 				}
-				//return value % 5 == 0;
 			};
-			//spline = tmp;
-		//console.log(x);
-		//console.log(spline);
-		spline = _.forEach(spline, function(value: any, key : any) {
-			//console.log(max);
-			//return value <= 35;
-		});
+
+		//add spline on histogramm
 		let splineData = [
 			{
 				x: x,
@@ -333,7 +252,6 @@ export class HistogrammeComponent implements OnInit {
 	 * @param {any} range thresold
 	 */
 	computeValuesToDataCubeAfterThreshold(range : any) {
-		//console.log(range);
 		let newImageAfterThreshold: any = [];
 		if(range == undefined){
 			range = {min:0,max:255};
@@ -374,10 +292,20 @@ export class HistogrammeComponent implements OnInit {
 			});
 		}
 		else{
-			newImageAfterThreshold = this.image.map((xi: any, i: number) => {
+			//by default : linear
+			/* newImageAfterThreshold = this.image.map((xi: any, i: number) => {
 				return xi.map((ji: any) => {
 					tmp = (ji - range.min ) / (range.max - range.min) * 255;
 					return tmp;
+				})
+			}); */
+
+			//get image values with value between range min and range max
+			newImageAfterThreshold = this.image.map((xi: any, i: number) => {
+				return xi.map((ji: any) => {
+					if(ji>= range.min && ji <= range.max){
+						return ji;
+					}
 				})
 			});
 		}
@@ -392,20 +320,16 @@ export class HistogrammeComponent implements OnInit {
 	setHistogram(x: any) {
 		
 		this.histogramme = x;
-		//console.log(this.histogramme);
+
+		//data to build histogramm
 		const data = [
 			{
 				x: x,
 				type: 'histogram',
-				/* autobinx: true,
-				xbins: {
-					end: this.tmin,
-					size: 1,
-					start: -.5
-				} */
 			}
 		];
 
+		//layout config
 		const layout = {
 			yaxis: {
 				fixedrange: true
@@ -424,12 +348,18 @@ export class HistogrammeComponent implements OnInit {
 		Plotly.newPlot('histogramme', data, layout);
 	}
 
+	/**
+	 * Get range histogramm and call threshold Datacube
+	 * @function getRange
+	 * @returns range min and range max
+	 */
 	getRange() {
 		const myHisto = <CustomHTMLElement>document.getElementById('histogramme');
 		const range = {
 			'min': <any>null,
 			'max': <any>null
 		};
+		//if user change the range
 		myHisto.on('plotly_relayout', (eventData: any) => {
 			if(eventData["xaxis.range"]!==undefined){
 				range.min = eventData["xaxis.range"][0];
