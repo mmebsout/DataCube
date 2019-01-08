@@ -43,7 +43,7 @@ module.exports = function( grunt ) {
 			}
 		},
 /* 
-		// Minify definitions
+		// Minify definitions (with basket.js)
 		uglify: {
 			dist: {
 			src: [ "src/vendor/jquery-3.3.1.js", "src/vendor/rsvp.js", "src/vendor/basket.js", "src/jquery.datacube.js" ],
