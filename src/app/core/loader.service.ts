@@ -12,7 +12,15 @@ export class LoaderService {
 
   constructor() {}
 
-  
+  /**
+   * init boolean to Datacube, histogramm, spectre, description, path, file.
+   * @param {boolean=} datacube boolean if datacube must be loaded
+   * @param {boolean=} spectre boolean if spectre must be loaded
+   * @param {boolean=} histogramme boolean if histogramme must be loaded
+   * @param {boolean=} description boolean if description must be loaded
+   * @param {boolean=} path boolean if path must be loaded
+   * @param {boolean=} file boolean if file must be loaded
+   */
   init(datacube: boolean, spectre: boolean, histogramme: boolean, description: boolean, path: string, file:string) {
     this.isDataCube = datacube;
     this.isSpectre = spectre;
