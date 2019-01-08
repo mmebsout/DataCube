@@ -1,5 +1,7 @@
+header {
 @import "src/theme/theme-variables";
 @import "src/theme/utils";
+
 
 .language-cube {
 	top: 5%;
@@ -106,4 +108,5 @@ header {
 			}
 		}
 	}
+}
 }

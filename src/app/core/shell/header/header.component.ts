@@ -6,10 +6,9 @@ import { I18nService } from '../../i18n.service';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { SearchFileService } from '../../../shared/services/search-file.service';
 import { StreamFitService } from '../../../shared/services/stream-fit.service';
-import { Fit } from '../../../shared/classes/fit';
 import { environment } from '../../../../environments/environment';
 
-const log = new Logger('searchFileService');
+const log = new Logger('Header');
 
 @Component({
 	selector: 'app-header',
@@ -40,32 +39,53 @@ export class HeaderComponent implements OnInit {
 		this.currentLang = this.currentLanguage;
 		this.searchFileService.getSearchList()
 		.subscribe(data => {
-			localStorage.setItem("listfilesPublic",data[0]);
-			localStorage.setItem("listfilesPrivate",data[1]);
-			data = JSON.parse(data);
-			this.fitsTab = data[0].concat(data[1]);
+			//get listFiles public and private
+			localStorage.setItem("listfilesPublic",data["public_files"]);
+			localStorage.setItem("listfilesPrivate",data["private_files"]);
+			this.fitsTab = data["public_files"].concat(data["private_files"]);
 			log.info(`fitList has uploaded: ${this.fitsTab}`);
 		});
 	}
 
+	/**
+	 * Logout application
+	 * @function logout
+	 * @returns void 
+	 */	
 	logout() {
+		//remove localstorage
 		localStorage.clear();
 		this.authenticationService.logout()
 		  .subscribe(() => this.router.navigate(['/login'], { skipLocationChange: true }));
 	  }
 
+	/**
+	 * Display or not menu
+	 * @function toggleMenu
+	 * @returns void 
+	 */	
 	toggleMenu() {
 		this.menuHidden = !this.menuHidden;
 		this.searchHidden = true;
 		$('html').toggleClass('menu');
 	}
 
+	/**
+	 * Display or not search
+	 * @function toggleMenu
+	 * @returns void 
+	 */	
 	toggleSearch() {
 		this.searchHidden = !this.searchHidden;
 		this.menuHidden = true;
 		$('html').removeClass('menu');
 	}
 
+	/**
+	 * Get file data choosen by user
+	 * @function getFitFile
+	 * @returns void 
+	 */	
 	getFitFile(fitFile: string) {
 		this.streamFitService.shareFitFile(fitFile);
 		this.searchText = null;
