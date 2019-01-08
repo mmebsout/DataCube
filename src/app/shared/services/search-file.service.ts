@@ -17,7 +17,7 @@ export class SearchFileService {
   getSearchList(): Observable<string> {
     return this.http.get(routes, { cache: true })
       .map((res: Response) => res.json())
-      .map(body => body.response)
+      .map(body => body)
       .catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
   }
 }
