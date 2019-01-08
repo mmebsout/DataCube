@@ -10,12 +10,12 @@
                     appFile:""
 				});
  */
-var folderPath =  "./templates/dist/";
+var folderPath =  "./templates/datacube/";
 $.when(
     $.getScript( folderPath + "inline.datacube.bundle.js" ),
     $.getScript( folderPath + "polyfills.datacube.bundle.js" ),
-    $.getScript(  folderPath + "scripts.datacube.bundle.js" ),
-    $.getScript(  folderPath + "main.datacube.bundle.js" ),
+    $.getScript( folderPath + "scripts.datacube.bundle.js" ),
+    $.getScript( folderPath + "main.datacube.bundle.js" ),
     $.Deferred(function( deferred ){
         $( deferred.resolve );
     })
@@ -59,7 +59,7 @@ $.when(
             // more objects, storing the result in the first object. The first object
             // is generally empty as we don't want to alter the default options for
             // future instances of the plugin
-            this.folderPat =  "./templates/dist/";
+            this.folderPat =  "./templates/datacube/";
             this.settings = $.extend( {}, defaults, options );
             this._defaults = defaults;
             this._name = pluginName;
@@ -122,7 +122,7 @@ $.when(
                 }
             } );
         };
-        var style = "../templates/dist/styles.datacube.bundle.css";
+        var style = "../templates/datacube/styles.datacube.bundle.css";
         $('head').append('<link rel="stylesheet" href="'+style+'" type="text/css" />');
        
 } )( jQuery, window, document );

@@ -1,7 +1,6 @@
 article {
 	@import "../../../theme/theme-variables";
 	@import "../dataCube/dataCube.component";
-	//@import "~bootstrap/scss/bootstrap";
 
 	h2 {
 		margin: 0 0 1rem 0;
@@ -13,8 +12,14 @@ article {
 
 	.controls {
 		padding: 1.6em;
+		background-color: white;
+		border-radius: 5px;
+		box-shadow: 1px 1px 2px #bbb;
+		margin: 1em 0;
+		
 
 		button {
+			margin-left: 35px;
 			max-width: fit-content;
 			display: inline-block;
 
