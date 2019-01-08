@@ -5,11 +5,11 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "rename-main" : "mv dist/main.*.bundle.js dist/main.datacube.bundle.js",
-    "rename-scripts" : "mv dist/scripts.*.bundle.js dist/scripts.datacube.bundle.js",
-    "rename-polyfills" : "mv dist/polyfills.*.bundle.js dist/polyfills.datacube.bundle.js",
-    "rename-styles" : "mv dist/styles.*.bundle.css dist/styles.datacube.bundle.css",
-    "rename-inline" : "mv dist/inline.*.bundle.js dist/inline.datacube.bundle.js",
+    "rename-main": "mv dist/main.*.bundle.js dist/main.datacube.bundle.js",
+    "rename-scripts": "mv dist/scripts.*.bundle.js dist/scripts.datacube.bundle.js",
+    "rename-polyfills": "mv dist/polyfills.*.bundle.js dist/polyfills.datacube.bundle.js",
+    "rename-styles": "mv dist/styles.*.bundle.css dist/styles.datacube.bundle.css",
+    "rename-inline": "mv dist/inline.*.bundle.js dist/inline.datacube.bundle.js",
     "build": "npm run env -s && ng build --prod && npm run rename-main && npm run rename-scripts && npm run rename-polyfills && npm run rename-styles && npm run rename-inline",
     "start": "ng serve --proxy-config proxy.conf.js",
     "lint": "ng lint --type-check && stylelint \"src/**/*.scss\" --syntax scss && htmlhint \"src\" --config .htmlhintrc",
@@ -62,7 +62,7 @@
     "glslify": "^6.1.0",
     "ify-loader": "^1.1.0",
     "jquery": "^3.2.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.11",
     "mapbox-gl": "^0.40.1",
     "ng2-slider-component": "1.0.9",
     "ng2-toastr": "^4.1.2",
@@ -70,6 +70,7 @@
     "plotly.js-cartesian-dist": "^1.42.5",
     "primeng": "^4.2.2",
     "rxjs": "^5.5.5",
+    "wcs.js": "git+https://github.com/astrojs/wcsjs.git",
     "zone.js": "^0.8.12"
   },
   "browserify": {
