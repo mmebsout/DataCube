@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
               private i18nService: I18nService,
               private loader: LoaderService,
               private elRef: ElementRef) {
+                    //init each object with the correct value (displayed or not)
                     this.attrAppDataCube = (this.elRef.nativeElement.getAttribute('appDataCube')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appDataCube')):true,
                     this.attrAppSpectre = (this.elRef.nativeElement.getAttribute('appSpectre')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appSpectre')):true,
                     this.attrAppHistogramm = (this.elRef.nativeElement.getAttribute('appHistogramm')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appHistogramm')):true,
@@ -63,6 +64,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // Setup logger
     if (environment.production) {
+      log.debug('Production mode');
       Logger.enableProductionMode();
     }
 
@@ -74,7 +76,7 @@ export class AppComponent implements OnInit {
     log.debug('attrDataPath : ', this.attrDataPath);
     log.debug('attrFile : ', this.attrFile);
 
-
+    //init loader with good values (loader service share values into component)
     this.loader.init(this.attrAppDataCube, this.attrAppSpectre, this.attrAppHistogramm, this.attrAppDescription, this.attrDataPath, this.attrFile);
 
     // Setup translations
