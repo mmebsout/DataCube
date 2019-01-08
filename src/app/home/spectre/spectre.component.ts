@@ -7,10 +7,12 @@ import { Subscription } from 'rxjs/Subscription';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
-//import * as Plotly from 'plotly.js';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
+import { Logger } from '../../core/logger.service';
+
 declare function require(moduleName: string): any;
 const Plotly = require('plotly.js/lib/index-cartesian.js');
+const log = new Logger('Spectre');
 
 @Component({
 	selector: 'app-spectre',
@@ -46,26 +48,27 @@ export class SpectreComponent implements OnInit {
 				private streamFitService: StreamFitService,
 				private loaderService: LoaderService,
 				private spectreService: SpectreService) {
+		
+		//get if spectre must be loaded (plugin gestion)
 		this.mustBeLoaded = this.loaderService.spectre;
 		if(this.mustBeLoaded){
 
+			//if filedata is defined
 			if(this.loaderService.fileData != null){
 				this.currentSlide = new Fit(this.loaderService.fileData);
+				log.info(`file is loaded : ${this.loaderService.fileData}`);
 			}
-
+			//if a new file is loaded
 			streamFitService.FitFile$.subscribe(fit => {
 				if(this.loaderService.dataPath != null){
 					this.pathData = this.loaderService.dataPath;
 				}	
-				/* if(this.loaderService.fileData != null){
-					this.currentSlide = new Fit(this.loaderService.fileData);
-				}else{ */
 				this.currentSlide = new Fit(fit);
-				//}	
+				log.info(`file is loaded : ${fit}`);
 				this.ngOnInit();
 			});
 		}		
-
+		//receive a new datacube, draw a spectre
 		this.subscription = cubeToSpectreService.CubePointCoord$.subscribe(coord => {		
 			this.dataCubePoint = coord;
 			this.lastTrace++;
@@ -74,6 +77,7 @@ export class SpectreComponent implements OnInit {
 		},
 		error => { console.log('error:', error)});
 
+		//receive reset spectre
 		this.resetSubscription = cubeToSpectreService.ResetGraph$.subscribe(reset => {
 			if (reset) {
 				let nbSpectreTraces = this.lastTrace;
@@ -90,6 +94,7 @@ export class SpectreComponent implements OnInit {
 			}
 		});
 
+		//if trace hidden into datacube then spectre redraw traces
 		this.traceNumberSubscription = cubeToSpectreService.CubeTrace$.subscribe(traceNumber => {
 			const graphDiv = <CustomHTMLElement>document.getElementById('graphDiv');
 			if(graphDiv.data[traceNumber-1].visible == undefined || graphDiv.data[traceNumber-1].visible == true){
@@ -115,6 +120,7 @@ export class SpectreComponent implements OnInit {
 		.finally(() => { this.spectreLoadingStatus.emit(false);  })
 		.subscribe((spectreData: any) => {
 			this.spectreData = spectreData;
+			//if spectre must be loaded then draw
 			if(this.mustBeLoaded){
 				this.spectreName++;
 				this.spectreData = [
@@ -141,24 +147,7 @@ export class SpectreComponent implements OnInit {
 	 * @function ngOnInit
 	 */
 	ngOnInit() {
-		//if(this.mustBeLoaded == 'true'){
-			const data: any = [],
-						layout = {
-							title: 'Wave Tab (um)',
-							xaxis: {
-								title: 'Wave length',
-								showgrid: false,
-								zeroline: false
-							},
-							yaxis: {
-								title: 'Percent',
-								showline: false
-							}
-						};
 
-			Plotly.newPlot('graphDiv', data, layout);
-			//this.changeVisibleTrace();
-		//} 
 	}
 
 	/**
@@ -196,29 +185,5 @@ export class SpectreComponent implements OnInit {
 		myPlot.on('plotly_legendclick', (data: any) => {
 			_cubeToSpectreService.shareSpectreTraceNumber(data.curveNumber+1);
 		});
-	}
-
-	/**
-	 * Set the language
-	 * @function setLanguage
-	 */
-	setLanguage(language: string) {
-		this.i18nService.language = language;
-	}
-
-	/**
-	 * Get the current language
-	 * @function currentLanguage
-	 */
-	get currentLanguage(): string {
-		return this.i18nService.language;
-	}
-
-	/**
-	 * Get all languages
-	 * @function currentLanguage
-	 */
-	get languages(): string[] {
-		return this.i18nService.supportedLanguages;
 	}
 }
