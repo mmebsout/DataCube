@@ -19,10 +19,14 @@ DataCube Plugin allows manipulate and displays DataCube into package NPM
 		appDataCube: true,
 		appSpectre: true,
 		appHistogramm: true,
-		appDescription: true
+		appDescription: true,
+		appFile: "<filename>",
+		appDataPath: ""
 	});
 	```
-Change parameters values to display the modules (DataCube, Histogramm, Spectrum, Description).
+- Change parameters values to display the modules (DataCube, Histogramm, Spectrum, Description).
+- appFile is fits filename or netcdf
+- appDataPath is path of files
 
 ## Structure
 
