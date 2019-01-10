@@ -1,37 +1,55 @@
 article {
 
-
-h2 {
-	margin: 0 0 1rem 0;
-}
-
-span {
-	color: black;
-}
-
-.descriptionList {
-	color: black;
-}
-
-.controls {
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 1px 1px 2px #bbb;
-    padding: 1em;
-    margin: 1em 0;
-	text-align: center;
-
-	button {
-		cursor: pointer;
-		display: block;
-		margin: 0 auto;
-		max-width: 200px;
-		width: 100%;
+	h2 {
+		margin: 0 0 1rem 0;
 	}
-}
 
-p-slider {
-	display: inline-block;
-	margin: 0 0 1rem 0;
-}
+	span {
+		color: black;
+	}
+
+	.descriptionList {
+		color: black;
+	}
+
+	.controls {
+		background-color: #fff;
+		border-radius: 5px;
+		box-shadow: 1px 1px 2px #bbb;
+		padding: 1em;
+		margin: 1em 0;
+		text-align: center;
+
+		button {
+			cursor: pointer;
+			display: block;
+			margin: 0 auto;
+			max-width: 200px;
+			width: 100%;
+		}
+	}
+
+	/* fix integration mizar */
+	p-slider {
+		display: inline-block;
+		margin: 0 0 1rem 0;
+		height: 4px !important;
+		border-radius: 5px !important;
+		background: #0275d8 !important;
+		box-shadow: none !important;
+	}
+
+	.ui-slider-horizontal .ui-slider-handle:hover {
+		transform: translateY(-5px) scale(1.2)  !important;
+		box-shadow: 0px 0px 2px #00aeff  !important;
+	}
+
+	.ui-slider-horizontal .ui-slider-handle {
+		background: #0275d8  !important;
+		cursor: pointer  !important;
+		width: 17px !important;
+		height: 17px !important;
+		border-radius: 50%  !important;
+		transition: all ease-in-out .2s  !important;
+	}
 }
