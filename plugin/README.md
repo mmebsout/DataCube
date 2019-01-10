@@ -2,17 +2,27 @@
 
 ### DataCube Plugin
 
-DataCube Plugin allows manipulate and displays DataCube into package NPM
+DataCube Plugin allows manipulate and displays DataCube
 
 ## Usage
 
-1. Include plugin's code:
-
-	```html
-	<script src="cubeExplorer.full.min.js" ></script>
+1. To generate plugin, launch following command into frontend project:
+	```bash
+	cd <frontend_project>/plugin/ && grunt build
 	```
 
-3. Call the plugin:
+2. Copy dist folder (plugin folder) into project which use Datacube:
+	```bash
+	cp dist/ <new_project_path>/templates/ && mv <new_project_path>/templates/ <new_project_path>/datacube/
+	```
+
+3. Include plugin's code:
+
+	```html
+	<script src="templates/datacube/libs/cubeExplorer.full.min.js" ></script>
+	```
+
+4. Call the plugin:
 
 	```javascript
 	$( "#element" ).dataCubeWidget({
@@ -21,7 +31,7 @@ DataCube Plugin allows manipulate and displays DataCube into package NPM
 		appHistogramm: true,
 		appDescription: true,
 		appFile: "<filename>",
-		appDataPath: ""
+		appDataPath: "<data_path>"
 	});
 	```
 - Change parameters values to display the modules (DataCube, Histogramm, Spectrum, Description).

@@ -7,7 +7,8 @@
 					appHistogramm: false,
                     appDescription: false,
                     appDataPath: "",
-                    appFile:""
+                    appFile:"",
+                    appendCSS: false
 				});
  */
 var folderPath =  "./templates/datacube/";
@@ -46,7 +47,8 @@ $.when(
                 appDescription: true,
                 appDataPath: "",
                 appFile:"",
-                apiRest: ""
+                apiRest: "",
+                appendCSS: false
             };
 
 
@@ -106,7 +108,7 @@ $.when(
                         appHistogramm: this.settings.appHistogramm,
                         appDescription: this.settings.appDescription,
                         appFile: this.settings.appFile,
-                        appDataPath: this.settings.appDataPath
+                        appDataPath: this.settings.appDataPath,
                     });
             },
             
@@ -122,8 +124,11 @@ $.when(
                 }
             } );
         };
-        var style = "../templates/datacube/styles.datacube.bundle.css";
-        $('head').append('<link rel="stylesheet" href="'+style+'" type="text/css" />');
+
+        if (this.settings.appendCSS){
+            var style = "../templates/datacube/styles.datacube.bundle.css";
+            $('head').append('<link rel="stylesheet" href="'+style+'" type="text/css" />');
+        }
        
 } )( jQuery, window, document );
 });

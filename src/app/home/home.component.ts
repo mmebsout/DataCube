@@ -4,11 +4,15 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { QuoteService } from './quote.service';
 
+declare function require(moduleName: string): any;
+const Plotly = require('plotly.js/lib/index-cartesian.js');
+
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss']
 })
+
 export class HomeComponent implements OnInit {
 
 	quote: string;
@@ -23,6 +27,8 @@ export class HomeComponent implements OnInit {
 	messageHistogrammeLoading = <string> '';
 	messageSpectreLoading = <string> '';
 	messageDescLoading = <string> '';
+
+
 
 	/**
 	 * Constructor of home component
@@ -40,22 +46,44 @@ export class HomeComponent implements OnInit {
 			this.messageHistogrammeLoading = res.messageHistogrammeLoading;
 			this.messageSpectreLoading = res.messageSpectreLoading;
 			this.messageDescLoading = res.messageDescLoading;
-		  });
-		const d3 = Plotly.d3;
+		  });	
+		  
+		  const d3 = Plotly.d3,
+		  WIDTH_IN_PERCENT_OF_PARENT = 100,
+		  HEIGHT_IN_PERCENT_OF_PARENT = 50;
+		  
+		  const cube = this.setGraph('#heatmap', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
+		  const spectre = this.setGraph('#graphDiv', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
+		  const histo = this.setGraph('#histogramme', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
+	  
+  
 
-		const WIDTH_IN_PERCENT_OF_PARENT = 100,
-			HEIGHT_IN_PERCENT_OF_PARENT = 50,
-			
-			cube = this.setGraph('#heatmap', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT),
-			spectre = this.setGraph('#graphDiv', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT),
-			histo = this.setGraph('#histogramme', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
-
-		window.onresize = (e) => {
+		  window.onresize = (e) => {
 			this.ngZone.run(() => {
 				Plotly.Plots.resize(cube);
 				Plotly.Plots.resize(spectre);
 				Plotly.Plots.resize(histo);
 			});
+		};
+	}
+
+	ngAfterViewInit() {
+
+		const d3 = Plotly.d3,
+		WIDTH_IN_PERCENT_OF_PARENT = 100,
+		HEIGHT_IN_PERCENT_OF_PARENT = 50;
+		
+		const cube = this.setGraph('#heatmap', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
+		const spectre = this.setGraph('#graphDiv', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
+		const histo = this.setGraph('#histogramme', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
+	
+
+		window.onresize = (e) => {
+			//this.ngZone.run(() => {
+				Plotly.Plots.resize(cube);
+				Plotly.Plots.resize(spectre);
+				Plotly.Plots.resize(histo);
+			//});
 		};
 	}
 
