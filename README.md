@@ -13,7 +13,7 @@ version 2.0.0
  ```bash
  java -jar <path>/cubeExplorer-1.0.0-SNAPSHOT.jar
  ```
- If jar file is not generated, you shoud launch the following command into root backend project:
+ If jar file is not generated, you should launch the following command into root backend project:
   ```bash
 mvn clean install
  ```

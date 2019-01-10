@@ -108,7 +108,7 @@ $.when(
                         appHistogramm: this.settings.appHistogramm,
                         appDescription: this.settings.appDescription,
                         appFile: this.settings.appFile,
-                        appDataPath: this.settings.appDataPath,
+                        appDataPath: this.settings.appDataPath
                     });
             },
             
