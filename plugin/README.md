@@ -6,6 +6,8 @@ DataCube Plugin allows manipulate and displays DataCube
 
 ## Usage
 
+Following the plugin location into new project, change value of variable : folderPath in jquery.datacube.js
+
 1. To generate plugin, launch following command into frontend project:
 	```bash
 	cd <frontend_project>/plugin/ && grunt build
@@ -19,7 +21,7 @@ DataCube Plugin allows manipulate and displays DataCube
 3. Include plugin's code:
 
 	```html
-	<script src="templates/datacube/libs/cubeExplorer.full.min.js" ></script>
+	<script src="<folderPath>/libs/cubeExplorer.full.min.js" ></script>
 	```
 
 4. Call the plugin:
