@@ -60,6 +60,8 @@ export class SpectreComponent implements OnInit {
 			}
 			//if a new file is loaded
 			streamFitService.FitFile$.subscribe(fit => {
+				//delete trace if one or many spectres already draw
+				this.deleteTraces();
 				if(this.loaderService.dataPath != null){
 					this.pathData = this.loaderService.dataPath;
 				}	
@@ -80,17 +82,7 @@ export class SpectreComponent implements OnInit {
 		//receive reset spectre
 		this.resetSubscription = cubeToSpectreService.ResetGraph$.subscribe(reset => {
 			if (reset) {
-				let nbSpectreTraces = this.lastTrace;
-				const	tabToDelete = <any>[];
-
-				for ( nbSpectreTraces; nbSpectreTraces > 0; nbSpectreTraces-- ) {
-					tabToDelete.push(-nbSpectreTraces);
-				}
-
-				Plotly.deleteTraces('graphDiv', tabToDelete).then(() => {
-					this.lastTrace = 0;
-					this.spectreName = 0;
-				});
+				this.deleteTraces();
 			}
 		});
 
@@ -106,6 +98,24 @@ export class SpectreComponent implements OnInit {
 			
 			Plotly.redraw(graphDiv);
 		});	
+	}
+
+	/**
+	 * Delete all traces
+	 * @function deleteTraces
+	 */
+	deleteTraces(){
+		let nbSpectreTraces = this.lastTrace;
+		const	tabToDelete = <any>[];
+
+		for ( nbSpectreTraces; nbSpectreTraces > 0; nbSpectreTraces-- ) {
+			tabToDelete.push(-nbSpectreTraces);
+		}
+
+		Plotly.deleteTraces('graphDiv', tabToDelete).then(() => {
+			this.lastTrace = 0;
+			this.spectreName = 0;
+		});
 	}
 
 	/**
