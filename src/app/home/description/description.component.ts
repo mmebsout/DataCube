@@ -28,7 +28,7 @@ export class DescriptionComponent implements OnInit {
 	metadatas: any = [];
 	localisation: any = {};
 	object_type: any = {};
-	pathData: string = null;
+	// pathData: string = null;
 
 	/**
 	 * Constructor of description component
@@ -56,9 +56,9 @@ export class DescriptionComponent implements OnInit {
 		
 		//if data file is loaded
 		streamFitService.FitFile$.subscribe(fit => {
-			if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
-				this.pathData = this.loaderService.dataPath;
-			}	
+			// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
+			// 	this.pathData = this.loaderService.dataPath;
+			// }	
 			this.currentSlide = new Fit(fit);
 			log.info(`filedata loaded : ${fit}`);
 			this.ngOnInit();
@@ -70,7 +70,7 @@ export class DescriptionComponent implements OnInit {
 	 */
 	ngOnInit() {
 		this.metadataService
-			.getMetadata({id: this.currentSlide.name, path : this.pathData})
+			.getMetadata({id: this.currentSlide.name})
 			.finally(() => { this.descLoadingStatus.emit(false); })
 			.subscribe((metadata: any) => {
 				if(metadata instanceof Object) {

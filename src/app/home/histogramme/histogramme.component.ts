@@ -5,6 +5,7 @@ import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
+import { CubeToHistoService } from '../../shared/services/cube-to-histo.service';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 declare function require(moduleName: string): any;
@@ -42,9 +43,13 @@ export class HistogrammeComponent implements OnInit {
 	filterBy: any;
 	histogramme : any = [];
 	traceAdded = <boolean>false;
-	//tmin :number = 0;
 	histo_transfer : any = [];
-	pathData: string = null;
+	// pathData: string = null;
+	tmin = <number>0;
+	tmax = <number>0;
+	//TODO change number of bins
+	nbBins = <number>255;
+	colorscale = <string>"";
 
 
 	/**
@@ -57,9 +62,15 @@ export class HistogrammeComponent implements OnInit {
 	constructor(
 		private i18nService: I18nService,
 		private slideService: SlideService,
+		private cubeToHistoService: CubeToHistoService,
 		private loaderService: LoaderService,
 		private streamFitService: StreamFitService, public toastr: ToastsManager) {
 		this.mustBeLoaded = this.loaderService.histogramme;
+
+		this.cubeToHistoService.Colorscale$.subscribe(color => {			
+			this.setColor(color);
+		});
+
 
 		if(this.loaderService.fileData != null){
 			this.currentSlide = new Fit(this.loaderService.fileData);
@@ -67,12 +78,16 @@ export class HistogrammeComponent implements OnInit {
 
 		//if data file is loaded
 		streamFitService.FitFile$.subscribe(fit => {
-			if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
-				this.pathData = this.loaderService.dataPath;
-			}	
+			// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
+			// 	this.pathData = this.loaderService.dataPath;
+			// }	
 			this.currentSlide = new Fit(fit);	
 			this.ngOnInit();
 		});
+	}
+
+	setColor(color:string){
+		this.colorscale = color;
 	}
 
 	swap(json : any) {
@@ -105,7 +120,7 @@ export class HistogrammeComponent implements OnInit {
 	 */
 	ngOnInit() {
 		this.slideService
-			.getSlide({id: this.currentSlide.name, path : this.pathData})
+			.getSlide({id: this.currentSlide.name})
 			.finally(() => {
 				this.histoLoadingStatus.emit(false);
 			})
@@ -131,30 +146,50 @@ export class HistogrammeComponent implements OnInit {
 						this.image.map((xi: any, i: number) => {		
 							xi.map((ji: any, j: number) => {
 								val.push(ji);
-								result_final.push(Number(ji).toFixed(20));
+								//result_final.push(Number(ji).toFixed(20));
 							});
 						});
 						let hist_tmp = new Array(colorLength);
-						let result = new Array(colorLength);
+						// let result = new Array(colorLength);
 		
-						for (let i = 0; i < colorLength; i++) {
-							result[i] = 0;
-						}
+						// for (let i = 0; i < colorLength; i++) {
+						// 	result[i] = 0;
+						// }
+						let max = 0, min = 0;
+						this.image.map((xi: any, i: number) => {
+							max = Math.max.apply(null, xi);
+							min = Math.min.apply(null, xi);
 		
+							if (max > this.tmax) {
+								this.tmax = max;
+							}
+		
+							if (min < this.tmin) {
+								this.tmin = min;
+							}
+						});
+						console.log(this.tmin+ " "+this.tmax);
+						// let step = this.tmax/255;
+						// let test=<any>[];
+						// for(let i=this.tmin;i<this.tmax;i-step){
+						// 	test.push(i);
+						// }
+						// console.log(test);
+
 						this.getHMAX(val, hist_tmp);						
 
 						hist_tmp = this.swap(hist_tmp);
 						this.histo_transfer = hist_tmp;
-						_.forEach(hist_tmp, function(value: any, key : any) {
-							if(hist_tmp[key]!==undefined){
-								result[key] =Number(hist_tmp[key]).toFixed(20);
-							}
-							else{
-								result[key] = 0;
-							}
-						});
+						// _.forEach(hist_tmp, function(value: any, key : any) {
+						// 	if(hist_tmp[key]!==undefined){
+						// 		result[key] =Number(hist_tmp[key]).toFixed(20);
+						// 	}
+						// 	else{
+						// 		result[key] = 0;
+						// 	}
+						// });
 						if(this.mustBeLoaded){
-							this.setHistogram(result_final);
+							this.setHistogram(val);
 							const r = this.getRange();
 						}	
 					}
@@ -180,20 +215,25 @@ export class HistogrammeComponent implements OnInit {
 	 * @function drawTransferFunction
 	 */
 	drawTransferFunction() {
+		//TODO repère pour Jean-Christophe transfer function
 		if (this.traceAdded) {
 			this.deleteTransferFunction();
 		}
 		let spline : any = [];
 		let x : any = [];
+		let nbBins = 255;
 
 		if(this.activeLinear){
 			_.forEach(this.histo_transfer, function(value: any, key : any) {
-				if(value >= 0){
-					x.push(value);
-				}			
+				// if(value >= 0){
+				// 	x.push(value);
+				// }			
 				spline.push(key);
 			});
-			
+			for (let i = 0; i < nbBins; i++) {
+				let value = i;
+				x.push(value / nbBins);
+			}
 		}
 		else if(this.activeExpo){
 			_.forEach(this.histo_transfer, function(value: any, key : any) {
@@ -222,12 +262,8 @@ export class HistogrammeComponent implements OnInit {
 		}
 		x = _.orderBy(x,Number,['asc']);
 
-			let tmp = [];
-			for(let i=0;i<spline.length;i++){
-				if(spline[i] % 5 == 0){
-					tmp.push(spline[i]);
-				}
-			};
+		console.log(x);
+		console.log(spline);	
 
 		//add spline on histogramm
 		let splineData = [
@@ -252,6 +288,7 @@ export class HistogrammeComponent implements OnInit {
 	 * @param {any} range thresold
 	 */
 	computeValuesToDataCubeAfterThreshold(range : any) {
+		//TODO repère pour Jean-Christophe thresold histogramme
 		let newImageAfterThreshold: any = [];
 		if(range == undefined){
 			range = {min:0,max:255};
@@ -292,22 +329,35 @@ export class HistogrammeComponent implements OnInit {
 			});
 		}
 		else{
-			//by default : linear
-			/* newImageAfterThreshold = this.image.map((xi: any, i: number) => {
-				return xi.map((ji: any) => {
-					tmp = (ji - range.min ) / (range.max - range.min) * 255;
-					return tmp;
-				})
-			}); */
 
-			//get image values with value between range min and range max
-			newImageAfterThreshold = this.image.map((xi: any, i: number) => {
-				return xi.map((ji: any) => {
-					if(ji>= range.min && ji <= range.max){
-						return ji;
-					}
-				})
-			});
+			//TODO if grey coloscale put black color if value<min and white if value > max
+			if(this.colorscale=="Greys"){
+				//get image values with value between range min and range max
+				newImageAfterThreshold = this.image.map((xi: any, i: number) => {
+					return xi.map((ji: any) => {
+						if(ji<range.min && ji != null){
+							return this.tmin;
+						}
+						else 
+						if(ji>= range.min && ji <= range.max){
+							return ji;
+						}
+						else if( ji > range.max){
+							return this.tmax;
+						}
+					})
+				});
+			}else{
+				//get image values with value between range min and range max
+				newImageAfterThreshold = this.image.map((xi: any, i: number) => {
+					return xi.map((ji: any) => {					
+						if(ji>= range.min && ji <= range.max){
+							return ji;
+						}						
+					})
+				});
+			}
+
 		}
 		this.newImageEmitter.emit(newImageAfterThreshold);	
 	}
@@ -326,6 +376,7 @@ export class HistogrammeComponent implements OnInit {
 			{
 				x: x,
 				type: 'histogram',
+				nbinsx:this.nbBins
 			}
 		];
 
@@ -345,7 +396,7 @@ export class HistogrammeComponent implements OnInit {
 			}
 		};
 
-		Plotly.newPlot('histogramme', data, layout);
+		Plotly.newPlot('histogramme', data, layout, {responsive: true});
 	}
 
 	/**
@@ -377,6 +428,7 @@ export class HistogrammeComponent implements OnInit {
 	 * @function linear
 	 */
 	linear() {
+		//TODO repère pour Jean-Christophe linear to datacube
 		this.activeLinear = true;
 		this.activeExpo = false;
 		this.activeSqr = false;
@@ -386,7 +438,13 @@ export class HistogrammeComponent implements OnInit {
 
 	 	newImageLinear = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				return ji = ( ji / 256 ) * this.hmax
+				let value=0;
+				if(ji==null){
+					value=ji;
+				}else{
+					value = ( ji / this.hmax ) * 255;
+				}
+				return value;
 			});
 		});
 
@@ -410,7 +468,13 @@ export class HistogrammeComponent implements OnInit {
 
 	 	newImageExpo = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				return ji = Math.sqrt(ji / 10.0) / Math.sqrt(256 / 10.0) * this.hmax;
+				let value=0;
+				if(ji==null){
+					value=ji;
+				}else{
+					value = ji = Math.sqrt(ji) / Math.sqrt(this.hmax) * 255;
+				}
+				return value;
 			});
 		});
 
@@ -434,7 +498,13 @@ export class HistogrammeComponent implements OnInit {
 
 		newImageSqr = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				return ji = Math.pow(ji, 2) / Math.pow(256, 2) * this.hmax;
+				let value=0;
+				if(ji==null){
+					value=ji;
+				}else{
+					value = ji = Math.pow(ji, 2)/ Math.pow(this.hmax, 2) * 255;
+				}
+				return value;
 			});
 		});
 
@@ -458,8 +528,15 @@ export class HistogrammeComponent implements OnInit {
 
 		newImageAsin = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				return ji = Math.log(ji + Math.sqrt(Math.pow(ji, 2) + 1.0 )) /
-							Math.log(256 + Math.sqrt( Math.pow(256, 2) + 1.0 )) * this.hmax;
+				// Math.log(ji + Math.sqrt(Math.pow(ji, 2) + 1.0 )) /
+				// 			Math.log(256 + Math.sqrt( Math.pow(256, 2) + 1.0 )) * this.hmax;
+				let value=0;
+				if(ji==null){
+					value=ji;
+				}else{
+					value = ji = Math.asinh(ji) / Math.asinh(this.hmax)*255;
+				}
+				return value;
 			});
 		});
 

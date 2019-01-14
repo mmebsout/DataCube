@@ -3,6 +3,25 @@
 	<div #myDiv id="heatmap"></div>
 	<!-- <canvas id="MizarCanvas"></canvas> -->
 	<div class="controls">
+			<div class="col-md-10">
+					<span translate>choiceColorscale</span> : <select [(ngModel)]="colorscale" (change)="changeColor()" class="colorscale">
+						<option>YIOrRd</option>
+						<option>YIGnBu</option>
+						<option>RdBu</option>
+						<option>Portland</option>
+						<option>Picnic</option>
+						<option>Jet</option>
+						<option>Hot</option>
+						<option>Greys</option>
+						<option>Greens</option>
+						<option>Electric</option>
+						<option>Earth</option>
+						<option>Bluered</option>
+						<option>Blackbody</option>
+						</select>
+						<label><span translate>SetSmooth</span></label>
+						<input type="checkbox" [(ngModel)]="smooth_color" (change)="setSmooth()" id="smooth_color" /> 
+				</div>
 		<p class="descriptionList"><span translate>CubeSlider</span>: {{ val.toFixed() }} / {{nbSlides}}</p>
 		<p-slider 
 			[(ngModel)]="val" 
@@ -10,7 +29,7 @@
 			[min]="1" [max]="nbSlides" 
 			[style]="{'width':'350px'}"
 			(onSlideEnd)="sliderSelectSlide(val.toFixed()-1, long, lat)"></p-slider>
-			<p class="descriptionList"><span translate>Opacity</span>: {{ val_opacity.toFixed(2) }}</p>
+		<p class="descriptionList"><span translate>Opacity</span>: {{ val_opacity.toFixed(2) }}</p>
 		<p-slider 
 			[(ngModel)]="val_opacity" 
 			[animate]="true" 

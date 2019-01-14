@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LoaderComponent } from './loader/loader.component';
 import { AccordionDirective } from './directives/accordion.directive';
 import { CubeToSpectreService } from './services/cube-to-spectre.service';
+import { CubeToHistoService } from './services/cube-to-histo.service';
 import { SearchFileService } from './services/search-file.service';
 import { StreamFitService } from './services/stream-fit.service';
 
@@ -23,7 +24,8 @@ import { StreamFitService } from './services/stream-fit.service';
 	providers: [
 		CubeToSpectreService,
 		SearchFileService,
-		StreamFitService
+		StreamFitService,
+		CubeToHistoService,
 	]
 })
 export class SharedModule {}

@@ -4,6 +4,7 @@ import { Http, Response } from '@angular/http';
 import { Router, CanActivate } from '@angular/router';
 import { I18nService } from '../../core/i18n.service';
 import { CubeToSpectreService } from '../../shared/services/cube-to-spectre.service';
+import { CubeToHistoService } from '../../shared/services/cube-to-histo.service';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
@@ -52,7 +53,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	nbSlides =  <number>1;
 	slideTrace = <number>0;
 	currentSlide: any = new Fit(null);
-	pathData: string = null;
+	// pathData: string = null;
 	world: any = [];
 	long: any = [];
 	lat: any = [];
@@ -62,6 +63,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	traceNumberSubscription: Subscription;
 	slideLoaded : number = 1;
 	pixelsSelected: any = [];
+	colorscale: string = "Jet";
+	smooth_color: string = "best";
 
 	/**
 	 * Constructor of DataCube component
@@ -69,6 +72,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @param {Http} http
 	 * @param {I18nService} i18nService - Translate service provider
 	 * @param {CubeToSpectreService} cubeToSpectreService
+	 * @param {CubeToHistoService} CubeToHistoService
 	 * @param {SlideService} slideService
 	 * @param {StreamFitService} streamFitService
 	 * @param {MetadataService} metadataService
@@ -79,12 +83,15 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				private i18nService: I18nService,
 				private translateService: TranslateService,
 				private cubeToSpectreService: CubeToSpectreService,
+				private cubeToHistoService: CubeToHistoService,
 				private slideService: SlideService,
 				private streamFitService: StreamFitService,
 				private metadataService: MetadataService,
 				private loaderService: LoaderService,
 				public toastr: ToastsManager,
 				public vcr: ViewContainerRef) {
+
+		
 
 		//get if datacube must be loaded (plugin gestion)
 		this.mustBeLoaded = this.loaderService.datacube;
@@ -111,9 +118,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			if((localStorage.getItem('userNameDataCube')=="admin") 
 			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(fit)!==-1))
 			){
-				if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
-					this.pathData = this.loaderService.dataPath;
-				}	
+				// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
+				// 	this.pathData = this.loaderService.dataPath;
+				// }	
 				this.currentSlide = new Fit(fit);
 				this.ngOnInit();
 			}else{
@@ -163,7 +170,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(this.currentSlide.name)!==-1))
 			){
 			this.metadataService
-				.getDimension({id: this.currentSlide.name, path : this.pathData})
+				.getDimension({id: this.currentSlide.name})
 				.finally(() => {
 					//toastr translate if success
 					this.translateService.get(['messageDataCube','success']).subscribe((res: any) => {
@@ -181,7 +188,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 						for (let i = 0; i < this.world.dimX; i++) {
 							this.long.push(i * this.world.stepX + this.world.refLon);
 						}
-						//gte latitude
+						//get latitude
 						for (let j = 0; j < this.world.dimY; j++) {
 							this.lat.push(j * this.world.stepY + this.world.refLat);
 						}
@@ -192,7 +199,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				});
 
 			this.slideService
-				.getSlide({id: this.currentSlide.name, path : this.pathData})
+				.getSlide({id: this.currentSlide.name})
 				.finally(() => {				
 					this.translateService.get(['cubeExplorerImage','success']).subscribe((res: any) => {
 						this.toastr.success(res.cubeExplorerImage, res.success);
@@ -249,7 +256,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		id = Number(this.val.toFixed()) + 1;		
 		if(this.val_opacity<1 && id <= this.nbSlides && (this.slideLoaded != id)){			
 			this.slideService
-			.getNextTranche({id: this.currentSlide.name, path: this.pathData}, {idTranche: id})
+			.getNextTranche({id: this.currentSlide.name}, {idTranche: id})
 			.finally(() => {})
 			.subscribe((figure: any) => {
 				this.slideData = figure.feature.properties.slide.value;
@@ -263,8 +270,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			{
 				z: this.slideData,
 				hoverinfo: 'z+text',
-				zsmooth: 'best',
+				zsmooth: (this.smooth_color)?"best":"",
 				type: 'heatmap',
+				colorscale: 'Jet',
 				text: text,
 				colorbar: {
 					thickness: 15,
@@ -296,7 +304,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	sliderSelectSlide(indexVal: number, long: any, lat: any): void {
 
 		this.slideService
-			.getNextTranche({id: this.currentSlide.name, path: this.pathData}, {idTranche: indexVal})
+			.getNextTranche({id: this.currentSlide.name}, {idTranche: indexVal})
 			.finally(() => {
 				if(this.translateService.currentLang == 'en-US') {
 					this.toastr.success(`Slide Nb  ${indexVal + 1} is loaded!`, `Success!`);
@@ -334,7 +342,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 					z: this.slideData,
 					hoverinfo: 'z+text',
 					text: text,
-					zsmooth: 'best',
+					zsmooth: (this.smooth_color)?"best":"",
+					colorscale: this.colorscale,
 					type: 'heatmap',
 					colorbar: {
 						thickness: 15,
@@ -428,19 +437,22 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			Long & Lat:<br> (${yi} , ${xi})`));
 
 		this.val = 1;
+		//console.log(this.slideData);
 		this.dataTraces = [
 			{
 				z: this.slideData,
 				hoverinfo: 'z+text',
 				text: text,
-				zsmooth: 'best',
+				zsmooth: (this.smooth_color)?"best":"",
 				type: 'heatmap',
+				colorscale: this.colorscale,
 				colorbar: {
 					thickness: 15,
 					xpad: 5
 				}
 			}
 		];
+		//TODO SCALE DATACUBE
 		const layout = {			
 			margin: {
 				l: 40,
@@ -453,7 +465,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		};
 		const data = this.dataTraces;
 		
-		Plotly.newPlot(this.graphId, data, layout);
+		Plotly.newPlot(this.graphId, data, layout, {responsive: true});
 	}
 
 	/**
@@ -569,4 +581,61 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			}
 		});
 	}
+
+	/**
+	 * Change the colorscale of datacube
+	 * @function changeColor
+	 */
+	changeColor() {		
+		const _cubeToHistoService = this.cubeToHistoService;
+		_cubeToHistoService.shareColorscale(this.colorscale);
+		var data = [{
+			z: this.slideData,
+			  colorscale: this.colorscale,
+			  zsmooth: (this.smooth_color)?"best":"",
+			  type: 'heatmap'
+			}
+		  ];
+
+		  const layout = {			
+			margin: {
+				l: 40,
+				r: 40,
+				t: 40,
+				b: 40
+			},
+			showlegend: true,
+			legend: {"orientation": "h"}
+		};
+		Plotly.newPlot(this.graphId, data, layout);
+
+	}
+
+	/**
+	 * Set smooth of datacube
+	 * @function setSmooth
+	 */
+	setSmooth() {
+		console.log(this.smooth_color);
+		var data = [{
+			z: this.slideData,
+			colorscale: this.colorscale,
+			type: 'heatmap',
+			zsmooth: (this.smooth_color)?"best":"",
+			}
+		];
+
+		const layout = {			
+			margin: {
+				l: 40,
+				r: 40,
+				t: 40,
+				b: 40
+			},
+			showlegend: true,
+			legend: {"orientation": "h"}
+		};
+		Plotly.newPlot(this.graphId, data, layout);
+	}
+
 }

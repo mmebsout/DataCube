@@ -39,5 +39,7 @@
   "RememberMe" : "Remember me",
   "Login" : "Login",
   "PasswordRequired" : "Password is required",
-  "Opacity" : "Opacity"
+  "Opacity" : "Opacity",
+  "choiceColorscale" : "Color choice",
+  "SetSmooth" : "Set smooth"
 }

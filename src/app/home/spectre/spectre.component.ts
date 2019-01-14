@@ -33,7 +33,7 @@ export class SpectreComponent implements OnInit {
 	currentSlide: any = new Fit(null);
 	spectreData: any = [];
 	serviceSpectre : SpectreService;
-	pathData: string = null;
+	// pathData: string = null;
 
 	/**
 	 * Constructor of spectre component
@@ -62,9 +62,9 @@ export class SpectreComponent implements OnInit {
 			streamFitService.FitFile$.subscribe(fit => {
 				//delete trace if one or many spectres already draw
 				this.deleteTraces();
-				if(this.loaderService.dataPath != null){
-					this.pathData = this.loaderService.dataPath;
-				}	
+				// if(this.loaderService.dataPath != null){
+				// 	this.pathData = this.loaderService.dataPath;
+				// }	
 				this.currentSlide = new Fit(fit);
 				log.info(`file is loaded : ${fit}`);
 				this.ngOnInit();
@@ -125,7 +125,7 @@ export class SpectreComponent implements OnInit {
 	 */
 	getSpectrum(name : string, x: any, y: any) : any {
 		this.serviceSpectre
-		.getSpectre({id: name, path: this.pathData},
+		.getSpectre({id: name},
 					{naxis1: x, naxis2: y})
 		.finally(() => { this.spectreLoadingStatus.emit(false);  })
 		.subscribe((spectreData: any) => {
