@@ -6,7 +6,6 @@
 					appSpectre: false,
 					appHistogramm: false,
                     appDescription: false,
-                    appDataPath: "",
                     appFile:"",
                     appendCSS: false
 				});
@@ -46,7 +45,6 @@ $.when(
                 appHistogramm: true,
                 appDescription: true,
                 appDescription: true,
-                appDataPath: "",
                 appFile:"",
                 apiRest: "",
                 appendCSS: false
@@ -110,8 +108,7 @@ $.when(
                         appSpectre: this.settings.appSpectre,
                         appHistogramm: this.settings.appHistogramm,
                         appDescription: this.settings.appDescription,
-                        appFile: this.settings.appFile,
-                        appDataPath: this.settings.appDataPath
+                        appFile: this.settings.appFile
                     });
 
                 if (this.settings.appendCSS == true){
