@@ -25,9 +25,13 @@ mvn clean install
  ```
  4. Launch production client (into frontend project), and open `localhost/datacube/` in your browser:
  ```bash
- npm run build && mv dist/ datacube/ && cp -R datacube/ <tomcat-path>/
+ npm run build && mv dist/ datacube/ && cp -R datacube/ <http-server>/
  ```
  
+# API server
+
+Documentation server (SERVER\README.md)
+
 # Project structure
 
 ```
