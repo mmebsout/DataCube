@@ -65,6 +65,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	pixelsSelected: any = [];
 	colorscale: string = "Jet";
 	smooth_color: string = "best";
+	text: string = "";
 
 	/**
 	 * Constructor of DataCube component
@@ -264,7 +265,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			this.slideLoaded = id;
 
 			//tooltip on datacube
-			const text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
+			this.text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
 			Long & Lat:<br> (${yi} , ${xi})`));
 			const sliderData = 
 			{
@@ -273,7 +274,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				zsmooth: (this.smooth_color)?"best":"",
 				type: 'heatmap',
 				colorscale: 'Jet',
-				text: text,
+				text: this.text,
 				colorbar: {
 					thickness: 15,
 					xpad: 5
@@ -334,14 +335,14 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				this.slideData = img;
 			}
 
-			const text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
+			this.text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
 			Long & Lat:<br> (${yi} , ${xi})`));
 
 			const sliderData = 
 				{
 					z: this.slideData,
 					hoverinfo: 'z+text',
-					text: text,
+					text: this.text,
 					zsmooth: (this.smooth_color)?"best":"",
 					colorscale: this.colorscale,
 					type: 'heatmap',
@@ -433,7 +434,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			this.slideData = this.slideData.feature.properties.slide.value;
 		}
 
-		const text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
+		this.text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
 			Long & Lat:<br> (${yi} , ${xi})`));
 
 		this.val = 1;
@@ -442,7 +443,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			{
 				z: this.slideData,
 				hoverinfo: 'z+text',
-				text: text,
+				text: this.text,
 				zsmooth: (this.smooth_color)?"best":"",
 				type: 'heatmap',
 				colorscale: this.colorscale,
@@ -560,7 +561,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		const _cubeToSpectreService = this.cubeToSpectreService;
 		const	tab = new Array;
 
-		this.dataTraces.forEach((element: any, index: number) => {
+		this.dataTraces.forEach((element: any, index: number) => {			
 			if (element.x) {
 				tab.push(index);
 			}
@@ -593,7 +594,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			z: this.slideData,
 			  colorscale: this.colorscale,
 			  zsmooth: (this.smooth_color)?"best":"",
-			  type: 'heatmap'
+			  hoverinfo: 'z+text',
+			  type: 'heatmap',
+			  text: this.text
 			}
 		  ];
 
@@ -608,6 +611,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			legend: {"orientation": "h"}
 		};
 		Plotly.newPlot(this.graphId, data, layout);
+		//allows plot on datacube
+		this.selectedCoord();
 
 	}
 
@@ -621,7 +626,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			z: this.slideData,
 			colorscale: this.colorscale,
 			type: 'heatmap',
-			zsmooth: (this.smooth_color)?"best":"",
+			zsmooth: (this.smooth_color)?"best":"",		
+			hoverinfo: 'z+text',	
+			text: this.text
 			}
 		];
 
@@ -636,6 +643,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			legend: {"orientation": "h"}
 		};
 		Plotly.newPlot(this.graphId, data, layout);
+		//allows plot on datacube
+		this.selectedCoord();
 	}
 
 }

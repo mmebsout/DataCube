@@ -146,15 +146,9 @@ export class HistogrammeComponent implements OnInit {
 						this.image.map((xi: any, i: number) => {		
 							xi.map((ji: any, j: number) => {
 								val.push(ji);
-								//result_final.push(Number(ji).toFixed(20));
 							});
 						});
 						let hist_tmp = new Array(colorLength);
-						// let result = new Array(colorLength);
-		
-						// for (let i = 0; i < colorLength; i++) {
-						// 	result[i] = 0;
-						// }
 						let max = 0, min = 0;
 						this.image.map((xi: any, i: number) => {
 							max = Math.max.apply(null, xi);
@@ -169,25 +163,11 @@ export class HistogrammeComponent implements OnInit {
 							}
 						});
 						console.log(this.tmin+ " "+this.tmax);
-						// let step = this.tmax/255;
-						// let test=<any>[];
-						// for(let i=this.tmin;i<this.tmax;i-step){
-						// 	test.push(i);
-						// }
-						// console.log(test);
 
 						this.getHMAX(val, hist_tmp);						
 
 						hist_tmp = this.swap(hist_tmp);
 						this.histo_transfer = hist_tmp;
-						// _.forEach(hist_tmp, function(value: any, key : any) {
-						// 	if(hist_tmp[key]!==undefined){
-						// 		result[key] =Number(hist_tmp[key]).toFixed(20);
-						// 	}
-						// 	else{
-						// 		result[key] = 0;
-						// 	}
-						// });
 						if(this.mustBeLoaded){
 							this.setHistogram(val);
 							const r = this.getRange();
@@ -225,15 +205,23 @@ export class HistogrammeComponent implements OnInit {
 
 		if(this.activeLinear){
 			_.forEach(this.histo_transfer, function(value: any, key : any) {
-				// if(value >= 0){
-				// 	x.push(value);
-				// }			
+				if(value >= 0){
+					x.push(value);
+				}			
 				spline.push(key);
 			});
-			for (let i = 0; i < nbBins; i++) {
-				let value = i;
-				x.push(value / nbBins);
-			}
+			x = _.orderBy(x,Number,['asc']);
+			let size = x.length;
+	
+			//TODO add linear function withonly two points because plotly don't display histo and spline
+			let tmp=x.slice(0,1);
+			tmp.push(x.slice(x.length-1)[0]);
+			x = tmp;
+			tmp=[];
+			tmp = spline.slice(0,1);
+			tmp.push(spline.slice(size-1)[0]);
+			spline = tmp;
+
 		}
 		else if(this.activeExpo){
 			_.forEach(this.histo_transfer, function(value: any, key : any) {
@@ -241,8 +229,9 @@ export class HistogrammeComponent implements OnInit {
 					x.push(value);
 				}	
 				spline.push(Math.sqrt(key));
+				
 			});
-			
+			x = _.orderBy(x,Number,['asc']);
 		}
 		else if(this.activeSqr){
 			_.forEach(this.histo_transfer, function(value: any, key : any) {
@@ -251,6 +240,7 @@ export class HistogrammeComponent implements OnInit {
 				}
 				spline.push(Math.pow(2, key));
 			});
+			x = _.orderBy(x,Number,['asc']);
 		}
 		else if(this.activeAsin){
 			_.forEach(this.histo_transfer, function(value: any, key : any) {
@@ -259,13 +249,10 @@ export class HistogrammeComponent implements OnInit {
 				}
 				spline.push(Math.asin(value));
 			});
+			x = _.orderBy(x,Number,['asc']);
 		}
-		x = _.orderBy(x,Number,['asc']);
-
-		console.log(x);
-		console.log(spline);	
-
-		//add spline on histogramm
+		
+		// //add spline on histogramm
 		let splineData = [
 			{
 				x: x,
@@ -275,6 +262,7 @@ export class HistogrammeComponent implements OnInit {
 				name: 'trace function',
 				id: 'spline_histo',
 				legend: {"orientation": "v"}
+				
 			}
 		];
 		Plotly.addTraces('histogramme', splineData);
