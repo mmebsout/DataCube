@@ -5,7 +5,7 @@ version 2.0.0
 
 # Getting started
 
-1. Go to project folder and install dependencies:
+1. Go to project folder (frontend) and install dependencies:
  ```bash
  npm install
  ```
@@ -17,16 +17,21 @@ version 2.0.0
   ```bash
 mvn clean install
  ```
+ If you must open big files (>2Go), you should launch the jar file with this command : 
+ ```bash
+ java -Xmx5G -jar <path>/cubeExplorer-1.0.0-SNAPSHOT.jar
+ ```
  Log file is written where backend is launched.
 
 3. Launch development client, and open `localhost:4200` in your browser:
- ```bash
- npm start
+```bash
+npm start
  ```
- 4. Launch production client (into frontend project), and open `localhost/datacube/` in your browser:
- ```bash
- npm run build && mv dist/ datacube/ && cp -R datacube/ <http-server>/
- ```
+
+4. Launch production client (into frontend project), and open `localhost/datacube/` in your browser:
+```bash
+npm run build && mv dist/ datacube/ && cp -R datacube/ <http-server>/
+```
  
 # API server
 
