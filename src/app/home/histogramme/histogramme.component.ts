@@ -453,9 +453,26 @@ export class HistogrammeComponent implements OnInit {
 		this.traceAdded = false;
 
 		this.getRange();
-		
 		this.newImageEmitter.emit(this.slideData);
 		this.newResetEmitter.emit(null);
+		const graphDiv = <CustomHTMLElement>document.getElementById("histogramme");
+
+		//layout config
+		const update = {
+			yaxis: {
+				fixedrange: true
+			},
+			xaxis: {
+				rangeslider: {}
+			},
+			margin: {
+				l: 40,
+				r: 40,
+				t: 40,
+				b: 40
+			}
+		};
+		Plotly.relayout(graphDiv, update);
 	}
 
 	setLanguage(language: string) {
