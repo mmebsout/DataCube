@@ -304,6 +304,10 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 */
 	sliderSelectSlide(indexVal: number, long: any, lat: any): void {
 
+		//share slide to histogramm
+		const _cubeToHistoService = this.cubeToHistoService;
+		_cubeToHistoService.shareTranche(indexVal);
+
 		this.slideService
 			.getNextTranche({id: this.currentSlide.name}, {idTranche: indexVal})
 			.finally(() => {
@@ -437,7 +441,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		this.text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
 			Long & Lat:<br> (${yi} , ${xi})`));
 
-		this.val = 1;
+		this.val = this.currentTranche;
 		//console.log(this.slideData);
 		this.dataTraces = [
 			{

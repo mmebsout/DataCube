@@ -50,6 +50,7 @@ export class HistogrammeComponent implements OnInit {
 	//TODO change number of bins
 	nbBins = <number>255;
 	colorscale = <string>"";
+	tranche = <number>1;
 
 
 	/**
@@ -71,6 +72,12 @@ export class HistogrammeComponent implements OnInit {
 			this.setColor(color);
 		});
 
+		this.cubeToHistoService.tranche$.subscribe(tranche => {
+			this.setTranche(tranche);
+			console.log(tranche);
+			this.ngOnInit();
+		});
+
 
 		if (this.loaderService.fileData != null) {
 			this.currentSlide = new Fit(this.loaderService.fileData);
@@ -88,6 +95,10 @@ export class HistogrammeComponent implements OnInit {
 
 	setColor(color: string) {
 		this.colorscale = color;
+	}
+
+	setTranche(tranche: number) {
+		this.tranche = tranche;
 	}
 
 	swap(json: any) {
@@ -120,7 +131,7 @@ export class HistogrammeComponent implements OnInit {
 	 */
 	ngOnInit() {
 		this.slideService
-			.getSlide({ id: this.currentSlide.name })
+			.getNextTranche({ id: this.currentSlide.name}, {idTranche: this.tranche})
 			.finally(() => {
 				this.histoLoadingStatus.emit(false);
 			})
