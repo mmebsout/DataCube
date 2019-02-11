@@ -11,7 +11,7 @@ export class ImageRecalc {
 
 	 	newImageLinear = image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				return ji = ( ji / 256 ) * hmax;
+				return ji == null ? null : ( ji / 256 ) * hmax;
 			});
 		});
 
@@ -28,7 +28,7 @@ export class ImageRecalc {
 
 	 	newImageExpo = image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				return ji = Math.sqrt(ji / 10.0) / Math.sqrt(256 / 10.0) * hmax;
+				return ji == null ? null :  Math.sqrt(ji / 10.0) / Math.sqrt(256 / 10.0) * hmax;
 			});
 		});
 
@@ -46,7 +46,7 @@ export class ImageRecalc {
 
 		newImageSqr = image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				return ji = Math.pow(ji, 2) / Math.pow(256, 2) * hmax;
+				return ji == null ? null : Math.pow(ji, 2) / Math.pow(256, 2) * hmax;
 			});
 		});
 
@@ -64,7 +64,7 @@ export class ImageRecalc {
 
 		newImageAsin = image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				return ji = Math.log(ji + Math.sqrt(Math.pow(ji, 2) + 1.0 )) /
+				return ji == null ? null : Math.log(ji + Math.sqrt(Math.pow(ji, 2) + 1.0 )) /
 							Math.log(256 + Math.sqrt( Math.pow(256, 2) + 1.0 )) * hmax;
 			});
 		});

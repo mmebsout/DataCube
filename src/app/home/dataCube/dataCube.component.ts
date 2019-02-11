@@ -92,7 +92,6 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				public toastr: ToastsManager,
 				public vcr: ViewContainerRef) {
 
-		
 
 		//get if datacube must be loaded (plugin gestion)
 		this.mustBeLoaded = this.loaderService.datacube;
@@ -121,15 +120,13 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			){
 				// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
 				// 	this.pathData = this.loaderService.dataPath;
-				// }	
+				// }
 				this.currentSlide = new Fit(fit);
 				this.ngOnInit();
 			}else{
 				this.toastr.error("Forbidden", 'Oops!')
 			}
-			
 		});
-	
 	}
 
 	ngOnInit() {
@@ -139,14 +136,13 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	/**
 	 * Detect changes on Datacube
 	 * @function ngOnChanges
-	 */	
+	 */
 	ngOnChanges(changes: SimpleChanges) {
 		if ( this.newImage ) {
 			this.deleteCurrentGraph();
 			this.setPlotly(changes.newImage.currentValue, this.long, this.lat);
-			this.selectedCoord();			
+			this.selectedCoord();
 		}
-	
 	}
 
 	/**
@@ -161,8 +157,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			//if no role redirect login
 			if(role==undefined){
 				this.router.navigate(['/login'], { skipLocationChange: true });
-			}	
-			
+			}
+
 			//get list files authorized
 			let list: any = localStorage.getItem('listfilesPublic').split(",");
 
@@ -177,14 +173,14 @@ export class DataCubeComponent implements OnInit, OnChanges {
 					this.translateService.get(['messageDataCube','success']).subscribe((res: any) => {
 						this.toastr.success(res.messageDataCube, res.success);
 						this.dataCubeLoadingStatus.emit(false);
-					});				
+					});
 				})
 				.subscribe((dimensions: any) => {
-					if(dimensions.feature instanceof Object) {	
-						//get slides number					
+					if(dimensions.feature instanceof Object) {
+						//get slides number
 						this.nbSlides = dimensions.feature.properties.dimensions.dimZ;
 						this.world = dimensions.feature.properties.dimensions;
-		
+
 						//get longitude
 						for (let i = 0; i < this.world.dimX; i++) {
 							this.long.push(i * this.world.stepX + this.world.refLon);
@@ -193,15 +189,15 @@ export class DataCubeComponent implements OnInit, OnChanges {
 						for (let j = 0; j < this.world.dimY; j++) {
 							this.lat.push(j * this.world.stepY + this.world.refLat);
 						}
-					}	
+					}
 					else {
-						this.toastr.error(dimensions, 'Oops!');						
-					}			
+						this.toastr.error(dimensions, 'Oops!');
+					}
 				});
 
 			this.slideService
 				.getSlide({id: this.currentSlide.name})
-				.finally(() => {				
+				.finally(() => {
 					this.translateService.get(['cubeExplorerImage','success']).subscribe((res: any) => {
 						this.toastr.success(res.cubeExplorerImage, res.success);
 					});
@@ -217,7 +213,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 							// TODO
 							// this.setMizar(slideData);
 						}
-		
+
 						this.selectedCoord();
 
 						//share trace to spectre
@@ -239,7 +235,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 					else {
 						this.toastr.error(this.fileType, 'Oops!')
 					}
-					
+
 				});
 			}
 			else{
@@ -255,7 +251,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		Plotly.restyle(this.graphId, 'opacity', this.val_opacity, [0]);
 	 	let id : number = 0;
 		id = Number(this.val.toFixed()) + 1;		
-		if(this.val_opacity<1 && id <= this.nbSlides && (this.slideLoaded != id)){			
+		if(this.val_opacity<1 && id <= this.nbSlides && (this.slideLoaded != id)){
 			this.slideService
 			.getNextTranche({id: this.currentSlide.name}, {idTranche: id})
 			.finally(() => {})
@@ -267,7 +263,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			//tooltip on datacube
 			this.text = lat.map((xi: any, i: number) => long.map((yi: any, j: number) => `
 			Long & Lat:<br> (${yi} , ${xi})`));
-			const sliderData = 
+			const sliderData =
 			{
 				z: this.slideData,
 				hoverinfo: 'z+text',
@@ -281,18 +277,18 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				},
 				showscale : true
 			};
-	
+
 			if(this.dataTraces.length == 2){
 				this.dataTraces.map((obj: any, index: number) => {
 					if (obj.opacity == undefined) {
 						return Plotly.deleteTraces(this.graphId, index);
 					}
 				});
-			}	 		
+			}
 			Plotly.addTraces(this.graphId, sliderData);
 			Plotly.restyle(this.graphId, 'opacity', 0.6 , [1]);
 
-		} 
+		}
 	}
 
 	/**
@@ -315,10 +311,10 @@ export class DataCubeComponent implements OnInit, OnChanges {
 					this.toastr.success(`Slide Nb  ${indexVal + 1} is loaded!`, `Success!`);
 				} else {
 					this.toastr.success(`Slide numéro  ${indexVal + 1} est chargée!`, `Succès!`);
-				}				
+				}
 				this.currentTranche = indexVal;
 			})
-			.subscribe((figure: any) => {			
+			.subscribe((figure: any) => {
 				const img = figure.feature.properties.slide.value;
 			if (this.newFilterReset) {
 				switch (this.newFilterReset) {
@@ -366,7 +362,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
 			for(let i=0;i<this.dataTraces.length-1;i++){
 				graphDiv.data[i].name = "trace "+(i+1);
-			}		
+			}
 
 			Plotly.redraw(graphDiv);
 
@@ -417,7 +413,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 					this.toastr.success(`Pixel is already selected`, `Success!`);
 				} else {
 					this.toastr.success(`Le pixel sélectioné est déjà sélectionné`, `Succès!`);
-				}	
+				}
 			}
 		});
 		if(isSelected==false){
@@ -458,7 +454,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			}
 		];
 		//TODO SCALE DATACUBE
-		const layout = {			
+		const layout = {
 			margin: {
 				l: 40,
 				r: 40,
@@ -469,7 +465,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			legend: {"orientation": "h"}
 		};
 		const data = this.dataTraces;
-		
+
 		Plotly.newPlot(this.graphId, data, layout, {responsive: true});
 	}
 
@@ -517,16 +513,16 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				pn = data.lassoPoints.x[i];
 				tn = data.lassoPoints.y[i];
 				Plotly.addTraces(myPlot, {y: [tn], x: [pn]});
-			
+
 				//change color legend datacube
 				Plotly.restyle(this.graphId, 'marker.color', this.colors[this.dataTraces.length-2], [this.dataTraces.length-1]);
 
 				_cubeToSpectreService.shareCubePointCoord({coordX: Math.round(pn), coordY: Math.round(tn)});
-			};			
+			};
 		});
 
 		//to click
-		myPlot.on('plotly_click', (data: any) => {			
+		myPlot.on('plotly_click', (data: any) => {
 			let pn = 0,
 				tn = 0;
 
@@ -534,10 +530,10 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				pn = data.points[i].x;
 				tn = data.points[i].y;
 			};
-			
+
 			this.isSelectedPixel(pn, tn);
 			Plotly.addTraces(myPlot, {y: [tn], x: [pn]});
-			
+
 			//change color legend datacube
 			Plotly.restyle(this.graphId, 'marker.color', this.colors[this.dataTraces.length-2], [this.dataTraces.length-1]);
 
@@ -550,7 +546,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @function resetPlots
 	 */
 	changeVisibleTrace(): void{
-		const _cubeToSpectreService = this.cubeToSpectreService, 
+		const _cubeToSpectreService = this.cubeToSpectreService,
 		myPlot = <CustomHTMLElement>document.getElementById(this.graphId);
 		myPlot.on('plotly_legendclick', (data: any) => {
 			_cubeToSpectreService.shareTraceNumber(data.curveNumber);
@@ -565,7 +561,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		const _cubeToSpectreService = this.cubeToSpectreService;
 		const	tab = new Array;
 
-		this.dataTraces.forEach((element: any, index: number) => {			
+		this.dataTraces.forEach((element: any, index: number) => {
 			if (element.x) {
 				tab.push(index);
 			}
@@ -591,7 +587,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * Change the colorscale of datacube
 	 * @function changeColor
 	 */
-	changeColor() {		
+	changeColor() {
 		const _cubeToHistoService = this.cubeToHistoService;
 		_cubeToHistoService.shareColorscale(this.colorscale);
 		var data = [{
@@ -604,7 +600,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			}
 		  ];
 
-		  const layout = {			
+		  const layout = {
 			margin: {
 				l: 40,
 				r: 40,
@@ -630,13 +626,13 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			z: this.slideData,
 			colorscale: this.colorscale,
 			type: 'heatmap',
-			zsmooth: (this.smooth_color)?"best":"",		
-			hoverinfo: 'z+text',	
+			zsmooth: (this.smooth_color)?"best":"",
+			hoverinfo: 'z+text',
 			text: this.text
 			}
 		];
 
-		const layout = {			
+		const layout = {
 			margin: {
 				l: 40,
 				r: 40,

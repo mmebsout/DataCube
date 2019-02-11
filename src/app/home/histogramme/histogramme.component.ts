@@ -74,7 +74,6 @@ export class HistogrammeComponent implements OnInit {
 
 		this.cubeToHistoService.tranche$.subscribe(tranche => {
 			this.setTranche(tranche);
-			console.log(tranche);
 			this.ngOnInit();
 		});
 
@@ -87,7 +86,7 @@ export class HistogrammeComponent implements OnInit {
 		streamFitService.FitFile$.subscribe(fit => {
 			// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
 			// 	this.pathData = this.loaderService.dataPath;
-			// }	
+			// }
 			this.currentSlide = new Fit(fit);
 			this.ngOnInit();
 		});
@@ -111,7 +110,6 @@ export class HistogrammeComponent implements OnInit {
 
 	getHMAX(val: any, hist_tmp: any) {
 		this.hmax = Number.MIN_VALUE;
-
 		for (let i = 0; i < val.length; i++) {
 			const bin = (val[i] == null) ? 0 : val[i].toPrecision(1);
 			hist_tmp[bin] = 0;
@@ -131,7 +129,7 @@ export class HistogrammeComponent implements OnInit {
 	 */
 	ngOnInit() {
 		this.slideService
-			.getNextTranche({ id: this.currentSlide.name}, {idTranche: this.tranche})
+			.getNextTranche({ id: this.currentSlide.name }, { idTranche: this.tranche })
 			.finally(() => {
 				this.histoLoadingStatus.emit(false);
 			})
