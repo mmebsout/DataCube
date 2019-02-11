@@ -30,26 +30,27 @@ export class HistogrammeComponent implements OnInit {
 	@Output()
 	newResetEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	mustBeLoaded : boolean;
+	mustBeLoaded: boolean;
 	slideData: any = [];
 	currentSlide: any = new Fit(null);
-	activeLinear = <boolean>false;
+	activeLinear = <boolean>true;
 	activeExpo = <boolean>false;
 	activeSqr = <boolean>false;
 	activeAsin = <boolean>false;
 	image: any = [];
 	hmax = <number>0;
-	isLoadingHisto = <boolean> true;
+	isLoadingHisto = <boolean>true;
 	filterBy: any;
-	histogramme : any = [];
+	histogramme: any = [];
 	traceAdded = <boolean>false;
-	histo_transfer : any = [];
+	histo_transfer: any = [];
 	// pathData: string = null;
 	tmin = <number>0;
 	tmax = <number>0;
 	//TODO change number of bins
 	nbBins = <number>255;
 	colorscale = <string>"";
+	tranche = <number>1;
 
 
 	/**
@@ -67,12 +68,18 @@ export class HistogrammeComponent implements OnInit {
 		private streamFitService: StreamFitService, public toastr: ToastsManager) {
 		this.mustBeLoaded = this.loaderService.histogramme;
 
-		this.cubeToHistoService.Colorscale$.subscribe(color => {			
+		this.cubeToHistoService.Colorscale$.subscribe(color => {
 			this.setColor(color);
 		});
 
+		this.cubeToHistoService.tranche$.subscribe(tranche => {
+			this.setTranche(tranche);
+			console.log(tranche);
+			this.ngOnInit();
+		});
 
-		if(this.loaderService.fileData != null){
+
+		if (this.loaderService.fileData != null) {
 			this.currentSlide = new Fit(this.loaderService.fileData);
 		}
 
@@ -81,34 +88,38 @@ export class HistogrammeComponent implements OnInit {
 			// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
 			// 	this.pathData = this.loaderService.dataPath;
 			// }	
-			this.currentSlide = new Fit(fit);	
+			this.currentSlide = new Fit(fit);
 			this.ngOnInit();
 		});
 	}
 
-	setColor(color:string){
+	setColor(color: string) {
 		this.colorscale = color;
 	}
 
-	swap(json : any) {
+	setTranche(tranche: number) {
+		this.tranche = tranche;
+	}
+
+	swap(json: any) {
 		let ret = [];
-		for(let key in json){
-		  ret[json[key]] = key;
+		for (let key in json) {
+			ret[json[key]] = key;
 		}
 		return ret;
 	}
 
-	getHMAX(val : any, hist_tmp : any) {
+	getHMAX(val: any, hist_tmp: any) {
 		this.hmax = Number.MIN_VALUE;
-						
+
 		for (let i = 0; i < val.length; i++) {
-			const bin = (val[i]==null)?0:val[i].toPrecision(1);							
-			hist_tmp[bin]=0;
-			
+			const bin = (val[i] == null) ? 0 : val[i].toPrecision(1);
+			hist_tmp[bin] = 0;
+
 		}
 		for (let i = 0; i < val.length; i++) {
-			let bin = (val[i]==null)?0:val[i].toPrecision(1);						
-			hist_tmp[Number(bin)]++;							
+			let bin = (val[i] == null) ? 0 : val[i].toPrecision(1);
+			hist_tmp[Number(bin)]++;
 			if (hist_tmp[Number(bin)] > this.hmax) {
 				this.hmax = hist_tmp[Number(bin)];
 			}
@@ -120,30 +131,30 @@ export class HistogrammeComponent implements OnInit {
 	 */
 	ngOnInit() {
 		this.slideService
-			.getSlide({id: this.currentSlide.name})
+			.getNextTranche({ id: this.currentSlide.name}, {idTranche: this.tranche})
 			.finally(() => {
 				this.histoLoadingStatus.emit(false);
 			})
 			.subscribe(slideData => {
 				//get user role
-				let role:  any = null;
+				let role: any = null;
 				role = JSON.parse(localStorage.getItem('userNameRole'));
 
 				//get list files authorized
 				let list: any = localStorage.getItem('listfilesPublic').split(",");
 
 				//check if user is authorized
-				if((localStorage.getItem('userNameDataCube')=="admin") 
-				|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(this.currentSlide.name)!==-1))
-				){
+				if ((localStorage.getItem('userNameDataCube') == "admin")
+					|| ((localStorage.getItem('userNameDataCube') !== "admin") && (role == "public" && list.indexOf(this.currentSlide.name) !== -1))
+				) {
 					this.slideData = slideData;
-					if(this.slideData.feature instanceof Object) {
+					if (this.slideData.feature instanceof Object) {
 						this.image = this.slideData.feature.properties.slide.value;
-						
+
 						let val = <any>[];
 						let result_final = <any>[];
 						const colorLength = 256;
-						this.image.map((xi: any, i: number) => {		
+						this.image.map((xi: any, i: number) => {
 							xi.map((ji: any, j: number) => {
 								val.push(ji);
 							});
@@ -153,120 +164,31 @@ export class HistogrammeComponent implements OnInit {
 						this.image.map((xi: any, i: number) => {
 							max = Math.max.apply(null, xi);
 							min = Math.min.apply(null, xi);
-		
+
 							if (max > this.tmax) {
 								this.tmax = max;
 							}
-		
+
 							if (min < this.tmin) {
 								this.tmin = min;
 							}
 						});
-						console.log(this.tmin+ " "+this.tmax);
+						console.log(this.tmin + " " + this.tmax);
 
-						this.getHMAX(val, hist_tmp);						
+						this.getHMAX(val, hist_tmp);
 
 						hist_tmp = this.swap(hist_tmp);
 						this.histo_transfer = hist_tmp;
-						if(this.mustBeLoaded){
+						if (this.mustBeLoaded) {
 							this.setHistogram(val);
 							const r = this.getRange();
-						}	
+						}
 					}
 				}
-				else{
-					this.toastr.error("Forbidden", 'Oops!');		
+				else {
+					this.toastr.error("Forbidden", 'Oops!');
 				}
 			});
-	}
-
-	/**
-	 * Delete transfer function
-	 * @function deleteTransferFunction
-	 */
-	deleteTransferFunction() {
-		if(this.activeAsin || this.activeExpo || this.activeLinear || this.activeSqr) {
-			Plotly.deleteTraces('histogramme', 1).then(() => {});
-		}		
-	}
-
-	/**
-	 * Draw transfer function
-	 * @function drawTransferFunction
-	 */
-	drawTransferFunction() {
-		//TODO repère pour Jean-Christophe transfer function
-		if (this.traceAdded) {
-			this.deleteTransferFunction();
-		}
-		let spline : any = [];
-		let x : any = [];
-		let nbBins = 255;
-
-		if(this.activeLinear){
-			_.forEach(this.histo_transfer, function(value: any, key : any) {
-				if(value >= 0){
-					x.push(value);
-				}			
-				spline.push(key);
-			});
-			x = _.orderBy(x,Number,['asc']);
-			let size = x.length;
-	
-			//TODO add linear function withonly two points because plotly don't display histo and spline
-			let tmp=x.slice(0,1);
-			tmp.push(x.slice(x.length-1)[0]);
-			x = tmp;
-			tmp=[];
-			tmp = spline.slice(0,1);
-			tmp.push(spline.slice(size-1)[0]);
-			spline = tmp;
-
-		}
-		else if(this.activeExpo){
-			_.forEach(this.histo_transfer, function(value: any, key : any) {
-				if(value >= 0){
-					x.push(value);
-				}	
-				spline.push(Math.sqrt(key));
-				
-			});
-			x = _.orderBy(x,Number,['asc']);
-		}
-		else if(this.activeSqr){
-			_.forEach(this.histo_transfer, function(value: any, key : any) {
-				if(value >= 0){
-					x.push(value);
-				}
-				spline.push(Math.pow(2, key));
-			});
-			x = _.orderBy(x,Number,['asc']);
-		}
-		else if(this.activeAsin){
-			_.forEach(this.histo_transfer, function(value: any, key : any) {
-				if(value >= 0){
-					x.push(value);
-				}
-				spline.push(Math.asin(value));
-			});
-			x = _.orderBy(x,Number,['asc']);
-		}
-		
-		// //add spline on histogramm
-		let splineData = [
-			{
-				x: x,
-				y: spline,
-				line: {shape: 'spline'},
-				type: 'scatter',
-				name: 'trace function',
-				id: 'spline_histo',
-				legend: {"orientation": "v"}
-				
-			}
-		];
-		Plotly.addTraces('histogramme', splineData);
-		this.traceAdded = true;
 	}
 
 
@@ -275,79 +197,79 @@ export class HistogrammeComponent implements OnInit {
 	 * @function computeValuesToDataCubeAfterThreshold
 	 * @param {any} range thresold
 	 */
-	computeValuesToDataCubeAfterThreshold(range : any) {
-		//TODO repère pour Jean-Christophe thresold histogramme
+	computeValuesToDataCubeAfterThreshold(range: any) {
 		let newImageAfterThreshold: any = [];
-		if(range == undefined){
-			range = {min:0,max:255};
+		if (range == undefined) {
+			range = { min: this.tmin, max: this.tmax };
 		}
 
 		let tmp = 0;
-		if(this.activeLinear){
+		if (this.activeLinear) {
 			newImageAfterThreshold = this.image.map((xi: any, i: number) => {
 				return xi.map((ji: any) => {
-					tmp = 0;
-					tmp = (ji - range.min ) / (range.max - range.min) * 255;
+					if (isNaN(ji) || ji == null) {
+						tmp = NaN;
+					} else if (ji < range.min) {
+						tmp = range.min;
+					} else if (ji > range.max) {
+						tmp = range.max;
+					} else {
+						tmp = (ji - range.min) / (range.max - range.min) * range.max;
+					}
 					return tmp;
 				})
 			});
 		}
-		else if(this.activeExpo){
+		else if (this.activeExpo) {
 			newImageAfterThreshold = this.image.map((xi: any, i: number) => {
 				return xi.map((ji: any) => {
-					tmp = Math.sqrt(ji - range.min + 1) / Math.sqrt(range.max - range.min + 1);
+					if (isNaN(ji) || ji == null) {
+						tmp = NaN;
+					} else if (ji < range.min) {
+						tmp = range.min;
+					} else if (ji > range.max) {
+						tmp = range.max;
+					} else {
+						tmp = Math.sqrt(ji - range.min) / Math.sqrt(range.max - range.min) * range.max;
+					}
 					return tmp;
 				})
 			});
 		}
-		else if(this.activeSqr){
+		else if (this.activeSqr) {
 			newImageAfterThreshold = this.image.map((xi: any, i: number) => {
 				return xi.map((ji: any) => {
-					tmp = Math.exp(ji - range.min + 1) / Math.exp(range.max - range.min + 1);
+					if (isNaN(ji) || ji == null) {
+						tmp = NaN;
+					} else if (ji < range.min) {
+						tmp = range.min;
+					} else if (ji > range.max) {
+						tmp = range.max;
+					} else {
+						tmp = Math.exp(ji - range.min) / Math.exp(range.max - range.min) * range.max;
+					}
 					return tmp;
 				})
 			});
 		}
-		else if(this.activeAsin){
+		else if (this.activeAsin) {
 			newImageAfterThreshold = this.image.map((xi: any, i: number) => {
 				return xi.map((ji: any) => {
-					tmp = Math.asin(ji - range.min + 1) / Math.asin(range.max - range.min + 1);
+					if (isNaN(ji) || ji == null) {
+						tmp = NaN;
+					} else if (ji < range.min) {
+						tmp = range.min;
+					} else if (ji > range.max) {
+						tmp = range.max;
+					} else {
+						tmp = Math.asin(ji - range.min) / Math.asin(range.max - range.min) * range.max;
+					}
 					return tmp;
 				})
 			});
 		}
-		else{
 
-			//TODO if grey coloscale put black color if value<min and white if value > max
-			if(this.colorscale=="Greys"){
-				//get image values with value between range min and range max
-				newImageAfterThreshold = this.image.map((xi: any, i: number) => {
-					return xi.map((ji: any) => {
-						if(ji<range.min && ji != null){
-							return this.tmin;
-						}
-						else 
-						if(ji>= range.min && ji <= range.max){
-							return ji;
-						}
-						else if( ji > range.max){
-							return this.tmax;
-						}
-					})
-				});
-			}else{
-				//get image values with value between range min and range max
-				newImageAfterThreshold = this.image.map((xi: any, i: number) => {
-					return xi.map((ji: any) => {					
-						if(ji>= range.min && ji <= range.max){
-							return ji;
-						}						
-					})
-				});
-			}
-
-		}
-		this.newImageEmitter.emit(newImageAfterThreshold);	
+		this.newImageEmitter.emit(newImageAfterThreshold);
 	}
 
 	/**
@@ -356,7 +278,7 @@ export class HistogrammeComponent implements OnInit {
 	 * @param {any} x - X Axis array
 	 */
 	setHistogram(x: any) {
-		
+
 		this.histogramme = x;
 
 		//data to build histogramm
@@ -364,7 +286,7 @@ export class HistogrammeComponent implements OnInit {
 			{
 				x: x,
 				type: 'histogram',
-				nbinsx:this.nbBins
+				nbinsx: this.nbBins
 			}
 		];
 
@@ -372,10 +294,10 @@ export class HistogrammeComponent implements OnInit {
 		const layout = {
 			yaxis: {
 				fixedrange: true
-			},	
+			},
 			xaxis: {
 				rangeslider: {}
-			},		
+			},
 			margin: {
 				l: 40,
 				r: 40,
@@ -384,7 +306,7 @@ export class HistogrammeComponent implements OnInit {
 			}
 		};
 
-		Plotly.newPlot('histogramme', data, layout, {responsive: true});
+		Plotly.newPlot('histogramme', data, layout, { responsive: true });
 	}
 
 	/**
@@ -400,14 +322,14 @@ export class HistogrammeComponent implements OnInit {
 		};
 		//if user change the range
 		myHisto.on('plotly_relayout', (eventData: any) => {
-			if(eventData["xaxis.range"]!==undefined){
+			if (eventData["xaxis.range"] !== undefined) {
 				range.min = eventData["xaxis.range"][0];
 				range.max = eventData["xaxis.range"][1];
-				if(range.min !== undefined){
+				if (range.min !== undefined) {
 					this.computeValuesToDataCubeAfterThreshold(range);
-				}			
+				}
 				return range;
-			}		
+			}
 		});
 	}
 
@@ -416,7 +338,6 @@ export class HistogrammeComponent implements OnInit {
 	 * @function linear
 	 */
 	linear() {
-		//TODO repère pour Jean-Christophe linear to datacube
 		this.activeLinear = true;
 		this.activeExpo = false;
 		this.activeSqr = false;
@@ -424,13 +345,13 @@ export class HistogrammeComponent implements OnInit {
 		let newImageLinear: any = [];
 		this.filterBy = 'linear';
 
-	 	newImageLinear = this.image.map((xi: any, i: number) => {
+		newImageLinear = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				let value=0;
-				if(ji==null){
-					value=ji;
-				}else{
-					value = ( ji / this.hmax ) * 255;
+				let value = 0;
+				if (ji == null) {
+					value = NaN;
+				} else {
+					value = ji;
 				}
 				return value;
 			});
@@ -439,7 +360,6 @@ export class HistogrammeComponent implements OnInit {
 		this.newImageEmitter.emit(newImageLinear);
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
-		this.drawTransferFunction();
 	}
 
 	/**
@@ -447,20 +367,20 @@ export class HistogrammeComponent implements OnInit {
 	 * @function expo
 	 */
 	expo() {
-	 	this.activeExpo = true;
+		this.activeExpo = true;
 		this.activeLinear = false;
 		this.activeSqr = false;
 		this.activeAsin = false;
 		let newImageExpo: any = [];
 		this.filterBy = 'expo';
 
-	 	newImageExpo = this.image.map((xi: any, i: number) => {
+		newImageExpo = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				let value=0;
-				if(ji==null){
-					value=ji;
-				}else{
-					value = ji = Math.sqrt(ji) / Math.sqrt(this.hmax) * 255;
+				let value = 0;
+				if (ji == null) {
+					value = NaN;
+				} else {
+					value = Math.sqrt(ji);
 				}
 				return value;
 			});
@@ -469,7 +389,6 @@ export class HistogrammeComponent implements OnInit {
 		this.newImageEmitter.emit(newImageExpo);
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
-		this.drawTransferFunction();
 	}
 
 	/**
@@ -486,11 +405,11 @@ export class HistogrammeComponent implements OnInit {
 
 		newImageSqr = this.image.map((xi: any, i: number) => {
 			return xi.map((ji: any) => {
-				let value=0;
-				if(ji==null){
-					value=ji;
-				}else{
-					value = ji = Math.pow(ji, 2)/ Math.pow(this.hmax, 2) * 255;
+				let value = 0;
+				if (ji == null) {
+					value = NaN;
+				} else {
+					value = Math.pow(ji, 2);
 				}
 				return value;
 			});
@@ -499,7 +418,6 @@ export class HistogrammeComponent implements OnInit {
 		this.newImageEmitter.emit(newImageSqr);
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
-		this.drawTransferFunction();
 	}
 
 	/**
@@ -518,11 +436,11 @@ export class HistogrammeComponent implements OnInit {
 			return xi.map((ji: any) => {
 				// Math.log(ji + Math.sqrt(Math.pow(ji, 2) + 1.0 )) /
 				// 			Math.log(256 + Math.sqrt( Math.pow(256, 2) + 1.0 )) * this.hmax;
-				let value=0;
-				if(ji==null){
-					value=ji;
-				}else{
-					value = ji = Math.asinh(ji) / Math.asinh(this.hmax)*255;
+				let value = 0;
+				if (ji == null) {
+					value = NaN;
+				} else {
+					value = Math.asinh(ji);
 				}
 				return value;
 			});
@@ -531,7 +449,6 @@ export class HistogrammeComponent implements OnInit {
 		this.newImageEmitter.emit(newImageAsin);
 		this.newHmaxEmitter.emit(this.hmax);
 		this.newResetEmitter.emit(this.filterBy);
-		this.drawTransferFunction();
 	}
 
 	/**
@@ -539,16 +456,34 @@ export class HistogrammeComponent implements OnInit {
 	 * @function resetHisto
 	 */
 	resetHisto() {
-		this.deleteTransferFunction();
 
 		this.activeExpo = false;
-		this.activeLinear = false;
+		this.activeLinear = true;
 		this.activeAsin = false;
 		this.activeSqr = false;
-		this.traceAdded = false;	
+		this.traceAdded = false;
 
+		this.getRange();
 		this.newImageEmitter.emit(this.slideData);
 		this.newResetEmitter.emit(null);
+		const graphDiv = <CustomHTMLElement>document.getElementById("histogramme");
+
+		//layout config
+		const update = {
+			yaxis: {
+				fixedrange: true
+			},
+			xaxis: {
+				rangeslider: {}
+			},
+			margin: {
+				l: 40,
+				r: 40,
+				t: 40,
+				b: 40
+			}
+		};
+		Plotly.relayout(graphDiv, update);
 	}
 
 	setLanguage(language: string) {
