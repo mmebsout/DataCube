@@ -29,16 +29,17 @@
 			[min]="1" [max]="nbSlides" 
 			[style]="{'width':'350px'}"
 			(onSlideEnd)="sliderSelectSlide(val.toFixed()-1, long, lat)"></p-slider>
-		<!--	
-		<p class="descriptionList"><span translate>Opacity</span>: {{ val_opacity.toFixed(2) }}</p>
+	<!--		
+		<p class="descriptionList"><span translate>Opacity</span>: {{ val_opacity.toFixed(0) }}</p>
 		<p-slider 
 			[(ngModel)]="val_opacity" 
 			[animate]="true" 
-			[min]="0.00" [max]="1.00"			
+			[min]="0.00" [max]="100.00"			
 			[style]="{'width':'350px'}" 
-			[step]="0.01"
+			[step]="1"
 			(onSlideEnd)="sliderSelectOpacity(long, lat)"></p-slider>
+	-->		
 		<button class="btn" (click)="resetPlots()"><span translate>ResetPlot</span></button>
-		-->
+		
 	</div>
 </article>

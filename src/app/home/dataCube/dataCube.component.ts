@@ -49,7 +49,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	slideData: any = [];
 	fileType: any = [];
 	val =  <number>1;
-	val_opacity = <number>1.00;
+	val_opacity = <number>100;
 	nbSlides =  <number>1;
 	slideTrace = <number>0;
 	currentSlide: any = new Fit(null);
@@ -248,10 +248,10 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @function sliderSelectOpacity
 	 */
 	sliderSelectOpacity(long: any, lat: any) {
-		Plotly.restyle(this.graphId, 'opacity', this.val_opacity, [0]);
+		Plotly.restyle(this.graphId, 'opacity', this.val_opacity/100, [0]);
 	 	let id : number = 0;
 		id = Number(this.val.toFixed()) + 1;		
-		if(this.val_opacity<1 && id <= this.nbSlides && (this.slideLoaded != id)){
+		if(this.val_opacity<100 && id <= this.nbSlides && (this.slideLoaded != id)){
 			this.slideService
 			.getNextTranche({id: this.currentSlide.name}, {idTranche: id})
 			.finally(() => {})
@@ -356,7 +356,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			this.deleteCurrentGraph();
 
 			Plotly.addTraces(this.graphId, sliderData);
-			Plotly.restyle(this.graphId, 'opacity', this.val_opacity, [0]);
+			Plotly.restyle(this.graphId, 'opacity', this.val_opacity/100, [0]);
 
 			//rename legend trace after selected slide
 			const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);

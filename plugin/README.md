@@ -10,7 +10,7 @@ Following the plugin location into new project, change value of variable : folde
 
 1. To generate plugin, launch following command into frontend project:
 	```bash
-	cd <frontend_project>/plugin/ && grunt build
+	cd <frontend_project>/plugin/ && npm install && grunt build
 	```
 
 2. Copy dist folder (plugin folder) into project which use Datacube:
