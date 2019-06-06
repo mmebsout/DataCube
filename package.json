@@ -21,7 +21,7 @@
     "compodoc": "compodoc -p src/tsconfig.app.json --disableRoutesGraph -s",
     "env": "ngx-scripts env2json npm_package_version",
     "generate": "ng generate",
-    "build-mizar": "npm run build && cd plugin && npm install && grunt build && cd .. && cp -r plugin/dist/libs dist/" 
+    "build-mizar": "npm run build && cd plugin && npm install && grunt build && cd .. && cp -r plugin/dist/libs dist/"
   },
   "keywords": [
     "cnes",
@@ -91,7 +91,7 @@
     "@types/jasmine": "^2.5.52",
     "@types/jasminewd2": "^2.0.2",
     "@types/jquery": "^3.2.12",
-    "@types/lodash": "^4.14.52",
+    "@types/lodash": "4.14.134",
     "@types/node": "^8.0.10",
     "codelyzer": "~3.1.1",
     "hads": "^1.3.4",
