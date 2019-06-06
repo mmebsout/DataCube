@@ -20,7 +20,8 @@
     "docs": "hads ./docs -o",
     "compodoc": "compodoc -p src/tsconfig.app.json --disableRoutesGraph -s",
     "env": "ngx-scripts env2json npm_package_version",
-    "generate": "ng generate"
+    "generate": "ng generate",
+    "build-mizar": "npm run build && cd plugin && npm install && grunt build && cd .. && cp -r plugin/dist/libs dist/" 
   },
   "keywords": [
     "cnes",
