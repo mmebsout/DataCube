@@ -50,7 +50,7 @@
 	</nav>
 </header>
 <div [ngbCollapse]="searchHidden">
-	<input [(ngModel)]="searchText" type="text" placeholder="Search a Fit file" appPrefixFocus appNextElement/>
+	<input [(ngModel)]="searchText" type="text" placeholder="{{ 'Search' | translate }}" appPrefixFocus appNextElement/>
 	<ul [ngClass]="{'show': searchText}">
 		<li *ngFor="let fit of fitsTab | filter:searchText; let i = index" 
 			[attr.tabindex]="i" 
