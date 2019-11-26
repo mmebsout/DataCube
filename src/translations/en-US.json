@@ -7,9 +7,11 @@
   "Author": "Author",
   "Search": "Search a file",
   "Datacube": "Datacube plugin",
-  "Histogramme": "Histogram",
+  "Histogram": "Histogram",
+  "Reset Histogram": "Reset Histogram",
   "Spectre": "Spectre",
   "Description": "Description",
+  "File" : "File",
   "ResetPlot": "Reset Plot Spectre",
   "CubeSlider": "Cube depth",
   "Linear": "Linear",
@@ -41,5 +43,8 @@
   "PasswordRequired" : "Password is required",
   "Opacity" : "Opacity",
   "choiceColorscale" : "Color choice",
-  "SetSmooth" : "Set smooth"
+  "SetSmooth" : "Set smooth",
+  "Credits" : "Contributeurs",
+  "messageCreditsCNES" : "The CNES institute developped this sofware"
+  
 }

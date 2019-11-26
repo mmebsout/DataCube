@@ -7,9 +7,11 @@
   "Author": "Auteur",
   "Search": "Rechercher un fichier",
   "Datacube": "Plugin Datacube",
-  "Histogramme": "Histogramme",
+  "Histogram": "Histogramme",
+  "Reset Histogram": "Réinitialiser l'Histogramme",
   "Spectre": "Spectre",
   "Description": "Description",
+  "File" : "Fichier",
   "ResetPlot": "Supprimer Points",
   "CubeSlider": "Profondeur du Cube",
   "Linear": "Linéaire",
@@ -41,5 +43,6 @@
   "PasswordRequired" : "Mot de passe obligatoire",
   "Opacity" : "Opacité",
   "choiceColorscale" : "Choix de l'échelle de couleur",
-  "SetSmooth" : "Activer smooth"
+  "SetSmooth" : "Activer smooth",
+  "Credits" : "Credits"
 }

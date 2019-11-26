@@ -1,7 +1,14 @@
 <article *ngIf="mustBeLoaded">
 	<h2><span translate>Description</span></h2>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-12">
+				<article>
+			<span class="h3 fa-file descriptionList" ><span translate>File</span> :</span>
+			<span >{{ currentSlide.name }}</span>
+			</article>
+		</div>
+
+		<div class="col-md-6" *ngIf="localisation">
 			<article>
 				<h3 class="waves-effect waves-teal fa-map-marker descriptionList"><span translate>Localisation</span></h3> 
 				<ul class="descriptionList">
@@ -11,7 +18,7 @@
 				</ul>
 			</article>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-6" *ngIf="object_type">
 			<article>
 				<h3 class="fa-cogs descriptionList"><span translate>TypeObject</span></h3> 
 				<ul class="descriptionList">
