@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
 	newImage: any;
 	newHmax: any;
 	messageDataCubeLoading = <string> '';
-	messageHistogrammeLoading = <string> '';
+	messageHistogramLoading = <string> '';
 	messageSpectreLoading = <string> '';
 	messageDescLoading = <string> '';
 
@@ -41,9 +41,9 @@ export class HomeComponent implements OnInit {
 	 * @function ngOnInit
 	 */
 	ngOnInit() {
-		this.translateService.get(['messageDataCubeLoading','messageHistogrammeLoading','messageSpectreLoading','messageDescLoading']).subscribe((res: any) => {
+		this.translateService.get(['messageDataCubeLoading','messageHistogramLoading','messageSpectreLoading','messageDescLoading']).subscribe((res: any) => {
 			this.messageDataCubeLoading = res.messageDataCubeLoading;
-			this.messageHistogrammeLoading = res.messageHistogrammeLoading;
+			this.messageHistogramLoading = res.messageHistogramLoading;
 			this.messageSpectreLoading = res.messageSpectreLoading;
 			this.messageDescLoading = res.messageDescLoading;
 		  });	
@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
 		  
 		  const cube = this.setGraph('#heatmap', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
 		  const spectre = this.setGraph('#graphDiv', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
-		  const histo = this.setGraph('#histogramme', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
+		  const histo = this.setGraph('#histogram', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
 	  
   
 
@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
 		
 		const cube = this.setGraph('#heatmap', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
 		const spectre = this.setGraph('#graphDiv', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
-		const histo = this.setGraph('#histogramme', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
+		const histo = this.setGraph('#histogram', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
 	
 
 		window.onresize = (e) => {

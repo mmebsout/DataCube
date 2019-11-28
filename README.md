@@ -117,8 +117,8 @@ You can selected a slide of DataCube with the first slider. The slide selected i
 ##### 3.4 Opacity
 You can selected a opacity to display to see the next slide.
 
-### 4. Histogramme
-Once file loaded, a histogramme is displayed next to DataCube. It represents of count of pixels by physical values of each pixel of picture.
+### 4. Histogram
+Once file loaded, a histogram is displayed next to DataCube. It represents of count of pixels by physical values of each pixel of picture.
 
 ### 5. Metadata
 a Metadata block contains all metadata of picture. Click on header to display or hide this block.

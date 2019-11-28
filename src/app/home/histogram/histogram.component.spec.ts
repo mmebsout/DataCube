@@ -7,11 +7,11 @@ import { ToastModule } from 'ng2-toastr/ng2-toastr';
 
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { I18nService } from '../../core/i18n.service';
-import { HistogrammeComponent } from './histogramme.component';
+import { HistogramComponent } from './histogram.component';
 
-describe('HistogrammeComponent', () => {
-	let component: HistogrammeComponent;
-	let fixture: ComponentFixture<HistogrammeComponent>;
+describe('HistogramComponent', () => {
+	let component: HistogramComponent;
+	let fixture: ComponentFixture<HistogramComponent>;
 
 	beforeEach(async(() => {
 	TestBed.configureTestingModule({
@@ -33,13 +33,13 @@ describe('HistogrammeComponent', () => {
 	  	SlideService,
 		StreamFitService
 	  ],
-  	declarations: [HistogrammeComponent]
+  	declarations: [HistogramComponent]
 	}).compileComponents();
   }));
 
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(HistogrammeComponent);
+		fixture = TestBed.createComponent(HistogramComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

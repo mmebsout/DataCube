@@ -14,7 +14,7 @@ import { HomeComponent } from './home.component';
 import { QuoteService } from './quote.service';
 import { DataCubeComponent } from './dataCube/dataCube.component';
 import { DescriptionComponent } from './description/description.component';
-import { HistogrammeComponent } from './histogramme/histogramme.component';
+import { HistogramComponent } from './histogram/histogram.component';
 import { SpectreComponent } from './spectre/spectre.component';
 import { I18nService } from '../core/i18n.service';
 import { SlideService } from './dataCube/slide.service';
@@ -39,7 +39,7 @@ describe('HomeComponent', () => {
           HomeComponent,
           DataCubeComponent,
           DescriptionComponent,
-          HistogrammeComponent,
+          HistogramComponent,
           SpectreComponent
           ],
         providers: [

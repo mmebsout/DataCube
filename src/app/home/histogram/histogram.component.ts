@@ -13,11 +13,11 @@ const Plotly = require('plotly.js/lib/index-cartesian.js');
 const _ = require('lodash');
 
 @Component({
-	selector: 'app-histogramme',
-	templateUrl: './histogramme.component.html',
-	styleUrls: ['./histogramme.component.scss']
+	selector: 'app-histogram',
+	templateUrl: './histogram.component.html',
+	styleUrls: ['./histogram.component.scss']
 })
-export class HistogrammeComponent implements OnInit {
+export class HistogramComponent implements OnInit {
 	@Output()
 	histoLoadingStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -41,7 +41,7 @@ export class HistogrammeComponent implements OnInit {
 	hmax = <number>0;
 	isLoadingHisto = <boolean>true;
 	filterBy: any;
-	histogramme: any = [];
+	histogram: any = [];
 	traceAdded = <boolean>false;
 	histo_transfer: any = [];
 	// pathData: string = null;
@@ -66,7 +66,7 @@ export class HistogrammeComponent implements OnInit {
 		private cubeToHistoService: CubeToHistoService,
 		private loaderService: LoaderService,
 		private streamFitService: StreamFitService, public toastr: ToastsManager) {
-		this.mustBeLoaded = this.loaderService.histogramme;
+		this.mustBeLoaded = this.loaderService.histogram;
 
 		this.cubeToHistoService.Colorscale$.subscribe(color => {
 			this.setColor(color);
@@ -277,7 +277,7 @@ export class HistogrammeComponent implements OnInit {
 	 */
 	setHistogram(x: any) {
 
-		this.histogramme = x;
+		this.histogram = x;
 
 		//data to build histogramm
 		const data = [
@@ -304,7 +304,7 @@ export class HistogrammeComponent implements OnInit {
 			}
 		};
 
-		Plotly.newPlot('histogramme', data, layout, { responsive: true });
+		Plotly.newPlot('histogram', data, layout, { responsive: true });
 	}
 
 	/**
@@ -313,7 +313,7 @@ export class HistogrammeComponent implements OnInit {
 	 * @returns range min and range max
 	 */
 	getRange() {
-		const myHisto = <CustomHTMLElement>document.getElementById('histogramme');
+		const myHisto = <CustomHTMLElement>document.getElementById('histogram');
 		const range = {
 			'min': <any>null,
 			'max': <any>null
@@ -464,7 +464,7 @@ export class HistogrammeComponent implements OnInit {
 		this.getRange();
 		this.newImageEmitter.emit(this.slideData);
 		this.newResetEmitter.emit(null);
-		const graphDiv = <CustomHTMLElement>document.getElementById("histogramme");
+		const graphDiv = <CustomHTMLElement>document.getElementById("histogram");
 
 		//layout config
 		const update = {

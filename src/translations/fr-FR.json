@@ -30,7 +30,7 @@
   "success" : "Succès!",
   "messageDataCubeLoading" : "Chargement Module DataCube",
   "messageSpectreLoading" : "Chargement Module Spectre",
-  "messageHistogrammeLoading" : "Chargement Module Histogram",
+  "messageHistogramLoading" : "Chargement Module Histogram",
   "messageDescLoading" : "Chargement Module Description",
   "Logout" : "Déconnexion",
   "Logged" : "Connecté en tant que",
