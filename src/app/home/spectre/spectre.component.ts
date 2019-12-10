@@ -9,6 +9,9 @@ import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
 import { Logger } from '../../core/logger.service';
+import { MetadataService } from '../description/metadata.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 declare function require(moduleName: string): any;
 const Plotly = require('plotly.js/lib/index-cartesian.js');
@@ -19,7 +22,7 @@ const log = new Logger('Spectre');
 	templateUrl: './spectre.component.html',
 	styleUrls: ['./spectre.component.scss']
 })
-export class SpectreComponent implements OnInit {
+export class SpectreComponent  {
 	@Output()
 	spectreLoadingStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 	mustBeLoaded : boolean;
@@ -40,13 +43,18 @@ export class SpectreComponent implements OnInit {
 	 * @constructor
 	 * @param {I18nService} i18nService - Translate service provider
 	 * @param {CubeToSpectreService} cubeToSpectreService
+	 * @param {MetadataService} metadataService
 	 * @param {StreamFitService} streamFitService - Fit file getter service provider
 	 * @param {SpectreService} spectreService
+	 * @param {ToastsManager} toastr
 	 */
 	constructor(private i18nService: I18nService,
 				private cubeToSpectreService: CubeToSpectreService,
 				private streamFitService: StreamFitService,
 				private loaderService: LoaderService,
+				private metadataService: MetadataService,
+				private translateService: TranslateService,
+				public toastr: ToastsManager,
 				private spectreService: SpectreService) {
 		
 		//get if spectre must be loaded (plugin gestion)
@@ -67,7 +75,7 @@ export class SpectreComponent implements OnInit {
 				// }	
 				this.currentSlide = new Fit(fit);
 				log.info(`file is loaded : ${fit}`);
-				this.ngOnInit();
+				this.ngAfterViewInit();
 			});
 		}		
 		//receive a new datacube, draw a spectre
@@ -150,40 +158,54 @@ export class SpectreComponent implements OnInit {
 		});
 		return this.spectreData;
 	}
-
 	
-	/**
-	 * Initialize the spectre graph
-	 * @function ngOnInit
-	 */
-	ngOnInit() {
-
-	}
-
 	/**
 	 * Actions made after the init view
 	 * @function ngAfterViewInit
 	 */
 	ngAfterViewInit() {
 		if(this.mustBeLoaded){
-			const data: any = [],
-						layout = {
-							title: 'Wave Tab (um)',
-							xaxis: {
-								title: 'Wave length',
-								showgrid: false,
-								zeroline: false
-							},
-							yaxis: {
-								title: 'Percent',
-								showline: false
-							}
-						};
 
-			Plotly.newPlot('graphDiv', data, layout);
-			this.changeVisibleTrace();
+			this.metadataService
+			.getDimension({id: this.currentSlide.name})
+			.finally(() => {
+				//toastr translate if success
+				this.translateService.get(['messageDimension','success']).subscribe((res: any) => {
+					this.toastr.success(res.messageDimension, res.success);
+				});
+			})
+			.subscribe((dimensions: any) => {
+				var titleX = "Slides";
+				var titleY = "Value";
+				if(dimensions.feature instanceof Object) {
+					var dims = dimensions.feature.properties.dimensions;
+					var titleX = dims.typeZ + " (" +  dims.unitZ + ")";
+					var titleY = dims.typeVal + " ("+ dims.unitVal + ")";
+				}
+				else {
+					this.toastr.error(dimensions, 'Oops!');
+				}
+				const data: any = [];
+				
+				const layout = {
+					xaxis: {
+						title: titleX,
+						showgrid: false,
+						zeroline: false
+					},
+					yaxis: {
+						title: titleY,
+						showline: false
+					}
+				};
+
+				Plotly.newPlot('graphDiv', data, layout);
+				this.changeVisibleTrace();
+			});
+		
 		}
-	  }
+	}
+	  
 
 	/**
 	 * Send to DataCube the spectre number hidden

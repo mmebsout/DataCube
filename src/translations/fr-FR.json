@@ -26,6 +26,7 @@
   "Class": "Classe",
   "Metadata": "Métadonnées",
   "messageDataCube" : "Les métadonnées sont chargées!",
+  "messageDimension" : "Les dimensions sont chargées!",
   "cubeExplorerImage" : "Image du Cube explorer est chargé!",
   "success" : "Succès!",
   "messageDataCubeLoading" : "Chargement Module DataCube",
