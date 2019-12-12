@@ -44,5 +44,13 @@
   "Opacity" : "Opacité",
   "choiceColorscale" : "Choix de l'échelle de couleur",
   "SetSmooth" : "Activer smooth",
-  "Credits" : "Credits"
+  "Credits" : "Credits",
+  "messageLicence1" : "Ce projet est publié avec la licence GPLV3 - pour plus d'information, voir le fichier ",
+  "messageLicence2" : ".",
+  "messageDev1" : "le ",
+  "messageDev2" : " a développé ce logiciel",
+  "messageDev3" : "ont contribué a la spécification des exigences, ",
+  "messageDev4" : "ainsi qu'à la réparation de bug et la production d'images docker.",
+  "messageFundings" : "Projets/Instituts ayant financé ce logiciel :"
+
 }
