@@ -45,6 +45,13 @@
   "choiceColorscale" : "Color choice",
   "SetSmooth" : "Set smooth",
   "Credits" : "Contributeurs",
-  "messageCreditsCNES" : "The CNES institute developped this sofware"
+  "messageCreditsCNES" : "The CNES institute developped this sofware",
+  "messageLicence1" : "This project is licensed under the GPLV3 License - see the ",
+  "messageLicence2" : "file for details.",
+  "messageDev1" : "The ",
+  "messageDev2" : " institute developped this software",
+  "messageDev3" : "contributed to specify the requirements, ",
+  "messageDev4" : "fix issues and produce docker images.",
+  "messageFundings" : "Projects/Institutes who have funded this software :"
   
 }

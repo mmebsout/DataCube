@@ -1,17 +1,30 @@
 <div class="container-fluid">
-  <div class="jumbotron text-center">
+  <div class="jumbotron text-center ">
     <h1>
       <span translate>APP_NAME</span>
     </h1>
-    <p>
-		This project is licensed under the GPLV3 License - 
-		see the <a href="https://raw.githubusercontent.com/MizarWeb/Mizar/master/LICENSE.md" target="_blank">LICENSE</a> file for details.
-	</p>
-	<p>
-		<i class="fa fa-code"></i> <span translate>Author :</span> {{author}}
-	</p>
-    <p>
-      <i class="fa fa-bookmark-o"></i> <span translate>Version :</span> {{version}}
+    <p> {{ 'messageLicence1' | translate }}<a href="https://raw.githubusercontent.com/MizarWeb/Mizar/master/LICENSE.md" target="_blank">LICENSE</a>
+        {{ 'messageLicence2' | translate }}
     </p>
+
+    <p >
+       <span class="font-weight-bold"> <i class="fa fa-bookmark-o"></i> <span  translate> - Version :</span></span> {{version}}
+    </p>
+      <p class="font-weight-bold"><i class="fa fa-code"></i> - Developpement : </p>
+        <ul class="d-inline-block text-left">
+          <li>{{ 'messageDev1' | translate }}<a href="https://cnes.fr/fr/">CNES</a>{{ 'messageDev2' | translate }}</li>
+          <li> <a href="https://idoc.ias.u-psud.fr/">IDOC/IAS</a> {{ 'messageDev3' | translate }}<br/>{{ 'messageDev4' | translate}}</li>
+        </ul>
+          <p class="font-weight-bold"><i class="fa  fa-eur"></i> -  {{ 'messageFundings' | translate }}</p>
+        <ul  class="d-inline-block text-left">
+          <li>
+            <a href="http://sitools2.github.io/">SITools2</a>, (<a href = "https://cnes.fr/">CNES</a>)
+          </li>
+          <li>
+            <a href="https://www.universite-paris-saclay.fr/recherche/projet/spaceobs-un-incubateur-spatial">SPACEOBS</a>
+          / <a href="https://www.universite-paris-saclay.fr">Paris-Saclay</a>
+          </li>
+        </ul>
+      
   </div>
 </div>
