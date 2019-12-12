@@ -26,7 +26,7 @@ export class DescriptionComponent implements OnInit {
 	isLoadingDesc = <boolean>true;
 	currentSlide: any = new Fit(null);
 	metadatas: any = [];
-	localisation: any = {};
+	location: any = {};
 	object_type: any = {};
 	// pathData: string = null;
 
@@ -66,7 +66,7 @@ export class DescriptionComponent implements OnInit {
 	}
 
 	/**
-	 * Description Init Function : load metadata and localisation and object type
+	 * Description Init Function : load metadata and location and object type
 	 */
 	ngOnInit() {
 		this.metadataService
@@ -76,7 +76,7 @@ export class DescriptionComponent implements OnInit {
 				if(metadata instanceof Object) {
 					log.info(`Description loaded`);
 					this.metadatas = metadata.feature.properties.metadata;
-					this.localisation = metadata.feature.properties.localisation;
+					this.location = metadata.feature.properties.location;
 					this.object_type = metadata.feature.properties.object_type;
 				}				
 				else {

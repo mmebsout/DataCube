@@ -8,19 +8,19 @@
 			</article>
 		</div>
 
-		<div class="col-md-6" *ngIf="localisation">
+		<div class="col-md-6" *ngIf="location">
 			<article>
-				<h3 class="waves-effect waves-teal fa-map-marker descriptionList"><span translate>Localisation</span></h3> 
+				<h3 class="waves-effect waves-teal fa-map-marker descriptionList"><span translate>Location</span></h3> 
 				<ul class="descriptionList">
-					<li *ngFor="let key of objectKeys(localisation)">
-						<strong>{{ key }} : </strong><span>{{ localisation[key] }}</span>
+					<li *ngFor="let key of objectKeys(location)">
+						<strong>{{ key }} : </strong><span>{{ location[key] }}</span>
 					</li>
 				</ul>
 			</article>
 		</div>
 		<div class="col-md-6" *ngIf="object_type">
 			<article>
-				<h3 class="fa-cogs descriptionList"><span translate>TypeObject</span></h3> 
+				<h3 class="fa-cogs descriptionList"><span translate>ObjectType</span></h3> 
 				<ul class="descriptionList">
 					<li *ngFor="let key of objectKeys(object_type)">
 						<strong>{{ key }} : </strong><span>{{ object_type[key] }}</span>
