@@ -5,7 +5,7 @@ export class LoaderService {
 
   isDataCube: boolean;
   isSpectre: boolean;
-  isHistogramme: boolean;
+  isHistogram: boolean;
   isDesc: boolean;
   dataPath : string;
   fileData : string;
@@ -16,15 +16,15 @@ export class LoaderService {
    * init boolean to Datacube, histogramm, spectre, description, path, file.
    * @param {boolean=} datacube boolean if datacube must be loaded
    * @param {boolean=} spectre boolean if spectre must be loaded
-   * @param {boolean=} histogramme boolean if histogramme must be loaded
+   * @param {boolean=} histogram boolean if histogram must be loaded
    * @param {boolean=} description boolean if description must be loaded
    * @param {boolean=} path boolean if path must be loaded
    * @param {boolean=} file boolean if file must be loaded
    */
-  init(datacube: boolean, spectre: boolean, histogramme: boolean, description: boolean, path: string, file:string) {
+  init(datacube: boolean, spectre: boolean, histogram: boolean, description: boolean, path: string, file:string) {
     this.isDataCube = datacube;
     this.isSpectre = spectre;
-    this.isHistogramme = histogramme;
+    this.isHistogram = histogram;
     this.isDesc = description;
     this.dataPath = path;
     this.fileData = file;
@@ -47,11 +47,11 @@ export class LoaderService {
   }
 
     /**
-   * Gets histogramme string.
-   * @return {boolean} if histogramme must be loaded.
+   * Gets histogram string.
+   * @return {boolean} if histogram must be loaded.
    */
-  get histogramme(): boolean {
-    return this.isHistogramme;
+  get histogram(): boolean {
+    return this.isHistogram;
   }
 
     /**

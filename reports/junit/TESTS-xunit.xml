@@ -50,7 +50,7 @@
   <testcase name="ShellComponent should create" time="1.01" classname="ShellComponent"/>
   <testcase name="DataCubeComponent should create" time="1" classname="DataCubeComponent"/>
   <testcase name="DescriptionComponent should create" time="0.039" classname="DescriptionComponent"/>
-  <testcase name="HistogrammeComponent should create" time="0.954" classname="HistogrammeComponent"/>
+  <testcase name="HistogramComponent should create" time="0.954" classname="HistogramComponent"/>
   <testcase name="HomeComponent should create" time="1.997" classname="HomeComponent"/>
   <testcase name="QuoteService getRandomQuote should return a random Chuck Norris quote" time="0.012" classname="QuoteService"/>
   <testcase name="QuoteService getRandomQuote should return a string in case of error" time="0.01" classname="QuoteService"/>

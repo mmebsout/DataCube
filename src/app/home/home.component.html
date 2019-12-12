@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<app-loader class="col-md-6" [isLoading]="isLoadingCube" [message]="messageDataCubeLoading"></app-loader>
-		<app-loader class="col-md-6" [isLoading]="isLoadingHisto" [message]="messageHistogrammeLoading"></app-loader>
+		<app-loader class="col-md-6" [isLoading]="isLoadingHisto" [message]="messageHistogramLoading"></app-loader>
 	</div>	
 	<div class="row">
 		<app-data-cube  
@@ -14,7 +14,7 @@
 		>  
 		</app-data-cube>
 
-		<app-histogramme 
+		<app-histogram 
 			class="col-md-4"
 			[hidden]="isLoadingHisto" 
 			(histoLoadingStatus)="loadingChange($event)"
@@ -22,7 +22,7 @@
 			(newResetEmitter)="loadingNewReseter($event)"
 			(newHmaxEmitter)="loadingNewHmax($event)"
 		>
-		</app-histogramme>
+		</app-histogram>
 	</div>
 	<div class="row">
 		<app-loader class="col-md-6" [isLoading]="isLoadingSpectre" [message]="messageSpectreLoading"></app-loader>

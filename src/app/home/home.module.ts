@@ -9,7 +9,7 @@ import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { DataCubeComponent } from './dataCube/dataCube.component';
 import { SpectreComponent } from './spectre/spectre.component';
-import { HistogrammeComponent } from './histogramme/histogramme.component';
+import { HistogramComponent } from './histogram/histogram.component';
 import { DescriptionComponent } from './description/description.component';
 
 import { HomeRoutingModule } from './home-routing.module';
@@ -38,7 +38,7 @@ import { SliderModule } from 'primeng/components/slider/slider';
     HomeComponent,
     DataCubeComponent,
     SpectreComponent,
-    HistogrammeComponent,
+    HistogramComponent,
     DescriptionComponent
   ],
   providers: [

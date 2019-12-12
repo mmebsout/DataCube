@@ -30,7 +30,7 @@
   "success" : "Success!",
   "messageDataCubeLoading" : "Module DataCube is loading",
   "messageSpectreLoading" : "Module Spectre is loading",
-  "messageHistogrammeLoading" : "Module Histogram is loading",
+  "messageHistogramLoading" : "Module Histogram is loading",
   "messageDescLoading" : "Module Description is loading",
   "Logout" : "Logout",
   "Logged" : "Logged in as",
