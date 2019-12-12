@@ -26,6 +26,7 @@
   "Class": "Class",
   "Metadata": "Metadata",
   "messageDataCube" : "Metadata are loaded!",
+  "messageDimension" : "Dimensions are loaded!",
   "cubeExplorerImage" : "Cube explorer image is loaded!",
   "success" : "Success!",
   "messageDataCubeLoading" : "Module DataCube is loading",
