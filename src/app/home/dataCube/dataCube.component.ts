@@ -44,7 +44,20 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	dataCubePoint = <number>0;
 	graphId = 'heatmap';
 	dataTraces: any = [];
-	layout: object = {};
+	layout: object = {
+		margin: {
+			l: 40,
+			r: 40,
+			t: 40,
+			b: 40
+		},
+		yaxis: {
+			scaleanchor : "x",
+			scaleratio : 1,
+		},
+		showlegend: true,
+		legend: {"orientation": "h"}
+	};
 	frames: any = [];
 	slideData: any = [];
 	fileType: any = [];
@@ -453,20 +466,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				}
 			}
 		];
-		//TODO SCALE DATACUBE
-		const layout = {
-			margin: {
-				l: 40,
-				r: 40,
-				t: 40,
-				b: 40
-			},
-			showlegend: true,
-			legend: {"orientation": "h"}
-		};
 		const data = this.dataTraces;
 
-		Plotly.newPlot(this.graphId, data, layout, {responsive: true});
+		Plotly.newPlot(this.graphId, data, this.layout, {responsive: true});
 	}
 
 	/**
@@ -600,17 +602,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			}
 		  ];
 
-		  const layout = {
-			margin: {
-				l: 40,
-				r: 40,
-				t: 40,
-				b: 40
-			},
-			showlegend: true,
-			legend: {"orientation": "h"}
-		};
-		Plotly.newPlot(this.graphId, data, layout);
+		Plotly.newPlot(this.graphId, data, this.layout);
 		//allows plot on datacube
 		this.selectedCoord();
 
@@ -632,17 +624,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			}
 		];
 
-		const layout = {
-			margin: {
-				l: 40,
-				r: 40,
-				t: 40,
-				b: 40
-			},
-			showlegend: true,
-			legend: {"orientation": "h"}
-		};
-		Plotly.newPlot(this.graphId, data, layout);
+		Plotly.newPlot(this.graphId, data, this.layout);
 		//allows plot on datacube
 		this.selectedCoord();
 	}
