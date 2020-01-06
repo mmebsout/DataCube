@@ -5,7 +5,7 @@
 	</div>	
 	<div class="row">
 		<app-data-cube  
-			class="col-md-8"
+			class="col-md-6"
 			[hidden]="isLoadingCube" 
 			(dataCubeLoadingStatus)="loadingChange($event)"
 			[newImage]="newImage"
@@ -14,8 +14,20 @@
 		>  
 		</app-data-cube>
 
+		<app-spectre 
+			class="col-md-6"
+			[hidden]="isLoadingSpectre" 
+			(spectreLoadingStatus)="loadingChange($event)"
+		>
+		</app-spectre>
+	</div>
+	<div class="row">
+		<app-loader class="col-md-6" [isLoading]="isLoadingSpectre" [message]="messageSpectreLoading"></app-loader>
+		<app-loader class="col-md-6" [isLoading]="isLoadingDesc" [message]="messageDescLoading"></app-loader>
+	</div>
+	<div class="row">
 		<app-histogram 
-			class="col-md-4"
+			class="col-md-6"
 			[hidden]="isLoadingHisto" 
 			(histoLoadingStatus)="loadingChange($event)"
 			(newImageEmitter)="loadingNewImage($event)" 
@@ -23,18 +35,6 @@
 			(newHmaxEmitter)="loadingNewHmax($event)"
 		>
 		</app-histogram>
-	</div>
-	<div class="row">
-		<app-loader class="col-md-6" [isLoading]="isLoadingSpectre" [message]="messageSpectreLoading"></app-loader>
-		<app-loader class="col-md-6" [isLoading]="isLoadingDesc" [message]="messageDescLoading"></app-loader>
-	</div>
-	<div class="row">
-		<app-spectre 
-			class="col-md-6"
-			[hidden]="isLoadingSpectre" 
-			(spectreLoadingStatus)="loadingChange($event)"
-		>
-		</app-spectre>
 
 		<app-description 
 			class="col-md-6"
