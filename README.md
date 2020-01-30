@@ -1,43 +1,131 @@
-# CNES
+<!-- vscode-markdown-toc -->
+* [Getting Started](#GettingStarted)
+	* [Prerequisites](#Prerequisites)
+		* [DataCubeServer](#DataCubeServer)
+	* [Installation](#Installation)
+		* [Standalone](#Standalone)
+		* [As a plugin in MizarWidget](#AsaplugininMizarWidget)
+	* [Usage](#Usage)
+		* [Login](#Login)
+		* [Header](#Header)
+		* [Home](#Home)
+		* [Histogram](#Histogram)
+		* [File](#File)
+		* [Metadata](#Metadata)
+* [Development](#Development)
+	* [Project structure](#Projectstructure)
+	* [Main tasks](#Maintasks)
+		* [Development server](#Developmentserver)
+		* [Code scaffolding](#Codescaffolding)
+		* [Additional tools](#Additionaltools)
+	* [What's in the box](#Whatsinthebox)
+		* [Tools](#Tools)
+		* [Libraries](#Libraries)
+		* [Coding guides](#Codingguides)
+		* [Other documentation](#Otherdocumentation)
+* [Licence](#Licence)
+* [Credits](#Credits)
 
-This project was generated with [ngX-Rocket](https://github.com/ngx-rocket/generator-ngx-rocket/)
-version 2.0.0
+<!-- vscode-markdown-toc-config
+	numbering=false
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
 
-# Getting started
+# CNES DataCube
 
-1. Go to project folder (frontend) and install dependencies:
- ```bash
+## <a name='GettingStarted'></a>Getting Started
+
+### <a name='Prerequisites'></a>Prerequisites
+1. Install and launch [DataCubeServer](#DataCubeServer) following the instructions of the project.
+
+2. Add the default cube file to the Server 'public' folder 
+```
+wget -P <path>/public http://idoc-herschel.ias.u-psud.fr/sitools/datastorage/user/storageRelease//R7_spire_fts/HIPE_Fits/FTS_SPIRE/OT1_atielens/M17-2/1342228703_M17-2_SPIRE-FTS_15.0.3244_HR_SLW_gridding_cube.fits
+
+```
+ 
+#### <a name='DataCubeServer'></a>DataCubeServer
+
+DataCube needs another application that reads the cube files and returns the cube data in json following the DataCube [API](SERVER\README.md).
+
+An example of such an application that works with Fits ant NetCDF files is provided with the project [DataCubeServer](https://github.com/MizarWeb/DataCubeServer). 
+
+
+### <a name='Installation'></a>Installation
+
+#### <a name='Standalone'></a>Standalone
+##### <a name='Installdependencies'></a>Install dependencies
+```bash
  npm install
  ```
-2. Launch backend DataCube:
- ```bash
- java -jar <path>/cubeExplorer-1.0.0-SNAPSHOT.jar
- ```
- If jar file is not generated, you should launch the following command into root backend project:
-  ```bash
-mvn clean install
- ```
- If you must open big files (>2Go), you should launch the jar file with this command : 
- ```bash
- java -Xmx5G -jar <path>/cubeExplorer-1.0.0-SNAPSHOT.jar
- ```
- Log file is written where backend is launched.
-
-3. Launch development client, and open `localhost:4200` in your browser:
+##### <a name='RuninDevelopment'></a>Run in Development
+1. Run 
 ```bash
 npm start
  ```
+2. Open `localhost:4200` in your browser
 
-4. Launch production client (into frontend project), and open `localhost/datacube/` in your browser:
+
+##### <a name='RuninProduction'></a>Run in Production
+1. Run 
 ```bash
-npm run build && mv dist/ datacube/ && cp -R datacube/ <http-server>/
+npm run build && mv build/ datacube/ && cp -R datacube/ <http-server>/
 ```
- 
-# API server
+2. Open `<youdomain>/datacube/` in your browser
 
-Documentation server (SERVER\README.md)
+#### <a name='AsaplugininMizarWidget'></a>As a plugin in MizarWidget
 
-# Project structure
+<-TODO->
+
+### <a name='Usage'></a>Usage
+
+#### <a name='Login'></a>Login
+You must be identified to used DataCube.
+
+The Login functionality depends on a service answering the [Identification API](SERVER\README.md#Identification).
+When using DataCubeServer by default two accounts are created (admin and public). 
+
+#### <a name='Header'></a>Header
+On the top right of the app the Header displays the Contributors logos, a search icon and a menu icon.
+
+##### Search
+Following your account, you are allowed or not to choose a specific file. Admin account has all files.
+
+##### Menu
+When clicking on the menu icon the menu is displayed with 
+- Home -> showing the main view with the Slider etc.
+- About -> showing the About page with information on this project
+- The locale -> allowing to change the language of the app with a dropdown list
+- User icon -> to log out
+
+#### <a name='Home'></a>Home
+
+##### Slider
+At the left top, you can see a slider displaying slides from the chosen datacube.
+
+You can selected a slide of DataCube by dragging the slider curser on the bottom of the Slider. 
+
+##### Spectre
+You can click on the DataCube to display the spectre of the selected pixel on the right of the slider.
+
+##### Lasso
+When moving the mouse over the top right of the slider, options appear. One of them is called "Lasso select". This options allows the user to create a series of spectre traces that follows a line he would draw on the slide. 
+
+
+#### <a name='Histogram'></a>Histogram
+Once file loaded, a histogram is displayed at the bottom of the Slider. It represents the count of pixels by physical values.
+The user can select the physical values to display by dragging the handles available at the edges of the second smaller histogram. The one on the top will only display the selected values and the Slider will adapt it's display to show only these values and adjust the color gradient in consequence.
+
+#### <a name='File'></a>File
+The File block displays the datacube filename.
+
+#### <a name='Metadata'></a>Metadata
+The Metadata block contains all metadata of the file. Click on "Metadata" to display or hide this block.
+
+## <a name='Development'></a>Development
+
+### <a name='Projectstructure'></a>Project structure
 
 ```
 dist/                        web app production build
@@ -47,7 +135,7 @@ src/                         project source code
 |- app/                      app components
 |  |- core/                  core module (singleton services and single-use components)
 |  |- shared/                shared module  (common components, directives and pipes)
-|  |- home/                  datacube components  (datacube, histogramm, spectre, description)
+|  |- home/                  datacube components  (datacube, histogram, spectre, description)
 |  |- app.component.*        app root component (shell)
 |  |- app.module.ts          app root module definition
 |  |- app-routing.module.ts  app routes
@@ -71,7 +159,7 @@ reports/                     test and coverage reports
 proxy.conf.js                backend proxy configuration
 ```
 
-# Main tasks
+### <a name='Maintasks'></a>Main tasks
 
 Task automation is based on [NPM scripts](https://docs.npmjs.com/misc/scripts).
 
@@ -94,45 +182,13 @@ forget to prepend `--` to pass arguments to npm scripts).
 
 The default build environment is `prod`.
 
-## DataCube Functionnality
-
-### 1. Login
-By default, two accounts are created (admin and public). You must be identified to used DataCube.
-
-### 2. Search
-Following your account, you are allowed or not to choose a specific file. Admin account has all files.
-
-### 3. DataCube
-At the left top, you can see a datacube who represent the file choosen.
-
-##### 3.1 Point
-You can click on the DataCube to display a spectre below the datacube.
-
-##### 3.2 Lasso
-After one or more point on Datacube, a new option is available (lasso option). This option can selected many points to draw one spectre by point.
-
-##### 3.3 Slide
-You can selected a slide of DataCube with the first slider. The slide selected is displayed with the number but also the maximum number of slides.
-
-##### 3.4 Opacity
-You can selected a opacity to display to see the next slide.
-
-### 4. Histogram
-Once file loaded, a histogram is displayed next to DataCube. It represents of count of pixels by physical values of each pixel of picture.
-
-### 5. Metadata
-a Metadata block contains all metadata of picture. Click on header to display or hide this block.
-
-### 6. Description
-This part is stubbed.
-
-## Development server
+#### <a name='Developmentserver'></a>Development server
 
 Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change
 any of the source files.
 You should not use `ng serve` directly, as it does not use the backend proxy configuration by default.
 
-## Code scaffolding
+#### <a name='Codescaffolding'></a>Code scaffolding
 
 Run `npm run generate -- component <name>` to generate a new component. You can also use
 `npm run generate -- directive|pipe|service|class|module`.
@@ -140,17 +196,17 @@ Run `npm run generate -- component <name>` to generate a new component. You can 
 If you have installed [angular-cli](https://github.com/angular/angular-cli) globally with `npm install -g @angular/cli`,
 you can also use the command `ng generate` directly.
 
-## Additional tools
+#### <a name='Additionaltools'></a>Additional tools
 
 Tasks are mostly based on the `angular-cli` tool. Use `ng help` to get more help or go check out the
 [Angular-CLI README](https://github.com/angular/angular-cli).
 
-# What's in the box
+### <a name='Whatsinthebox'></a>What's in the box
 
 The app template is based on [HTML5](http://whatwg.org/html), [TypeScript](http://www.typescriptlang.org) and
 [Sass](http://sass-lang.com). The translation files use the common [JSON](http://www.json.org) format.
 
-#### Tools
+#### <a name='Tools'></a>Tools
 
 Development, build and quality processes are based on [angular-cli](https://github.com/angular/angular-cli) and
 [NPM scripts](https://docs.npmjs.com/misc/scripts), which includes:
@@ -166,7 +222,7 @@ Development, build and quality processes are based on [angular-cli](https://gith
   [Stylelint](http://stylelint.io) and [HTMLHint](http://htmlhint.com/)
 - Local knowledgebase server using [Hads](https://github.com/sinedied/hads)
 
-#### Libraries
+#### <a name='Libraries'></a>Libraries
 
 - [Angular](https://angular.io)
 - [Bootstrap 4](https://v4-alpha.getbootstrap.com)
@@ -180,7 +236,7 @@ Development, build and quality processes are based on [angular-cli](https://gith
 - [Primeng](https://www.primefaces.org/primeng/#/slider)
 - [Mizar](https://github.com/MizarWeb/Mizar)
 
-#### Coding guides
+#### <a name='Codingguides'></a>Coding guides
 
 - [Angular](docs/coding-guides/angular.md)
 - [TypeScript](docs/coding-guides/typescript.md)
@@ -189,10 +245,22 @@ Development, build and quality processes are based on [angular-cli](https://gith
 - [Unit tests](docs/coding-guides/unit-tests.md)
 - [End-to-end tests](docs/coding-guides/e2e-tests.md)
 
-#### Other documentation
+#### <a name='Otherdocumentation'></a>Other documentation
 
 - [I18n guide](docs/i18n.md)
 - [Working behind a corporate proxy](docs/corporate-proxy.md)
 - [Updating dependencies and tools](docs/updating.md)
 - [Using a backend proxy for development](docs/backend-proxy.md)
 - [Browser routing](docs/routing.md)
+
+## <a name='Licence'></a>Licence
+
+MizarWeb/MizarWidget is licensed under the
+[GNU General Public License v3.0](LICENCE)
+
+## <a name='Credits'></a>Credits
+
+See [CREDITS.md](CREDITS.md)
+
+This project was generated with [ngX-Rocket](https://github.com/ngx-rocket/generator-ngx-rocket/)
+version 2.0.0

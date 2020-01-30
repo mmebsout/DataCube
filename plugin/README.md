@@ -36,7 +36,7 @@ Following the plugin location into new project, change value of variable : folde
 	});
 	```
 - Change parameters values to display the modules (DataCube, Histogramm, Spectrum, Description).
-- appFile is fits filename or netcdf
+- appFile is fits or netcdf filename
 
 ## Structure
 
