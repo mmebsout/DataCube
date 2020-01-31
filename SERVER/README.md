@@ -9,7 +9,9 @@
 	numbering=true
 	autoSave=true
 	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc --># API server documentation
+<!-- /vscode-markdown-toc -->
+
+# API server documentation
 
 ##  1. <a name='Identification'></a>Identification 
 (API to connect user) : Method POST with two values
