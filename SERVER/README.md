@@ -73,7 +73,7 @@ Json response example for url "http://localhost:8081/cubeExplorer/rest/header?en
 				"geometry":{"coordinates":[0,0],"type":"Point"},
 				"type":"Feature",
 				"properties":{
-					"metadata":[["XTENSION","IMAGE","marks beginning of new HDU"],["BITPIX","-64","bits per data value"],["NAXIS","3","number of axes"],["NAXIS1","12","size of the n'th axis"], ... ], // These are the metadata of the file. To get only the NAXIS1 information in this table, add the parameter "&metadata=NAXIS1" to the url.
+					"metadata":[["XTENSION","IMAGE","marks beginning of new HDU"],["BITPIX","-64","bits per data value"],["NAXIS","3","number of axes"],["NAXIS1","12","size of the n'th axis"], ... ], 
 					"fileType":"fits",
 					"dimensions":{
 						"typeVal":"Value",
@@ -211,7 +211,7 @@ Json response example for urlhttp://localhost:8081/cubeExplorer/rest/spectrum?en
 			"properties":{
 				"metadata":[["NAXIS1","12"],["NAXIS2","15"],["NAXIS3","1905"]],
 				"spectrum":{
-					"wavelength":[446.6907958984375,446.9905700683594,447.2903747558594, ... ], // correspond to the abscissa of the spectrum (even if it's in frequency the keyword is still "wavelength" so far.)
+					"wavelength":[446.6907958984375,446.9905700683594,447.2903747558594, ... ], 
 					"value":[2.1621268312117027e-17,2.065115143637593e-17,2.0809775452393622e-17,  ... ]
 					},
 				"fileType":"fits"
@@ -221,4 +221,5 @@ Json response example for urlhttp://localhost:8081/cubeExplorer/rest/spectrum?en
 	"status":"OK"
 }
 ```
+"wavelength" correspond to the abscissa of the spectrum (even if it's in frequency the keyword is still "wavelength" so far.)
 </details>
