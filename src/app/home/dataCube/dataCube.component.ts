@@ -151,10 +151,23 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @function ngOnChanges
 	 */
 	ngOnChanges(changes: SimpleChanges) {
+		console.log('datacube.component.ts ngOnChanges');
 		if ( this.newImage ) {
 			this.deleteCurrentGraph();
-			this.setPlotly(changes.newImage.currentValue, this.long, this.lat);
-			this.selectedCoord();
+			const sliderData = {
+				z: this.newImage,
+				hoverinfo: 'z+text',
+				text: this.text,
+				zsmooth: (this.smooth_color) ? 'best' : '' ,
+				colorscale: this.colorscale,
+				type: 'heatmap',
+				colorbar: {
+					thickness: 15,
+					xpad: 5
+				}
+			}
+			;
+			Plotly.addTraces(this.graphId, sliderData);
 		}
 	}
 
@@ -365,19 +378,22 @@ export class DataCubeComponent implements OnInit, OnChanges {
 					}
 				}
 			;
-
+			
 			this.deleteCurrentGraph();
-
 			Plotly.addTraces(this.graphId, sliderData);
-			Plotly.restyle(this.graphId, 'opacity', this.val_opacity/100, [0]);
 
-			//rename legend trace after selected slide
-			const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
-			for(let i=0;i<this.dataTraces.length-1;i++){
-				graphDiv.data[i].name = "trace "+(i+1);
-			}
+			// this.deleteCurrentGraph();
 
-			Plotly.redraw(graphDiv);
+			// Plotly.addTraces(this.graphId, sliderData);
+			// Plotly.restyle(this.graphId, 'opacity', this.val_opacity / 100, [0]);
+
+			// // rename legend trace after selected slide
+			// const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
+			// for ( let i = 0; i < this.dataTraces.length - 1; i++) {
+			// 	graphDiv.data[i].name = 'trace ' + (i + 1);
+			// }
+
+			// Plotly.redraw(graphDiv);
 
 		});
 	}
@@ -592,20 +608,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	changeColor() {
 		const _cubeToHistoService = this.cubeToHistoService;
 		_cubeToHistoService.shareColorscale(this.colorscale);
-		var data = [{
-			z: this.slideData,
-			  colorscale: this.colorscale,
-			  zsmooth: (this.smooth_color)?"best":"",
-			  hoverinfo: 'z+text',
-			  type: 'heatmap',
-			  text: this.text
-			}
-		  ];
-
-		Plotly.newPlot(this.graphId, data, this.layout);
-		//allows plot on datacube
-		this.selectedCoord();
-
+		  
+		  const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
+		  Plotly.restyle(graphDiv, {colorscale: this.colorscale});
 	}
 
 	/**
@@ -613,20 +618,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @function setSmooth
 	 */
 	setSmooth() {
-		console.log(this.smooth_color);
-		var data = [{
-			z: this.slideData,
-			colorscale: this.colorscale,
-			type: 'heatmap',
-			zsmooth: (this.smooth_color)?"best":"",
-			hoverinfo: 'z+text',
-			text: this.text
-			}
-		];
-
-		Plotly.newPlot(this.graphId, data, this.layout);
-		//allows plot on datacube
-		this.selectedCoord();
+		const graphDiv = <CustomHTMLElement>document.getElementById(this.graphId);
+		Plotly.restyle(graphDiv, {zsmooth: (this.smooth_color)?"best":""});
 	}
 
 }
