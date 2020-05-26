@@ -56,7 +56,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			scaleratio : 1,
 		},
 		showlegend: true,
-		legend: {"orientation": "h"}
+		legend: {"orientation": "h"},
+		hovermode : "closest",
+		hoverdistance: 1
 	};
 	frames: any = [];
 	slideData: any = [];
