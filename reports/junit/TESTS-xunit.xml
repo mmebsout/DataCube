@@ -3,7 +3,6 @@
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"/>
   </properties>
-  <testcase name="AboutComponent should create" time="0.194" classname="AboutComponent"/>
   <testcase name="AppComponent should create the app" time="0.988" classname="AppComponent"/>
   <testcase name="HttpCacheService setCacheData should set cache data" time="0.012" classname="HttpCacheService"/>
   <testcase name="HttpCacheService setCacheData should replace existing data" time="0.01" classname="HttpCacheService"/>

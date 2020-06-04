@@ -7,14 +7,14 @@
 	top: 5%;
 }
 .navbar {
- 	margin-bottom: $spacer;
+	 margin-bottom: $spacer;
+	 flex-direction: row;
 	
 	&-brand {
 		color: $white;
 		display: inline-block;
 		img {
-			width: 10vh;
-			height: 10vh;
+			height: 2.6rem;
 		}
 	}
 
@@ -26,6 +26,7 @@
 
 .nav-link.dropdown-toggle {
   cursor: pointer;
+  color : #dddddd;
 }
 
 header {
@@ -53,7 +54,7 @@ header {
 		}
 	}
 
-	& + div {
+	& ~ .nav-collapsible {
 		background: linear-gradient(to bottom, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.75) 60%, transparent);
 		position: absolute;
 		left: 0;
@@ -64,47 +65,64 @@ header {
 		z-index: 10000;
 		display: none;
 
-		input {
-			background: none;
-			border: none;
-			border-bottom: 2px solid $gray;
-			color: $white;
-			font-weight: 900;
-			font-size: 4vh;
-			width: 100%;
-			outline: none;
-			transition: all ease-in-out .3s;
+	}
 
-			&:focus {
-				font-size: 5vh;
-				border-bottom: 3px solid $gray-lighter;
-			}
+
+	& ~ .collapse {
+		&.show {
+			transform: unset;
+			top: 3.6rem;
+		}
+	}
+
+}
+
+
+.cube-about {
+	overflow: auto;
+}
+
+.cube-search {
+
+	input {
+		background: none;
+		border: none;
+		border-bottom: 2px solid $gray;
+		color: $white;
+		font-weight: 900;
+		font-size: 1.5rem;
+		width: 100%;
+		outline: none;
+		transition: all ease-in-out .3s;
+
+		&:focus {
+			border-bottom: 3px solid $gray-lighter;
+		}
+	}
+
+	ul {
+		@extend .util-reset-list;
+		visibility: hidden;
+		opacity: 0;
+		transition: all ease-in-out .3s;
+
+		&.show {
+			opacity: 1;
+			visibility: visible;
 		}
 
-		ul {
-			@extend .util-reset-list;
-			visibility: hidden;
-			opacity: 0;
+		li {
+			color: $white;
+			cursor: pointer;
+			font-size: 1rem;
+			text-shadow: 1px 1px 1px $black;
 			transition: all ease-in-out .3s;
+			word-wrap: break-word;
+			padding: 1em;
+			border-bottom: 1px solid $gray;
 
-			&.show {
-				opacity: 1;
-				visibility: visible;
-			}
-
-			li {
-				color: $white;
-				cursor: pointer;
-				font-size: 2.5vh;
-				text-shadow: 1px 1px 1px $black;
-				transition: all ease-in-out .3s;
-				word-wrap: break-word;
-				padding: 1em;
-				border-bottom: 1px solid $gray;
-
-				&:hover, &.active {
-					background: $gray;
-				}
+			&:hover, &.active {
+				background: $gray;
 			}
 		}
 	}
