@@ -1,63 +1,104 @@
 <header>
-	<nav class="navbar navbar-toggleable-lg navbar-inverse bg-inverse">
-		<button class="navbar-toggler navbar-toggler-right" type="button" aria-controls="navbar-menu"
-						aria-label="Toggle navigation" (click)="toggleMenu()" [attr.aria-expanded]="!menuHidden">
-			<span class="fa fa-bars"></span>
-		</button>
-		<button class="navbar-toggler navbar-icon-search" type="button" aria-label="Toggle search" 
-						(click)="toggleSearch()" [attr.aria-expanded]="!searchHidden">
-			<span class="fa fa-search"></span>
-		</button>
+	<nav class="navbar navbar-toggleable-lg navbar-inverse bg-inverse ">
+
 		<a class="navbar-brand" href="/home">
 			<img src="{{imgPath}}/assets/Logo_CNES.svg" alt="CNES centre national d'études spatiales - Logo" />
 			<img src="{{imgPath}}/assets/Logo_IDOC.svg" alt="IDOC Integrated Data & Operation Center - Logo" />
 		</a>
-		<div id="navbar-menu" class="collapse navbar-collapse float-xs-none" [ngbCollapse]="menuHidden">
-			<div class="navbar-nav">
-				<a class="nav-item nav-link text-uppercase" routerLink="/home" routerLinkActive="active">
-					<i class="fa fa-home"></i>
-					<span translate>Home</span>
-				</a>
-				<a class="nav-item nav-link text-uppercase" routerLink="/about" routerLinkActive="active">
-					<i class="fa fa-question-circle"></i>
-					<span translate>About</span>
-				</a>
-			</div>
-			<div class="navbar-nav ml-auto">
-				<div class="nav-item" ngbDropdown>
-					<a id="language-dropdown" class="nav-link" ngbDropdownToggle>{{currentLang}}</a>
-					<div class="dropdown-menu dropdown-menu-right language-cube"aria-labelledby="language-dropdown">
-						<button 
-							class="dropdown-item" 
-							*ngFor="let language of languages" 
-							(click)="setLanguage(language)">
-							{{language}}
-						</button>
-					</div>
-				</div>
-				<div class="nav-item" ngbDropdown placement="bottom-right">
-					<a id="user-dropdown" class="nav-link" ngbDropdownToggle>
-					  <i class="fa fa-user-circle"></i>
-					</a>
-					<div ngbDropdownMenu aria-labelledby="user-dropdown">
-					  <h6 class="dropdown-header">
-						<span translate>Logged</span> <b>{{username}}</b></h6>
-					  <div class="dropdown-divider"></div>
-					  <button class="dropdown-item" (click)="logout()" translate>Logout</button>
-					</div>
-				  </div>
-			</div>
-		</div>
+
+		<div class="btn-group justify-content-end ml-auto" role="group" aria-label="nav-buttons">
+			<button class="navbar-toggler " type="button" aria-label="Toggle search" (click)="toggleSearch()"
+				[attr.aria-expanded]="!searchHidden">
+				<span class="fa fa-search"></span>
+			</button>
+			<button class="navbar-toggler " type="button" aria-label="Toggle about" (click)="toggleAbout()"
+				[attr.aria-expanded]="!aboutHidden">
+				<span class="fa fa-info"></span>
+			</button>
+			<button class="navbar-toggler " type="button" aria-controls="navbar-menu"
+				aria-label="Toggle navigation" (click)="toggleMenu()" [attr.aria-expanded]="!menuHidden">
+				<span class="fa fa-cog"></span>
+			</button>
+		</div> 
+
+
 	</nav>
 </header>
-<div [ngbCollapse]="searchHidden">
-	<input [(ngModel)]="searchText" type="text" placeholder="{{ 'Search' | translate }}" appPrefixFocus appNextElement/>
+
+
+<div id="navbar-menu" class="nav-collapsible collapse navbar-collapse float-xs-none" [ngbCollapse]="menuHidden">
+	<div class="navbar-nav float-right">
+		<div class="nav-item" ngbDropdown>
+			<a id="language-dropdown" class="nav-link" ngbDropdownToggle>{{currentLang}}</a>
+			<div class="dropdown-menu dropdown-menu-right language-cube" aria-labelledby="language-dropdown">
+				<button class="dropdown-item" *ngFor="let language of languages"
+					(click)="setLanguage(language)">
+					{{language}}
+				</button>
+			</div>
+		</div>
+		<div class="nav-item" ngbDropdown placement="bottom-right">
+			<a id="user-dropdown" class="nav-link" ngbDropdownToggle>
+				<i class="fa fa-user-circle"></i>
+			</a>
+			<div ngbDropdownMenu aria-labelledby="user-dropdown">
+				<h6 class="dropdown-header">
+					<span translate>Logged</span> <b>{{username}}</b></h6>
+				<div class="dropdown-divider"></div>
+				<button class="dropdown-item" (click)="logout()" translate>Logout</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="nav-collapsible cube-search"[ngbCollapse]="searchHidden">
+	<input [(ngModel)]="searchText" type="text" placeholder="{{ 'Search' | translate }}" appPrefixFocus
+		appNextElement />
 	<ul [ngClass]="{'show': searchText}">
-		<li *ngFor="let fit of fitsTab | filter:searchText; let i = index" 
-			[attr.tabindex]="i" 
-			(click)="getFitFile(fit)" 
-			appChooseElement>
+		<li *ngFor="let fit of fitsTab | filter:searchText; let i = index" [attr.tabindex]="i"
+			(click)="getFitFile(fit)" appChooseElement>
 			{{fit}}
 		</li>
 	</ul>
+</div>
+
+
+<div [ngbCollapse]="aboutHidden" (click)="toggleAbout()" class="nav-collapsible cube-about">
+	<div class="container-fluid">
+		<div class="jumbotron text-center ">
+			<h1>
+				<span translate>APP_NAME</span>
+			</h1>
+			<p> {{ 'messageLicence1' | translate }}<a
+					href="https://raw.githubusercontent.com/MizarWeb/Mizar/master/LICENSE.md"
+					target="_blank">LICENSE</a>
+				{{ 'messageLicence2' | translate }}
+			</p>
+
+			<p>
+				<span class="font-weight-bold"> <i class="fa fa-bookmark-o"></i> <span translate> - Version
+						:</span></span> {{version}}
+			</p>
+			<p class="font-weight-bold"><i class="fa fa-code"></i> - Developpement : </p>
+			<ul class="d-inline-block text-left">
+				<li>{{ 'messageDev1' | translate }}<a
+						href="https://cnes.fr/fr/">CNES</a>{{ 'messageDev2' | translate }}</li>
+				<li> <a href="https://idoc.ias.u-psud.fr/">IDOC/IAS</a>
+					{{ 'messageDev3' | translate }}<br />{{ 'messageDev4' | translate}}</li>
+			</ul>
+			<p class="font-weight-bold"><i class="fa  fa-eur"></i> - {{ 'messageFundings' | translate }}</p>
+			<ul class="d-inline-block text-left">
+				<li>
+					<a href="http://sitools2.github.io/">SITools2</a>, (<a href="https://cnes.fr/">CNES</a>)
+				</li>
+				<li>
+					<a
+						href="https://www.universite-paris-saclay.fr/recherche/projet/spaceobs-un-incubateur-spatial">SPACEOBS</a>
+					/ <a href="https://www.universite-paris-saclay.fr">Paris-Saclay</a>
+				</li>
+			</ul>
+
+		</div>
+	</div>
 </div>

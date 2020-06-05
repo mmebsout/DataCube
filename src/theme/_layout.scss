@@ -3,7 +3,9 @@
 body {
 	background: $gray-lighter;
 }
-
+html.datacube-menu {
+	overflow: hidden;
+}
 .navbar-toggler {
 	cursor: pointer;
 	top: 2rem;
@@ -43,10 +45,6 @@ header + .collapse {
 	&.show {
 		transform: translate(0,11%);
 	}
-}
-
-.menu {
-	overflow: hidden;
 }
 
 @media (min-width: 1200px){

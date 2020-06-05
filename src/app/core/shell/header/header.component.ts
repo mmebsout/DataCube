@@ -16,9 +16,12 @@ const log = new Logger('Header');
 	styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+	version: string = environment.version;
+	author: string = environment.author;
 	username = <string>'';
 	menuHidden = true;
 	searchHidden = true;
+	aboutHidden = true;
 	searchText = <any>null;
 	fitsTab = <any>[];
 	languages = <any>[];
@@ -67,9 +70,24 @@ export class HeaderComponent implements OnInit {
 	toggleMenu() {
 		this.menuHidden = !this.menuHidden;
 		this.searchHidden = true;
-		$('html').toggleClass('menu');
+		this.aboutHidden = true;
+		this.htmlMenuClass(!this.menuHidden);
+		
 	}
 
+	/**
+	 * Display or not about
+	 * @function toggleMenu
+	 * @returns void 
+	 */	
+	toggleAbout() {
+		this.aboutHidden = !this.aboutHidden;
+		this.searchHidden = true;
+		this.menuHidden = true;
+		this.htmlMenuClass(!this.aboutHidden);
+		
+	}
+	
 	/**
 	 * Display or not search
 	 * @function toggleMenu
@@ -78,7 +96,22 @@ export class HeaderComponent implements OnInit {
 	toggleSearch() {
 		this.searchHidden = !this.searchHidden;
 		this.menuHidden = true;
-		$('html').removeClass('menu');
+		this.aboutHidden = true;
+		this.htmlMenuClass(!this.searchHidden);
+		
+	}
+
+	/**
+	 * Toggle a class "datacube-menu" to the html element
+	 * @function htmlMenuClass
+	 * @returns void
+	 */
+	htmlMenuClass(menu: boolean) {
+		if(menu){
+			$('html').addClass('datacube-menu');
+		}else{
+			$('html').removeClass('datacube-menu');
+		}
 	}
 
 	/**
@@ -95,6 +128,7 @@ export class HeaderComponent implements OnInit {
 	setLanguage(language: string) {
 		this.i18nService.language = language;
 		this.currentLang = language;
+		this.toggleMenu();
 	}
 
 	get currentLanguage(): string {

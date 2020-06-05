@@ -16,7 +16,6 @@ import { LoginModule } from './login/login.module';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeModule } from './home/home.module';
-import { AboutModule } from './about/about.module';
 
 @NgModule({
   imports: [
@@ -28,7 +27,6 @@ import { AboutModule } from './about/about.module';
 	CoreModule,
 	SharedModule,
 	HomeModule,
-	AboutModule,
 	LoginModule,
 	AppRoutingModule,
 	BrowserAnimationsModule
