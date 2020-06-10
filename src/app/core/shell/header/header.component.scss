@@ -80,6 +80,11 @@ header {
 
 .cube-about {
 	overflow: auto;
+	color: #333333;
+	
+	a {
+		color: steelblue !important;
+	}
 }
 
 .cube-search {
