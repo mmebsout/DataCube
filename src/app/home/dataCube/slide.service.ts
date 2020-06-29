@@ -1,11 +1,13 @@
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+import {map, catchError} from 'rxjs/operators';
+
+
 
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
-import 'rxjs/add/operator/catch';
+import { Observable, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
 
 const routes = {
   slide: (s: slides) => `/slide?entry=${s.id}&posZ=0`,
@@ -23,20 +25,33 @@ export interface tranches {
 @Injectable()
 export class SlideService {
 
-	constructor(private http: Http, public toastr: ToastsManager) {
+	constructor(private http: Http, public toastr: ToastrService) {
 	}
 
 	getSlide(id: slides): Observable<string>  {
 		return this.http.get(routes.slide(id), { cache: false })
-				.map((res: Response) => res.json())
-				.map(body => body.response)
-				.catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
+			.pipe(
+				map((res: Response) => res.json()),
+				map(body => body.response),
+				catchError((err:any) => {
+					this.toastr.error(err.json().message, 'Oops!');
+					return throwError(err);
+				}
+			),
+		);
 	}
 
 	getNextTranche(id: slides, idTranche: tranches): Observable<string> {
-		return this.http.get(routes.tranche(id, idTranche), {cache: false})
-						.map((res: Response) => res.json())
-						.map(body => body.response)
-						.catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
+		return this.http.get(routes.tranche(id, idTranche), { cache: false })
+			.pipe(
+				map((res: Response) => res.json()),
+				map(body => body.response),
+				catchError(
+					(err: any) => {
+						this.toastr.error(err.json().message, 'Oops!');
+						return throwError(err);
+					}
+				),
+			);
 	}
 }

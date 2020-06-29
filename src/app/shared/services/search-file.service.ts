@@ -1,10 +1,12 @@
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+import {catchError, map} from 'rxjs/operators';
+
+
 
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { Observable, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 const routes = `/listFiles`;
 
@@ -12,12 +14,15 @@ const routes = `/listFiles`;
 @Injectable()
 export class SearchFileService {
 
-  constructor(private http: Http, public toastr: ToastsManager) { }
+  constructor(private http: Http, public toastr: ToastrService) { }
 
   getSearchList(): Observable<string> {
-    return this.http.get(routes, { cache: true })
-      .map((res: Response) => res.json())
-      .map(body => body)
-      .catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
+    return this.http.get(routes, { cache: true }).pipe(
+      map((res: Response) => res.json()),
+      map(body => body),
+      catchError(err => {
+        this.toastr.error(err.json().message, 'Oops!');
+        return throwError(err);
+    }));
   }
 }

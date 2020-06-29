@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { APP_BASE_HREF, Location } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -21,7 +21,7 @@ import { HomeModule } from './home/home.module';
   imports: [
 	BrowserModule,
 	FormsModule,
-	HttpModule,
+	HttpClientModule,
 	TranslateModule.forRoot(),
 	NgbModule.forRoot(),
 	CoreModule,

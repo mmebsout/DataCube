@@ -5,8 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-
-import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import { ToastrModule } from 'ngx-toastr';
 import { SliderModule } from 'primeng/primeng';
 
 import { SharedModule } from '../shared/shared.module';
@@ -33,7 +32,7 @@ describe('HomeComponent', () => {
           BrowserAnimationsModule,
           FormsModule,
           TranslateModule.forRoot(),
-          ToastModule.forRoot()
+          ToastrModule.forRoot()
         ],
         declarations: [
           HomeComponent,

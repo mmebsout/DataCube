@@ -6,10 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastModule } from 'ng2-toastr/ng2-toastr';
-import { ToastOptions } from 'ng2-toastr/ng2-toastr';
-
-import { CustomOption } from './custom-option';
+import { ToastrModule } from 'ngx-toastr';
 import { ShellComponent } from './shell/shell.component';
 import { HeaderComponent } from './shell/header/header.component';
 import { RouteReusableStrategy } from './route-reusable-strategy';
@@ -39,7 +36,10 @@ export function createHttpService(backend: ConnectionBackend,
 		FormsModule,
 		ReactiveFormsModule,
 		BrowserAnimationsModule,
-		ToastModule.forRoot()
+		ToastrModule.forRoot({
+			newestOnTop : false,
+  			closeButton : true,
+		  })
 	],
 	declarations: [
 		HeaderComponent,
@@ -58,7 +58,6 @@ export function createHttpService(backend: ConnectionBackend,
 			deps: [XHRBackend, RequestOptions, HttpCacheService],
 			useFactory: createHttpService
 		},
-		{ provide: ToastOptions, useClass: CustomOption },
 		{
 		  provide: RouteReuseStrategy,
 		  useClass: RouteReusableStrategy

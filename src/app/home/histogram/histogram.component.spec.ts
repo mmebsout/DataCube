@@ -3,7 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Http, BaseRequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { SlideService } from '../dataCube/slide.service';
-import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import { ToastrModule } from 'ngx-toastr';
 
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { I18nService } from '../../core/i18n.service';
@@ -17,7 +17,7 @@ describe('HistogramComponent', () => {
 	TestBed.configureTestingModule({
 	  imports: [
 		TranslateModule.forRoot(),
-		ToastModule.forRoot()
+		ToastrModule.forRoot()
 	  ],
 	  providers: [
 	  	I18nService,

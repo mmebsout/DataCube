@@ -5,7 +5,7 @@ import { MockBackend } from '@angular/http/testing';
 import { SliderModule } from 'primeng/primeng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
-import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { I18nService } from '../../core/i18n.service';
@@ -30,7 +30,7 @@ describe('DataCubeComponent', () => {
           BrowserAnimationsModule,
           SliderModule,
           TranslateModule.forRoot(),
-          ToastModule.forRoot()
+          ToastrModule.forRoot()
         ],
         declarations: [DataCubeComponent],
         providers: [

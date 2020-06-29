@@ -123,7 +123,7 @@ export class HttpCacheService {
 
   private loadCacheData() {
     const data = this.storage ? this.storage[cachePersistenceKey] : null;
-    this.cachedData = data ? JSON.stringify(data) : {};
+    this.cachedData = data ? JSON.parse(data) : {};
   }
 
 }

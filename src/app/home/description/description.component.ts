@@ -1,3 +1,5 @@
+
+import {finalize} from 'rxjs/operators';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 import { I18nService } from '../../core/i18n.service';
@@ -7,7 +9,7 @@ import { Logger } from '../../core/logger.service';
 import { LoaderService } from '../../core/loader.service';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { Fit } from '../../shared/classes/fit';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 const log = new Logger('Description');
 
@@ -44,7 +46,7 @@ export class DescriptionComponent implements OnInit {
 		private streamFitService: StreamFitService,
 		private loaderService: LoaderService,
 		private metadataService: MetadataService,
-		public toastr: ToastsManager) {
+		public toastr: ToastrService) {
 		this.mustBeLoaded = this.loaderService.description;	
 		config.closeOthers = true;
 		config.type = 'info';
@@ -70,8 +72,8 @@ export class DescriptionComponent implements OnInit {
 	 */
 	ngOnInit() {
 		this.metadataService
-			.getMetadata({id: this.currentSlide.name})
-			.finally(() => { this.descLoadingStatus.emit(false); })
+			.getMetadata({id: this.currentSlide.name}).pipe(
+			finalize(() => { this.descLoadingStatus.emit(false); }))
 			.subscribe((metadata: any) => {
 				if(metadata instanceof Object) {
 					log.info(`Description loaded`);

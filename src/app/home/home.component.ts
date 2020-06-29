@@ -1,4 +1,4 @@
-import 'rxjs/add/operator/finally';
+
 
 import { Component, OnInit, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';

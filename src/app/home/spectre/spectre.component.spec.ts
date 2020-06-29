@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { Http, BaseRequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import { ToastrModule } from 'ngx-toastr';
 
 import { CubeToSpectreService } from '../../shared/services/cube-to-spectre.service';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
@@ -18,7 +18,7 @@ describe('SpectreComponent', () => {
     TestBed.configureTestingModule({
 		imports: [
 			TranslateModule.forRoot(),
-			ToastModule.forRoot()
+			ToastrModule.forRoot()
 		],
 		providers: [
 			I18nService,
