@@ -10,7 +10,6 @@ import { SliderModule } from 'primeng/primeng';
 
 import { SharedModule } from '../shared/shared.module';
 import { HomeComponent } from './home.component';
-import { QuoteService } from './quote.service';
 import { DataCubeComponent } from './dataCube/dataCube.component';
 import { DescriptionComponent } from './description/description.component';
 import { HistogramComponent } from './histogram/histogram.component';
@@ -42,7 +41,6 @@ describe('HomeComponent', () => {
           SpectreComponent
           ],
         providers: [
-          QuoteService,
           MockBackend,
           BaseRequestOptions,
           {

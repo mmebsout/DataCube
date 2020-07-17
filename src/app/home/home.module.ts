@@ -14,7 +14,6 @@ import { DescriptionComponent } from './description/description.component';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
-import { QuoteService } from './quote.service';
 import { SlideService } from './dataCube/slide.service';
 import { SpectreService } from './spectre/spectre.service';
 import { MetadataService } from './description/metadata.service';
@@ -42,7 +41,6 @@ import { SliderModule } from 'primeng/components/slider/slider';
     DescriptionComponent
   ],
   providers: [
-    QuoteService,
     SlideService,
     SpectreService,
     MetadataService,

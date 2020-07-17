@@ -2,8 +2,8 @@
 import {finalize} from 'rxjs/operators';
 import { Component, OnInit,
 	Output, Input, EventEmitter, OnChanges, SimpleChanges  } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Router, CanActivate } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+ import { Router, CanActivate } from '@angular/router';
 import { I18nService } from '../../core/i18n.service';
 import { CubeToSpectreService } from '../../shared/services/cube-to-spectre.service';
 import { CubeToHistoService } from '../../shared/services/cube-to-histo.service';
@@ -96,7 +96,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @param {MetadataService} metadataService
 	 * @param {ToastrManager} toastr
 	 */
-	constructor(private router: Router, private http: Http,
+	constructor(private router: Router, private http: HttpClient,
 				private i18nService: I18nService,
 				private translateService: TranslateService,
 				private cubeToSpectreService: CubeToSpectreService,
@@ -126,11 +126,12 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			role = JSON.parse(localStorage.getItem('userNameRole'));
 
 			//get list files authorized
-			let list: any = localStorage.getItem('listfilesPublic').split(",");
+			let listfilesPublic = localStorage.getItem('listfilesPublic');
+			let list: any = listfilesPublic ? listfilesPublic.split(",") : [];
 
 			//check if user is authorized
 			if((localStorage.getItem('userNameDataCube')=="admin") 
-			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(fit)!==-1))
+			|| (role=="public" && list.indexOf(fit)!==-1)
 			){
 				// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
 				// 	this.pathData = this.loaderService.dataPath;

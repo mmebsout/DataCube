@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { APP_BASE_HREF, Location } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule , HTTP_INTERCEPTORS} from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -16,6 +16,9 @@ import { LoginModule } from './login/login.module';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeModule } from './home/home.module';
+import { AboutModule } from './about/about.module';
+import { HttpCacheService } from './core';
+import { CachingInterceptor } from './core/http/http.cache.interceptor';
 
 @NgModule({
   imports: [
@@ -33,7 +36,9 @@ import { HomeModule } from './home/home.module';
   ],
   declarations: [AppComponent],
   providers: [
-    { provide: APP_BASE_HREF, useValue: window['_app_base'] || '/DataCube/' },
+	{ provide: APP_BASE_HREF, useValue: window['_app_base'] || '/DataCube/' },
+	HttpCacheService,
+	{provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi:true }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -6,8 +6,10 @@ import {catchError} from 'rxjs/operators';
 
 import { Injectable } from '@angular/core';
 import {
-  Http, ConnectionBackend, RequestOptions, Request, Response, RequestOptionsArgs, RequestMethod, ResponseOptions
+  ConnectionBackend, RequestOptions, Request, Response, RequestOptionsArgs, RequestMethod, ResponseOptions
 } from '@angular/http';
+
+import {HttpClient} from '@angular/common/http';
 import { extend } from 'lodash';
 
 import { environment } from '../../../environments/environment';
@@ -22,7 +24,7 @@ const log = new Logger('HttpService');
  * The default extension adds support for API prefixing, request caching and default error handler.
  */
 @Injectable()
-export class HttpService extends Http {
+export class HttpService extends HttpClient {
 
   constructor(backend: ConnectionBackend,
               private defaultOptions: RequestOptions,
