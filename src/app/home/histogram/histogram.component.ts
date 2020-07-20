@@ -141,7 +141,8 @@ export class HistogramComponent implements OnInit {
 				role = JSON.parse(localStorage.getItem('userNameRole'));
 
 				//get list files authorized
-				let list: any = localStorage.getItem('listfilesPublic').split(",");
+				let listfilesPublic = localStorage.getItem('listfilesPublic');
+				let list: any = listfilesPublic ? listfilesPublic.split(",") : [] ;
 
 				//check if user is authorized
 				if ((localStorage.getItem('userNameDataCube') == "admin")
