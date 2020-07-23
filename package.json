@@ -21,7 +21,8 @@
     "compodoc": "compodoc -p src/tsconfig.app.json --disableRoutesGraph -s",
     "env": "ngx-scripts env2json npm_package_version",
     "generate": "ng generate",
-    "build-mizar": "npm run build && cd plugin && npm install && grunt build && cd .. && cp -r plugin/dist/libs dist/"
+    "build-mizar": "npm run build && cd plugin && npm install && npm run postinstall && grunt build && cd .. && cp -r plugin/dist/libs dist/",
+    "postinstall" : "patch-package"
   },
   "keywords": [
     "cnes",
@@ -72,7 +73,7 @@
     "ngx-toastr": "^10.1.0",
     "plotly.js": "^1.54.5",
     "plotly.js-cartesian-dist": "^1.42.5",
-    "primeng": "^4.2.2",
+    "primeng": "^7.0.1",
     "rxjs": "^6.5.4",
     "rxjs-compat": "^6.0.0-rc.0",
     "zone.js": "^0.8.12"
