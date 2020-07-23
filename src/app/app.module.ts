@@ -16,7 +16,6 @@ import { LoginModule } from './login/login.module';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeModule } from './home/home.module';
-import { AboutModule } from './about/about.module';
 import { HttpCacheService } from './core';
 import { CachingInterceptor } from './core/http/http.cache.interceptor';
 
