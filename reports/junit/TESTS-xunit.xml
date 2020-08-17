@@ -51,8 +51,6 @@
   <testcase name="DescriptionComponent should create" time="0.039" classname="DescriptionComponent"/>
   <testcase name="HistogramComponent should create" time="0.954" classname="HistogramComponent"/>
   <testcase name="HomeComponent should create" time="1.997" classname="HomeComponent"/>
-  <testcase name="QuoteService getRandomQuote should return a random Chuck Norris quote" time="0.012" classname="QuoteService"/>
-  <testcase name="QuoteService getRandomQuote should return a string in case of error" time="0.01" classname="QuoteService"/>
   <testcase name="SpectreComponent should create" time="1.012" classname="SpectreComponent"/>
   <testcase name="LoaderComponent should not be visible by default" time="0.967" classname="LoaderComponent"/>
   <testcase name="LoaderComponent should be visible when app is loading" time="0.999" classname="LoaderComponent"/>

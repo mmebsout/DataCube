@@ -1,8 +1,7 @@
-import 'rxjs/add/operator/finally';
+
 
 import { Component, OnInit, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { QuoteService } from './quote.service';
 
 declare function require(moduleName: string): any;
 const Plotly = require('plotly.js/lib/index-cartesian.js');
@@ -15,7 +14,6 @@ const Plotly = require('plotly.js/lib/index-cartesian.js');
 
 export class HomeComponent implements OnInit {
 
-	quote: string;
 	isLoadingCube = <boolean>true;
 	isLoadingHisto = <boolean>true;
 	isLoadingSpectre = <boolean>true;
@@ -34,7 +32,7 @@ export class HomeComponent implements OnInit {
 	 * Constructor of home component
 	 * @constructor
 	 */
-	constructor(private quoteService: QuoteService, private ngZone: NgZone, private translateService: TranslateService) {}
+	constructor(private ngZone: NgZone, private translateService: TranslateService) {}
 
 	/**
 	 * Initialize the responsive web design for all components
@@ -58,7 +56,7 @@ export class HomeComponent implements OnInit {
 	  
   
 
-		  window.onresize = (e) => {
+		  window.onresize = () => {
 			this.ngZone.run(() => {
 				Plotly.Plots.resize(cube);
 				Plotly.Plots.resize(spectre);
@@ -78,7 +76,7 @@ export class HomeComponent implements OnInit {
 		const histo = this.setGraph('#histogram', d3, WIDTH_IN_PERCENT_OF_PARENT, HEIGHT_IN_PERCENT_OF_PARENT);
 	
 
-		window.onresize = (e) => {
+		window.onresize = () => {
 			//this.ngZone.run(() => {
 				Plotly.Plots.resize(cube);
 				Plotly.Plots.resize(spectre);

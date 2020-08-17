@@ -43,8 +43,8 @@ export class HeaderComponent implements OnInit {
 		this.searchFileService.getSearchList()
 		.subscribe(data => {
 			//get listFiles public and private
-			localStorage.setItem("listfilesPublic",data["public_files"]);
-			localStorage.setItem("listfilesPrivate",data["private_files"]);
+			localStorage.setItem("listfilesPublic", JSON.stringify(data["public_files"]));
+			localStorage.setItem("listfilesPrivate", JSON.stringify(data["private_files"]));
 			this.fitsTab = data["public_files"].concat(data["private_files"]);
 			log.info(`fitList has uploaded: ${this.fitsTab}`);
 		});

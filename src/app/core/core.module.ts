@@ -1,45 +1,45 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouteReuseStrategy, RouterModule } from '@angular/router';
-import { HttpModule, Http, XHRBackend, ConnectionBackend, RequestOptions } from '@angular/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastModule } from 'ng2-toastr/ng2-toastr';
-import { ToastOptions } from 'ng2-toastr/ng2-toastr';
-
-import { CustomOption } from './custom-option';
+import { ToastrModule } from 'ngx-toastr';
 import { ShellComponent } from './shell/shell.component';
 import { HeaderComponent } from './shell/header/header.component';
 import { RouteReusableStrategy } from './route-reusable-strategy';
 import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationGuard } from './authentication/authentication.guard';
 import { I18nService } from './i18n.service';
-import { HttpService } from './http/http.service';
+//import { HttpService } from './http/http.service';
 import { HttpCacheService } from './http/http-cache.service';
 import { FilterPipe } from '../shared/pipes/filter.pipe';
 import { NextElementDirective } from '../shared/directives/next-element.directive';
 import { ChooseElementDirective } from '../shared/directives/choose-element.directive';
 
 
-export function createHttpService(backend: ConnectionBackend,
-																	defaultOptions: RequestOptions,
-																	httpCacheService: HttpCacheService) {
-	return new HttpService(backend, defaultOptions, httpCacheService);
-}
+// export function createHttpService(backend: ConnectionBackend,
+// 																	defaultOptions: RequestOptions,
+// 																	httpCacheService: HttpCacheService) {
+// 	return new HttpService(backend, defaultOptions, httpCacheService);
+// }
 
 @NgModule({
 	imports: [
 		CommonModule,
-		HttpModule,
+		HttpClientModule,
 		TranslateModule,
 		NgbModule,
 		RouterModule,
 		FormsModule,
 		ReactiveFormsModule,
 		BrowserAnimationsModule,
-		ToastModule.forRoot()
+		ToastrModule.forRoot({
+			newestOnTop : false,
+  			closeButton : true,
+		  })
 	],
 	declarations: [
 		HeaderComponent,
@@ -53,12 +53,12 @@ export function createHttpService(backend: ConnectionBackend,
 		AuthenticationGuard,
 		I18nService,
 		HttpCacheService,
-		{
-			provide: Http,
-			deps: [XHRBackend, RequestOptions, HttpCacheService],
-			useFactory: createHttpService
-		},
-		{ provide: ToastOptions, useClass: CustomOption },
+		HttpClient,
+		// {
+		// 	provide: HttpClient,
+		// 	deps: [XHRBackend, RequestOptions, HttpCacheService],
+		// 	useFactory: createHttpService
+		// },
 		{
 		  provide: RouteReuseStrategy,
 		  useClass: RouteReusableStrategy

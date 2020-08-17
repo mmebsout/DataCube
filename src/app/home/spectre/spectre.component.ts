@@ -1,9 +1,11 @@
+
+import {finalize} from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { I18nService } from '../../core/i18n.service';
 import { ScatterData, Layout, PlotlyHTMLElement, newPlot } from 'plotly.js/lib/core';
 import { CubeToSpectreService } from '../../shared/services/cube-to-spectre.service';
 import { SpectreService } from './spectre.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { LoaderService } from '../../core/loader.service';
 import { Fit } from '../../shared/classes/fit';
@@ -11,7 +13,7 @@ import { CustomHTMLElement } from '../../shared/classes/custom-html';
 import { Logger } from '../../core/logger.service';
 import { MetadataService } from '../description/metadata.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 declare function require(moduleName: string): any;
 const Plotly = require('plotly.js/lib/index-cartesian.js');
@@ -46,7 +48,7 @@ export class SpectreComponent  {
 	 * @param {MetadataService} metadataService
 	 * @param {StreamFitService} streamFitService - Fit file getter service provider
 	 * @param {SpectreService} spectreService
-	 * @param {ToastsManager} toastr
+	 * @param {ToastrService} toastr
 	 */
 	constructor(private i18nService: I18nService,
 				private cubeToSpectreService: CubeToSpectreService,
@@ -54,7 +56,7 @@ export class SpectreComponent  {
 				private loaderService: LoaderService,
 				private metadataService: MetadataService,
 				private translateService: TranslateService,
-				public toastr: ToastsManager,
+				public toastr: ToastrService,
 				private spectreService: SpectreService) {
 		
 		//get if spectre must be loaded (plugin gestion)
@@ -134,8 +136,8 @@ export class SpectreComponent  {
 	getSpectrum(name : string, x: any, y: any) : any {
 		this.serviceSpectre
 		.getSpectre({id: name},
-					{naxis1: x, naxis2: y})
-		.finally(() => { this.spectreLoadingStatus.emit(false);  })
+					{naxis1: x, naxis2: y}).pipe(
+		finalize(() => { this.spectreLoadingStatus.emit(false);  }))
 		.subscribe((spectreData: any) => {
 			this.spectreData = spectreData;
 			//if spectre must be loaded then draw
@@ -167,13 +169,13 @@ export class SpectreComponent  {
 		if(this.mustBeLoaded){
 
 			this.metadataService
-			.getDimension({id: this.currentSlide.name})
-			.finally(() => {
+			.getDimension({id: this.currentSlide.name}).pipe(
+			finalize(() => {
 				//toastr translate if success
 				this.translateService.get(['messageDimension','success']).subscribe((res: any) => {
 					this.toastr.success(res.messageDimension, res.success);
 				});
-			})
+			}))
 			.subscribe((dimensions: any) => {
 				var titleX = "Slides";
 				var titleY = "Value";

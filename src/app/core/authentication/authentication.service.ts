@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable ,  of } from 'rxjs';
 import { Logger} from '@app/core';
+import { environment } from '../../../environments/environment';
 
 //const log = new Logger('Authentification');
 
@@ -19,6 +19,11 @@ export interface LoginContext {
   remember?: boolean;
 }
 
+interface IdentificationResponse {
+	"role":string,
+	"message":boolean
+}
+
 const credentialsKey = 'credentials';
 
 /**
@@ -30,7 +35,7 @@ export class AuthenticationService {
 
   private _credentials: Credentials | null;
 
-  constructor(private http: Http, private router: Router) {
+  constructor(private http: HttpClient, private router: Router) {
     const savedCredentials = sessionStorage.getItem(credentialsKey) || localStorage.getItem(credentialsKey);
     if (savedCredentials) {
       this._credentials = JSON.parse(savedCredentials);
@@ -41,20 +46,19 @@ export class AuthenticationService {
     await new Promise(resolve => setTimeout(()=>resolve(), ms)).then(()=>console.log("fired"));
 }
 
+
   /**
    * Authenticates the user.
    * @param {LoginContext} context The login parameters.
    * @return {Observable<Credentials>} The user credentials.
    */
   login(context: LoginContext) : any{
-    let auth = <any>{};
     let promise = new Promise((resolve, reject) => {
-      let apiURL = '/identification';
+      let apiURL = environment.serverUrl+'/identification';
       this.http.post(apiURL,{username:context.username,password:context.password})
-        .subscribe((response: Response) =>{
-            auth = response.json();
-           if(auth.message == true){
-              localStorage.setItem('userNameRole',JSON.stringify(auth.role));
+        .subscribe((idResponse : IdentificationResponse) =>{
+           if(idResponse.message == true){
+              localStorage.setItem('userNameRole',JSON.stringify(idResponse.role));
               localStorage.setItem('userNameDataCube',context.username);
               this.router.navigate(['/'], { skipLocationChange: true });
               this.setCredentials({

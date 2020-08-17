@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewContainerRef,
+
+import {finalize} from 'rxjs/operators';
+import { Component, OnInit,
 	Output, Input, EventEmitter, OnChanges, SimpleChanges  } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Router, CanActivate } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+ import { Router, CanActivate } from '@angular/router';
 import { I18nService } from '../../core/i18n.service';
 import { CubeToSpectreService } from '../../shared/services/cube-to-spectre.service';
 import { CubeToHistoService } from '../../shared/services/cube-to-histo.service';
@@ -11,8 +13,8 @@ import { Fit } from '../../shared/classes/fit';
 import { SlideService } from './slide.service';
 import { Logger } from '../../core/logger.service';
 import { MetadataService } from '../description/metadata.service';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
-import { Subscription } from 'rxjs/Subscription';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { ImageRecalc } from '../../shared/classes/image-recalc';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
@@ -92,10 +94,9 @@ export class DataCubeComponent implements OnInit, OnChanges {
 	 * @param {SlideService} slideService
 	 * @param {StreamFitService} streamFitService
 	 * @param {MetadataService} metadataService
-	 * @param {ToastsManager} toastr
-	 * @param {ViewContainerRef} vcr
+	 * @param {ToastrManager} toastr
 	 */
-	constructor(private router: Router, private http: Http,
+	constructor(private router: Router, private http: HttpClient,
 				private i18nService: I18nService,
 				private translateService: TranslateService,
 				private cubeToSpectreService: CubeToSpectreService,
@@ -104,13 +105,11 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				private streamFitService: StreamFitService,
 				private metadataService: MetadataService,
 				private loaderService: LoaderService,
-				public toastr: ToastsManager,
-				public vcr: ViewContainerRef) {
+				public toastr: ToastrService) {
 
 
 		//get if datacube must be loaded (plugin gestion)
 		this.mustBeLoaded = this.loaderService.datacube;
-		toastr.setRootViewContainerRef(vcr);
 		this.colors = Plotly.PlotSchema.get().layout.layoutAttributes.colorway.dflt;
 		cubeToSpectreService.CubePointCoord$.subscribe(coord => {
 			this.dataCubePoint = coord;
@@ -127,11 +126,12 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			role = JSON.parse(localStorage.getItem('userNameRole'));
 
 			//get list files authorized
-			let list: any = localStorage.getItem('listfilesPublic').split(",");
+			let listfilesPublic = localStorage.getItem('listfilesPublic');
+			let list: any = listfilesPublic ? listfilesPublic.split(",") : [];
 
 			//check if user is authorized
 			if((localStorage.getItem('userNameDataCube')=="admin") 
-			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(fit)!==-1))
+			|| (role=="public" && list.indexOf(fit)!==-1)
 			){
 				// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
 				// 	this.pathData = this.loaderService.dataPath;
@@ -188,21 +188,22 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			}
 
 			//get list files authorized
-			let list: any = localStorage.getItem('listfilesPublic').split(",");
+			let listfilesPublic = localStorage.getItem('listfilesPublic');
+			let list: any = listfilesPublic ? listfilesPublic.split(",") : [] ;
 
 			//check if user is authorized
 			if((localStorage.getItem('userNameDataCube')=="admin") 
 			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(this.currentSlide.name)!==-1))
 			){
 			this.metadataService
-				.getDimension({id: this.currentSlide.name})
-				.finally(() => {
+				.getDimension({id: this.currentSlide.name}).pipe(
+				finalize(() => {
 					//toastr translate if success
 					this.translateService.get(['messageDataCube','success']).subscribe((res: any) => {
 						this.toastr.success(res.messageDataCube, res.success);
 						this.dataCubeLoadingStatus.emit(false);
 					});
-				})
+				}))
 				.subscribe((dimensions: any) => {
 					if(dimensions.feature instanceof Object) {
 						//get slides number
@@ -224,13 +225,13 @@ export class DataCubeComponent implements OnInit, OnChanges {
 				});
 
 			this.slideService
-				.getSlide({id: this.currentSlide.name})
-				.finally(() => {
+				.getSlide({id: this.currentSlide.name}).pipe(
+				finalize(() => {
 					this.translateService.get(['cubeExplorerImage','success']).subscribe((res: any) => {
 						this.toastr.success(res.cubeExplorerImage, res.success);
 					});
 					this.dataCubeLoadingStatus.emit(false);
-				})
+				}))
 				.subscribe(slideData => {
 						this.fileType = slideData;
 						if(this.fileType.feature instanceof Object) {
@@ -281,8 +282,8 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		id = Number(this.val.toFixed()) + 1;		
 		if(this.val_opacity<100 && id <= this.nbSlides && (this.slideLoaded != id)){
 			this.slideService
-			.getNextTranche({id: this.currentSlide.name}, {idTranche: id})
-			.finally(() => {})
+			.getNextTranche({id: this.currentSlide.name}, {idTranche: id}).pipe(
+			finalize(() => {}))
 			.subscribe((figure: any) => {
 				this.slideData = figure.feature.properties.slide.value;
 			});
@@ -333,15 +334,15 @@ export class DataCubeComponent implements OnInit, OnChanges {
 		_cubeToHistoService.shareTranche(indexVal);
 
 		this.slideService
-			.getNextTranche({id: this.currentSlide.name}, {idTranche: indexVal})
-			.finally(() => {
+			.getNextTranche({id: this.currentSlide.name}, {idTranche: indexVal}).pipe(
+			finalize(() => {
 				if(this.translateService.currentLang == 'en-US') {
 					this.toastr.success(`Slide Nb  ${indexVal + 1} is loaded!`, `Success!`);
 				} else {
 					this.toastr.success(`Slide numéro  ${indexVal + 1} est chargée!`, `Succès!`);
 				}
 				this.currentTranche = indexVal;
-			})
+			}))
 			.subscribe((figure: any) => {
 				const img = figure.feature.properties.slide.value;
 			if (this.newFilterReset) {

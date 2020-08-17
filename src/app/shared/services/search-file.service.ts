@@ -1,23 +1,36 @@
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+import {catchError, map} from 'rxjs/operators';
+
+
 
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
-const routes = `/listFiles`;
+import { environment } from '../../../environments/environment';
 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { cache_key, HttpCachePolicy } from '@app/core/http/request-options-args';
+
+const routes = environment.serverUrl+`/listFiles`;
+
+interface Files {
+	"private_files": string[],
+	"public_files": string[],
+	"status":"OK"
+}
 
 @Injectable()
 export class SearchFileService {
 
-  constructor(private http: Http, public toastr: ToastsManager) { }
+  constructor(private http: HttpClient, public toastr: ToastrService) { }
 
-  getSearchList(): Observable<string> {
-    return this.http.get(routes, { cache: true })
-      .map((res: Response) => res.json())
-      .map(body => body)
-      .catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
+  getSearchList(): Observable<Files> {
+    let header : HttpHeaders = new HttpHeaders().set(cache_key, HttpCachePolicy.Never);
+    return this.http.get<Files>(routes, {headers : header}).pipe(
+      catchError(err => {
+        this.toastr.error(err.json().message, 'Oops!');
+        return throwError(err);
+    }));
   }
 }

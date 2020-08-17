@@ -1,0 +1,16 @@
+diff --git a/node_modules/primeng/components/slider/slider.js b/node_modules/primeng/components/slider/slider.js
+index 5631b7c..be596d3 100644
+--- a/node_modules/primeng/components/slider/slider.js
++++ b/node_modules/primeng/components/slider/slider.js
+@@ -95,6 +95,11 @@ var Slider = /** @class */ (function () {
+         if (!this.sliderHandleClick) {
+             this.updateDomData();
+             this.handleChange(event);
++            if (this.range){
++                this.onSlideEnd.emit({ originalEvent: event, values: this.values });
++            } else { 
++                this.onSlideEnd.emit({ originalEvent: event, value: this.value });
++            } 
+         }
+         this.sliderHandleClick = false;
+     };

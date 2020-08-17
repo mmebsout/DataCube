@@ -6,7 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import { ToastrModule } from 'ngx-toastr';
 
 import { SearchFileService } from '../../../shared/services/search-file.service';
 import { StreamFitService } from '../../../shared/services/stream-fit.service';
@@ -25,7 +25,7 @@ describe('HeaderComponent', () => {
         RouterTestingModule,
         NgbModule.forRoot(),
         TranslateModule.forRoot(),
-        ToastModule.forRoot()
+        ToastrModule.forRoot()
       ],
       declarations: [HeaderComponent, FilterPipe],
       providers: [

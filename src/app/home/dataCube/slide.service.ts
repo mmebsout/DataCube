@@ -1,15 +1,20 @@
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+import {map, catchError} from 'rxjs/operators';
+
+
 
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
-import 'rxjs/add/operator/catch';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environments/environment';
+import { HttpCachePolicy, cache_key } from '@app/core/http/request-options-args';
+
+
 
 const routes = {
-  slide: (s: slides) => `/slide?entry=${s.id}&posZ=0`,
-  tranche: (s: slides, t: tranches) => `/slide?entry=${s.id}&posZ=${t.idTranche}`
+  slide: (s: slides) => environment.serverUrl + `/slide?entry=${s.id}&posZ=0`,
+  tranche: (s: slides, t: tranches) => environment.serverUrl + `/slide?entry=${s.id}&posZ=${t.idTranche}`
 };
 
 export interface slides {
@@ -20,23 +25,53 @@ export interface tranches {
   idTranche: number;
 }
 
+export interface Slide {
+	"feature":{
+		"geometry":{"coordinates":[number,number],"type":"Point"},
+		"type":"Feature",
+		"properties":{
+			"metadata":[],
+			"slide":{ "value":number[][]},
+			"fileType":string
+			}
+		}
+	}
+
+export interface RawSlide {
+	"response":Slide,
+	"status":"OK"
+}
+
 @Injectable()
 export class SlideService {
 
-	constructor(private http: Http, public toastr: ToastsManager) {
+	constructor(private http: HttpClient, public toastr: ToastrService) {
 	}
 
-	getSlide(id: slides): Observable<string>  {
-		return this.http.get(routes.slide(id), { cache: false })
-				.map((res: Response) => res.json())
-				.map(body => body.response)
-				.catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
+	getSlide(id: slides): Observable<Slide>  {
+		let header : HttpHeaders = new HttpHeaders().set(cache_key, HttpCachePolicy.Never);
+		return this.http.get<RawSlide>(routes.slide(id), {headers : header})
+			.pipe(
+				map(body => body.response),
+				catchError((err:any) => {
+					this.toastr.error(err.json().message, 'Oops!');
+					return throwError(err);
+				}
+			),
+		);
 	}
 
-	getNextTranche(id: slides, idTranche: tranches): Observable<string> {
-		return this.http.get(routes.tranche(id, idTranche), {cache: false})
-						.map((res: Response) => res.json())
-						.map(body => body.response)
-						.catch((error:any) => this.toastr.error(error.json().message, 'Oops!'));
+	getNextTranche(id: slides, idTranche: tranches): Observable<Slide> {
+		let header : HttpHeaders = new HttpHeaders().set(cache_key, HttpCachePolicy.Never);
+		return this.http.get<RawSlide>(routes.tranche(id, idTranche), {headers : header})
+			.pipe(
+				map(body => body.response),
+				catchError(
+					(err: any) => {
+						this.toastr.error(err.json().message, 'Oops!');
+						return throwError(err);
+					}
+				),
+			);
 	}
 }

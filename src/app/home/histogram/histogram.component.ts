@@ -1,3 +1,5 @@
+
+import {finalize} from 'rxjs/operators';
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { I18nService } from '../../core/i18n.service';
 import { SlideService } from '../dataCube/slide.service';
@@ -6,7 +8,7 @@ import { Fit } from '../../shared/classes/fit';
 import { CustomHTMLElement } from '../../shared/classes/custom-html';
 import { StreamFitService } from '../../shared/services/stream-fit.service';
 import { CubeToHistoService } from '../../shared/services/cube-to-histo.service';
-import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 declare function require(moduleName: string): any;
 const Plotly = require('plotly.js/lib/index-cartesian.js');
@@ -65,7 +67,7 @@ export class HistogramComponent implements OnInit {
 		private slideService: SlideService,
 		private cubeToHistoService: CubeToHistoService,
 		private loaderService: LoaderService,
-		private streamFitService: StreamFitService, public toastr: ToastsManager) {
+		private streamFitService: StreamFitService, public toastr: ToastrService) {
 		this.mustBeLoaded = this.loaderService.histogram;
 
 		this.cubeToHistoService.Colorscale$.subscribe(color => {
@@ -129,17 +131,18 @@ export class HistogramComponent implements OnInit {
 	 */
 	ngOnInit() {
 		this.slideService
-			.getNextTranche({ id: this.currentSlide.name }, { idTranche: this.tranche })
-			.finally(() => {
+			.getNextTranche({ id: this.currentSlide.name }, { idTranche: this.tranche }).pipe(
+			finalize(() => {
 				this.histoLoadingStatus.emit(false);
-			})
+			}))
 			.subscribe(slideData => {
 				//get user role
 				let role: any = null;
 				role = JSON.parse(localStorage.getItem('userNameRole'));
 
 				//get list files authorized
-				let list: any = localStorage.getItem('listfilesPublic').split(",");
+				let listfilesPublic = localStorage.getItem('listfilesPublic');
+				let list: any = listfilesPublic ? listfilesPublic.split(",") : [] ;
 
 				//check if user is authorized
 				if ((localStorage.getItem('userNameDataCube') == "admin")
