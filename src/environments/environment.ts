@@ -13,5 +13,6 @@ export const environment = {
 	'en-US',
 	'fr-FR'
   ],
-  imgPath:''
+  imgPath:'',
+  i18nPath:'/assets/i18n/'
 };

@@ -20,12 +20,14 @@ import { CachingInterceptor } from './core/http/http.cache.interceptor';
 // import ngx-translate and the http loader
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { environment } from '../environments/environment';
+
 
 const log = new Logger('AppModule');
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http);
+    return new TranslateHttpLoader(http, environment.i18nPath);
 }
 @NgModule({
   imports: [
