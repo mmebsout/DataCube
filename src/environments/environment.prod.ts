@@ -11,5 +11,6 @@ export const environment = {
 	'en-US',
 	'fr-FR'
   ],
-  imgPath:'../templates/datacube'
+  imgPath:'../templates/datacube',
+  i18nPath:'/templates/datacube/assets/i18n/'
 };
