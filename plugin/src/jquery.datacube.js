@@ -7,6 +7,7 @@
 					appHistogramm: false,
                     appDescription: false,
                     appFile:"",
+                    noLogin: false,
                     appendCSS: false
 				});
  */
@@ -46,6 +47,7 @@ $.when(
                 appDescription: true,
                 appDescription: true,
                 appFile:"",
+                noLogin: false,
                 apiRest: "",
                 appendCSS: false
             };
@@ -108,7 +110,8 @@ $.when(
                         appSpectre: this.settings.appSpectre,
                         appHistogramm: this.settings.appHistogramm,
                         appDescription: this.settings.appDescription,
-                        appFile: this.settings.appFile
+                        appFile: this.settings.appFile,
+                        noLogin: this.settings.noLogin
                     });
 
                 if (this.settings.appendCSS == true){

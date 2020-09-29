@@ -32,11 +32,13 @@ Following the plugin location into new project, change value of variable : folde
 		appSpectre: true,
 		appHistogramm: true,
 		appDescription: true,
-		appFile: "<filename>"
+		appFile: "<filename>",
+		noLogin: false,
 	});
 	```
 - Change parameters values to display the modules (DataCube, Histogramm, Spectrum, Description).
 - appFile is fits or netcdf filename
+- noLogin is to be set to true if no authentication is needed to access the files
 
 ## Structure
 

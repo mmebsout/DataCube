@@ -145,7 +145,7 @@ export class HistogramComponent implements OnInit {
 				let list: any = listfilesPublic ? listfilesPublic.split(",") : [] ;
 
 				//check if user is authorized
-				if ((localStorage.getItem('userNameDataCube') == "admin")
+				if (this.loaderService.noLogin || (localStorage.getItem('userNameDataCube') == "admin")
 					|| ((localStorage.getItem('userNameDataCube') !== "admin") && (role == "public" && list.indexOf(this.currentSlide.name) !== -1))
 				) {
 					this.slideData = slideData;

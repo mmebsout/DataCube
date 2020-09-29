@@ -130,7 +130,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			let list: any = listfilesPublic ? listfilesPublic.split(",") : [];
 
 			//check if user is authorized
-			if((localStorage.getItem('userNameDataCube')=="admin") 
+			if(this.loaderService.noLogin || (localStorage.getItem('userNameDataCube')=="admin") 
 			|| (role=="public" && list.indexOf(fit)!==-1)
 			){
 				// if(this.loaderService.dataPath != null && this.loaderService.dataPath != undefined){
@@ -183,7 +183,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			role = JSON.parse(localStorage.getItem('userNameRole'));
 
 			//if no role redirect login
-			if(role==undefined){
+			if(!this.loaderService.noLogin && role==undefined){
 				this.router.navigate(['/login'], { skipLocationChange: true });
 			}
 
@@ -192,7 +192,7 @@ export class DataCubeComponent implements OnInit, OnChanges {
 			let list: any = listfilesPublic ? listfilesPublic.split(",") : [] ;
 
 			//check if user is authorized
-			if((localStorage.getItem('userNameDataCube')=="admin") 
+			if( this.loaderService.noLogin || (localStorage.getItem('userNameDataCube')=="admin") 
 			|| ((localStorage.getItem('userNameDataCube')!=="admin") && (role=="public" && list.indexOf(this.currentSlide.name)!==-1))
 			){
 			this.metadataService
