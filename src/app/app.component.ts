@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
   attrAppHistogramm: boolean;
   attrAppDescription: boolean;
   attrFile: string;
+  attrNoLogin: boolean;
   attrDataPath: string;
 
   constructor(private router: Router,
@@ -48,6 +49,7 @@ export class AppComponent implements OnInit {
                     this.attrAppHistogramm = (this.elRef.nativeElement.getAttribute('appHistogramm')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appHistogramm')):true,
                     this.attrAppDescription = (this.elRef.nativeElement.getAttribute('appDescription')!=null)?this.toBoolean(this.elRef.nativeElement.getAttribute('appDescription')):true;
                     this.attrFile = (this.elRef.nativeElement.getAttribute('appFile')!=null)?this.elRef.nativeElement.getAttribute('appFile'):null;
+                    this.attrNoLogin = (this.elRef.nativeElement.getAttribute('noLogin')!=null)?this.elRef.nativeElement.getAttribute('noLogin'):true;
                     this.translateService.setDefaultLang('en-US');
               }
 
@@ -78,9 +80,10 @@ export class AppComponent implements OnInit {
     log.debug('attrAppDescription : ', this.attrAppDescription);
     log.debug('attrDataPath : ', this.attrDataPath);
     log.debug('attrFile : ', this.attrFile);
+    log.debug('attrNoLogin : ', this.attrNoLogin);
 
     //init loader with good values (loader service share values into component)
-    this.loader.init(this.attrAppDataCube, this.attrAppSpectre, this.attrAppHistogramm, this.attrAppDescription, this.attrDataPath, this.attrFile);
+    this.loader.init(this.attrAppDataCube, this.attrAppSpectre, this.attrAppHistogramm, this.attrAppDescription, this.attrDataPath, this.attrFile, this.attrNoLogin);
 
     // Setup translations
     this.i18nService.init(environment.defaultLanguage, environment.supportedLanguages);

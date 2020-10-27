@@ -5,6 +5,7 @@ import { Logger } from '../../logger.service';
 import { I18nService } from '../../i18n.service';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { SearchFileService } from '../../../shared/services/search-file.service';
+import { LoaderService } from '../../../core/loader.service';
 import { StreamFitService } from '../../../shared/services/stream-fit.service';
 import { environment } from '../../../../environments/environment';
 
@@ -28,14 +29,19 @@ export class HeaderComponent implements OnInit {
 	fitFile = <string>'';
 	currentLang = <string>'';
 	imgPath = <string>'';
+	canlogin = true;
 
 	constructor(private router: Router,
 				private i18nService: I18nService,
 				private searchFileService: SearchFileService,
 				private authenticationService: AuthenticationService,
-				private streamFitService: StreamFitService) { }
+				private streamFitService: StreamFitService,
+				private loaderService: LoaderService) { }
 
 	ngOnInit() {
+		console.log("HEADER loaderServiece nolgoin est "+this.loaderService.noLogin );
+
+		this.canlogin = !this.loaderService.noLogin;
 		this.imgPath = environment.imgPath;
 		this.username = localStorage.getItem('userNameDataCube');
 		this.languages = this.listLanguages;

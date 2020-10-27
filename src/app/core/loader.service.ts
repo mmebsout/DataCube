@@ -9,6 +9,7 @@ export class LoaderService {
   isDesc: boolean;
   dataPath : string;
   fileData : string;
+  isNoLogin : boolean;
 
   constructor() {}
 
@@ -21,13 +22,14 @@ export class LoaderService {
    * @param {boolean=} path boolean if path must be loaded
    * @param {boolean=} file boolean if file must be loaded
    */
-  init(datacube: boolean, spectre: boolean, histogram: boolean, description: boolean, path: string, file:string) {
+  init(datacube: boolean, spectre: boolean, histogram: boolean, description: boolean, path: string, file:string, nologin:boolean) {
     this.isDataCube = datacube;
     this.isSpectre = spectre;
     this.isHistogram = histogram;
     this.isDesc = description;
     this.dataPath = path;
     this.fileData = file;
+    this.isNoLogin = nologin;
   }
 
   /**
@@ -78,5 +80,12 @@ export class LoaderService {
     return this.fileData;
   }
 
+   /**
+   * Gets noLogin boolean
+   * @return {boolean} if no Login is required.
+   */
+  get noLogin(): boolean {
+    return this.isNoLogin;
+  }
 
 }
